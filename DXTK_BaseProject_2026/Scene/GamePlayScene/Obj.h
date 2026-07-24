@@ -34,18 +34,6 @@ public:
         return m_collider.get();
     }
 
-    void SetColliderBox(DirectX::SimpleMath::Vector3 min ={.5f,.5f,.5f},
-                        DirectX::SimpleMath::Vector3 max = {.5f, .5f, .5f},
-                        DirectX::SimpleMath::Vector3 pos = {.0f, .0f, .0f})
-    {
-        m_collider = std::make_unique<Itsuki::BoxCollider>(min,max,pos);
-    }
-
-    void SetColliderSphere(float radius=0.5)
-    {
-        m_collider = std::make_unique<Itsuki::SphereCollider>(radius);
-    }
-
 protected:
 
     //位置
