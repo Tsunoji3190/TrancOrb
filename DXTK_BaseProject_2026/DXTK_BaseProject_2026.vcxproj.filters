@@ -43,7 +43,6 @@
     <ClInclude Include="Scene\SceneId.h" />
     <ClInclude Include="Scene\BaseScene\BaseScene.h" />
     <ClInclude Include="Scene\GamePlayScene\GamePlayScene.h" />
-    <ClInclude Include="Scene\SpriteTestScene\SpriteTestScene.h" />
     <ClInclude Include="GameContext.h" />
     <ClInclude Include="Scene\GamePlayScene\Player.h" />
     <ClInclude Include="ItsukiLib\ColliderRenderer.h" />
@@ -54,7 +53,6 @@
     <ClInclude Include="ItsukiLib\Camera\CameraBase.h" />
     <ClInclude Include="ItsukiLib\Camera\NormalCamera.h" />
     <ClInclude Include="Scene\GamePlayScene\Obj.h" />
-    <ClInclude Include="ItsukiLib\ColliderFactory.h" />
     <ClInclude Include="Scene\GamePlayScene\Orb.h" />
     <ClInclude Include="Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="Scene\GamePlayScene\Factory\StageManager.h" />
@@ -71,9 +69,6 @@
     <ClInclude Include="SuzukiLib\Audio\Internal\DirectXTKAudioResourceManager.h" />
     <ClInclude Include="Scene\GamePlayScene\Status.h" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
-    <ClInclude Include="ItsukiLib\Fade\FadeManager.h" />
-    <ClInclude Include="ItsukiLib\Fade\FadeBase.h" />
-    <ClInclude Include="ItsukiLib\Fade\FadeKind.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -98,7 +93,6 @@
     <ClCompile Include="ItsukiLib\SphereCollider.cpp" />
     <ClCompile Include="Scene\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\GamePlayScene.cpp" />
-    <ClCompile Include="Scene\SpriteTestScene\SpriteTestScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Player.cpp" />
     <ClCompile Include="ItsukiLib\ColliderRenderer.cpp" />
     <ClCompile Include="ItsukiLib\Stage.cpp" />

@@ -22,7 +22,7 @@ void ClearScene::Update(Imase::ISceneController<SceneId>& sceneController, GameC
 	debugRenderer.DrawText({540, 300.0f}, L"Game Clear!!!");
 	debugRenderer.DrawText({540, 350.0f}, L"Please Push to Space");
 
-	if (kb.Space)
+	if (gameContext.keyboardTracker.pressed.Space)
 	{
         sceneController.RequestSwitch(SceneId::TitleScene);
 	}

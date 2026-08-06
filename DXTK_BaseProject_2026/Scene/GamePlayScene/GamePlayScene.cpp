@@ -29,33 +29,36 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
 	// 経過時間を取得する
 	float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
 
-	auto kb = Keyboard::Get().GetState();
-
-    auto& mouse = Mouse::Get();
-
-        if (m_status->IsClear())
+    //ステータスがクリアを示していたなら
+    if (m_status->IsClear())
     {
+        //クリアシーンに切り替える
         sceneController.RequestSwitch(SceneId::ClearScene);
     }
 
-
+    //タイマーがゼロになったら
     if (m_timer <= 0)
     {
+        //ステータスを表示する
         m_status->Update(m_timer);
 
         return;
     }
 
+    //カメラの設定
     GamePlayCamera(elapsedTime);
 
+    //プレイヤーの更新
     m_player->Update(elapsedTime);
 
     //ステージとの当たり判定
     for (int i=0;i<m_stageManager->GetNumStages();i++)
     {
         Stage* Stage = m_stageManager->GetStage(i);
+        //もしプレイヤーとステージがぶつかったら
         if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *Stage->GetCollider()))
         {
+            //押し出し判定を行う
             CheckCollider(m_player->GetCollider(), Stage->GetCollider());
         }
 
@@ -64,26 +67,29 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
     {
         Orb* pOrb = m_orbManager->GetOrb(i);
+        // もしプレイヤーとオーブがぶつかったら
         if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *pOrb->GetCollider()))
         {
+            //音を鳴らす
             gameContext.audio.PlayOneShot("GetOrb");
             // 持ってるオーブの数の追加
             m_status->AddOrbCount(pOrb->GetOrbValue());
-
+            //位置を変更する
             pOrb->SetRandom();
 
         }
     }
-    //---------------やむを得ず---------------
+
+    //時間を減らす
     m_timer -= elapsedTime;
 
+    //テキストの設定
     std::wstring text = L"Time: " + std::to_wstring(m_timer);
     std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_status->GetOrbCount());
 
+    //テキストの描画
     debugRenderer.DrawText({500.0f, 0.0f}, text);
     debugRenderer.DrawText({.0f, 100.0f}, OrbCounttext);
-
-    //---------------やむを得ず---------------
 
     //debugRenderer.DrawText({0.0f, 0.0f}, L"GamePlayScene");
 
@@ -113,9 +119,11 @@ void GamePlayScene::Render(GameContext& gameContext)
 
 	//m_player->Render(context, m_view, m_projection, eye, target);
 
+    //制限時間が0になったら
     if (m_timer <= 0)
     {
-         m_status->Render();
+        //ステータスの描画を行う
+        m_status->Render();
 
          return;
     }

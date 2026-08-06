@@ -15,7 +15,6 @@
 #include "ImaseLib/DebugCamera.h"
 
 #include "Player.h"
-#include "ItsukiLib/Collider.h"
 #include "ItsukiLib/ColliderRenderer.h"
 #include"ItsukiLib/CollisionChecker.h"
 

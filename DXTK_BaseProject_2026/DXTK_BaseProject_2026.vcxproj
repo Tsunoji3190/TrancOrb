@@ -194,12 +194,8 @@
     <ClInclude Include="ItsukiLib\Camera\CameraBase.h" />
     <ClInclude Include="ItsukiLib\Camera\NormalCamera.h" />
     <ClInclude Include="ItsukiLib\Collider.h" />
-    <ClInclude Include="ItsukiLib\ColliderFactory.h" />
     <ClInclude Include="ItsukiLib\ColliderRenderer.h" />
     <ClInclude Include="ItsukiLib\CollisionChecker.h" />
-    <ClInclude Include="ItsukiLib\Fade\FadeBase.h" />
-    <ClInclude Include="ItsukiLib\Fade\FadeKind.h" />
-    <ClInclude Include="ItsukiLib\Fade\FadeManager.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
     <ClInclude Include="ItsukiLib\Physics.h" />
@@ -218,7 +214,6 @@
     <ClInclude Include="Scene\GamePlayScene\State\Moving.h" />
     <ClInclude Include="Scene\GamePlayScene\Status.h" />
     <ClInclude Include="Scene\SceneId.h" />
-    <ClInclude Include="Scene\SpriteTestScene\SpriteTestScene.h" />
     <ClInclude Include="Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioChannel.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioHandle.h" />
@@ -256,7 +251,6 @@
     <ClCompile Include="Scene\GamePlayScene\Orb.cpp" />
     <ClCompile Include="Scene\GamePlayScene\State\Moving.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Status.cpp" />
-    <ClCompile Include="Scene\SpriteTestScene\SpriteTestScene.cpp" />
     <ClCompile Include="Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="SuzukiLib\Audio\AudioSystem.cpp" />
     <ClCompile Include="SuzukiLib\Audio\Internal\AudioVolumeMixer.cpp" />

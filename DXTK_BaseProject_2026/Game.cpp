@@ -5,7 +5,6 @@
 #include "pch.h"
 #include "Game.h"
 #include "Scene/BaseScene/BaseScene.h"
-#include "Scene/SpriteTestScene/SpriteTestScene.h"
 #include "Scene/GamePlayScene/GamePlayScene.h"
 #include "Scene/TitleScene/TitleScene.h"
 #include "Scene/ClearScene/ClearScene.h"
@@ -49,7 +48,6 @@ void Game::Initialize(HWND window, int width, int height)
 
         // シーンの登録
     m_sceneManager.RegisterScene<BaseScene>(SceneId::BaseScene);
-    m_sceneManager.RegisterScene<SpriteTestScene>(SceneId::SpriteTestScene);
     m_sceneManager.RegisterScene<GamePlayScene>(SceneId::GamePlayScene);
     m_sceneManager.RegisterScene<TitleScene>(SceneId::TitleScene);
     m_sceneManager.RegisterScene<ClearScene>(SceneId::ClearScene);

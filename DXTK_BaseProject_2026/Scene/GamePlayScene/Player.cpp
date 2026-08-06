@@ -86,7 +86,7 @@ void Player::Update(float elapsedTime)
     }
 
     //スペースキーでジャンプ
-    if (kb.Space && m_isGround)
+    if (m_gameContext.keyboardTracker.pressed.Space && m_isGround)
     {
         m_gameContext.audio.PlayOneShot("Jump");
         m_velocity.y = m_jump;

@@ -36,6 +36,7 @@ void Status::Update(float& timer)
 
         m_OrbCount -= m_JumpSteak;
 
+        //プレイヤーのジャンプの高さをあげる
         m_player->SetJump(m_JumpAdd);
 
         //レベルを上げる
@@ -61,6 +62,7 @@ void Status::Update(float& timer)
 
         m_OrbCount -= m_OrbNumberSteak;
 
+        //オーブを追加する
         m_orbManager->AddOrb();
 
          // レベルを上げる
@@ -86,6 +88,7 @@ void Status::Update(float& timer)
 
         m_OrbCount -= m_OrbValueSteak;
 
+        //オーブの価値を追加する
         for (size_t i = 0; i < m_orbManager->GetNumOrbs(); i++)
         {
             auto pOrb = m_orbManager->GetOrb(i);
@@ -117,6 +120,7 @@ void Status::Update(float& timer)
 
         m_OrbCount -= m_timerSteak;
 
+        //制限時間を増やす
         FIRST_TIMER += m_timerAdd;
 
         // レベルを上げる
@@ -130,6 +134,7 @@ void Status::Update(float& timer)
     {
         timer = FIRST_TIMER;
 
+        //オーブの位置をランダムに設定する
         for (size_t i = 0; i < m_orbManager->GetNumOrbs(); i++)
         {
             auto pOrb = m_orbManager->GetOrb(i);
@@ -147,13 +152,14 @@ void Status::Update(float& timer)
 
 
         // オーブの数がSteakを超えていないなら音を出す
-        if (!IsAboveSteak(200))
+        if (!IsAboveSteak(1))
         {
             m_gameContext.audio.PlayOneShot("Stop");
 
             return;
         }
 
+        //クリアフラグをつける
         m_isClear = true;
 
     }
