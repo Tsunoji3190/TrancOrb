@@ -18,8 +18,8 @@
 #include "ItsukiLib/ColliderRenderer.h"
 #include"ItsukiLib/CollisionChecker.h"
 
-#include"Factory/StageManager.h"
-#include"Factory/OrbManager.h"
+#include"Manager/StageManager.h"
+#include"Manager/OrbManager.h"
 #include"Status.h"
 
 #include"ItsukiLib/Camera/NormalCamera.h"

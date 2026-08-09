@@ -200,8 +200,8 @@
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
     <ClInclude Include="ItsukiLib\Physics.h" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
-    <ClInclude Include="Scene\GamePlayScene\Factory\OrbManager.h" />
-    <ClInclude Include="Scene\GamePlayScene\Factory\StageManager.h" />
+    <ClInclude Include="Scene\GamePlayScene\Manager\OrbManager.h" />
+    <ClInclude Include="Scene\GamePlayScene\Manager\StageManager.h" />
     <ClInclude Include="Scene\GamePlayScene\Player.h" />
     <ClInclude Include="ItsukiLib\SphereCollider.h" />
     <ClInclude Include="pch.h" />
@@ -210,8 +210,6 @@
     <ClInclude Include="Scene\GamePlayScene\GamePlayScene.h" />
     <ClInclude Include="Scene\GamePlayScene\Obj.h" />
     <ClInclude Include="Scene\GamePlayScene\Orb.h" />
-    <ClInclude Include="Scene\GamePlayScene\State\BaseState.h" />
-    <ClInclude Include="Scene\GamePlayScene\State\Moving.h" />
     <ClInclude Include="Scene\GamePlayScene\Status.h" />
     <ClInclude Include="Scene\SceneId.h" />
     <ClInclude Include="Scene\TitleScene\TitleScene.h" />
@@ -249,7 +247,6 @@
     <ClCompile Include="Scene\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\GamePlayScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Orb.cpp" />
-    <ClCompile Include="Scene\GamePlayScene\State\Moving.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Status.cpp" />
     <ClCompile Include="Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="SuzukiLib\Audio\AudioSystem.cpp" />

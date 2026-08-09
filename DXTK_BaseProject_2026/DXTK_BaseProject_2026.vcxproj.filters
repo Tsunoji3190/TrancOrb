@@ -55,10 +55,8 @@
     <ClInclude Include="Scene\GamePlayScene\Obj.h" />
     <ClInclude Include="Scene\GamePlayScene\Orb.h" />
     <ClInclude Include="Scene\TitleScene\TitleScene.h" />
-    <ClInclude Include="Scene\GamePlayScene\Factory\StageManager.h" />
-    <ClInclude Include="Scene\GamePlayScene\Factory\OrbManager.h" />
-    <ClInclude Include="Scene\GamePlayScene\State\BaseState.h" />
-    <ClInclude Include="Scene\GamePlayScene\State\Moving.h" />
+    <ClInclude Include="Scene\GamePlayScene\Manager\StageManager.h" />
+    <ClInclude Include="Scene\GamePlayScene\Manager\OrbManager.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioChannel.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioHandle.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioPlayDesc.h" />
@@ -100,7 +98,6 @@
     <ClCompile Include="ItsukiLib\Camera\NormalCamera.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Orb.cpp" />
     <ClCompile Include="Scene\TitleScene\TitleScene.cpp" />
-    <ClCompile Include="Scene\GamePlayScene\State\Moving.cpp" />
     <ClCompile Include="SuzukiLib\Audio\AudioSystem.cpp" />
     <ClCompile Include="SuzukiLib\Audio\Internal\AudioVolumeMixer.cpp" />
     <ClCompile Include="SuzukiLib\Audio\Internal\DirectXTKAudioDevice.cpp" />

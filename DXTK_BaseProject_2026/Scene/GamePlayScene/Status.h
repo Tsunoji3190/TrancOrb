@@ -1,6 +1,6 @@
 #pragma once
 #include "Player.h"
-#include "Factory/OrbManager.h"
+#include "Manager/OrbManager.h"
 class Status
 {
 public:

@@ -3,7 +3,6 @@
 
 #include"ItsukiLib/SphereCollider.h"
 #include "GameContext.h"
-#include "State/BaseState.h"
 
 
 class Player :public Obj
@@ -146,12 +145,6 @@ private:
 
     //設置しているかどうか判定
     bool m_isGround;
-
-    //現在の状態
-    BaseState* m_baseState;
-
-    ////立っている状態
-    //std::unique_ptr<Standing> m_standing;
 
 };
 
