@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include "../Orb.h"
+#include"../../../ItsukiLib/ColliderFactory.h"
 
 class OrbManager
 {
@@ -31,8 +32,15 @@ public:
 
     void AddOrb()
     {
-        
-        std::unique_ptr<Orb> orb = std::make_unique<Orb>(m_pGameContext,m_pPrimitiveBatch,m_pTexture);
+        // 当たり判定工場の作成
+            Itsuki::ColliderFactory& colF = Itsuki::ColliderFactory::GetRefInstance();
+
+        /// 球
+        Itsuki::CollisionParams orbCol = {{0.0f, 0.0f, .0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.5}};
+
+
+        std::unique_ptr<Orb> orb = std::make_unique<Orb>(m_pGameContext, m_pPrimitiveBatch, m_pTexture,
+                                                         colF.MakeCollider(Itsuki::SHAPE::SPHERE, orbCol));
         
         m_pOrbs.push_back(std::move(orb));
     }

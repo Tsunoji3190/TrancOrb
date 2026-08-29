@@ -20,11 +20,10 @@ public:
 
     void Render();
 
-    void AddStage(DirectX::SimpleMath::Vector3 min, DirectX::SimpleMath::Vector3 max,
-        DirectX::SimpleMath::Vector3 pos)
+    void AddStage( std::unique_ptr<Itsuki::Collider> collider)
     {
         
-        std::unique_ptr<Stage> stage = std::make_unique<Stage>(m_pGameContext, m_pPrimitiveBatch, min, max, pos);
+        std::unique_ptr<Stage> stage = std::make_unique<Stage>(m_pGameContext, m_pPrimitiveBatch, std::move(collider));
         
         m_pStages.push_back(std::move(stage));
     }

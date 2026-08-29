@@ -11,7 +11,8 @@ class Player :public Obj
 public:
 
 	Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix& view,
-           const DirectX::SimpleMath::Matrix& projection, DirectX::Model* pModel);
+           const DirectX::SimpleMath::Matrix& projection, DirectX::Model* pModel,
+           std::unique_ptr<Itsuki::Collider> collider);
 
 	~Player();
 
@@ -55,11 +56,6 @@ public:
     void ResetAngle()
     {
         m_facingAngleRad = DirectX::SimpleMath::Vector3::Zero;
-    }
-
-    Itsuki::SphereCollider* GetCollider()
-    {
-        return m_collider.get();
     }
 
     void SetIsGround(bool isGround)
@@ -109,8 +105,6 @@ private:
 
 private:
 
-    // 当たり判定
-    std::unique_ptr<Itsuki::SphereCollider> m_collider;
 
     // ゲームコンテキスト
     const GameContext& m_gameContext;

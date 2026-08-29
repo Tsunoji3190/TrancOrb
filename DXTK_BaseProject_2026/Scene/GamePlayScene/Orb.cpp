@@ -3,11 +3,11 @@
 #include <random>
 
 Orb::Orb(GameContext* pGameContext, DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>* pPrimitiveBatch,
-         ID3D11ShaderResourceView* pTexture)
+         ID3D11ShaderResourceView* pTexture, std::unique_ptr<Itsuki::Collider> collider)
     : m_pGameContext{pGameContext}, m_pPrimitiveBatch{pPrimitiveBatch}, m_pTexture{pTexture}
 {
-    // 半径の情報を入れておく
-    m_collider = std::make_unique<Itsuki::SphereCollider>(0.5f);
+    // 当たり判定をセットする
+    SetCollider(std::move(collider));
 
     auto device = m_pGameContext->deviceResources.GetD3DDevice();
 

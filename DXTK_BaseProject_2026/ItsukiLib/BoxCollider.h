@@ -10,19 +10,13 @@ namespace Itsuki {
 		//箱の大きさ
 		DirectX::SimpleMath::Vector3 m_dimensions_min;
 		DirectX::SimpleMath::Vector3 m_dimensions_max;
-
-    private:
-
-
 	public:
 
 		//コンストラクタ
-        BoxCollider(DirectX::SimpleMath::Vector3 min,
-                    DirectX::SimpleMath::Vector3 max,
-					DirectX::SimpleMath::Vector3 pos);
+        BoxCollider(Itsuki::CollisionParams param
+			);
 
-
-		void Render() override;
+        void Render() override;
 
 		//位置と四角の中で一番小さい座標を足したものを返す
 		DirectX::SimpleMath::Vector3 GetMin() const

@@ -9,7 +9,7 @@ namespace Itsuki {
 	{
     public:
         // コンストラクタ
-        SphereCollider(float radius = RADIUS);
+        SphereCollider(Itsuki::CollisionParams param);
 
         void Render() override;
 

@@ -46,31 +46,38 @@ Itsuki::ColliderRenderer::ColliderRenderer(ID3D11Device* pDevice,
 }
 
 void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, const DirectX::SimpleMath::Matrix& view,
-                                      const DirectX::SimpleMath::Matrix& proj, Collider& collider)
+                                      const DirectX::SimpleMath::Matrix& proj, Itsuki::Collider& collider)
 {
 
-    //switch (Collider.GetShape())
-    //{
-    //    case Collider::SHAPE::BOX:
-    //           
-    //    const BoxCollider* Box = dynamic_cast<const BoxCollider*>(&Collider);
+    switch (collider.GetShape())
+    {
+        case Itsuki::SHAPE::BOX:
+            
+            BoxRender(pContext,view,proj,collider);
+            break;
 
-
-    //}
+        case Itsuki::SHAPE::SPHERE:
+            
+            SphereRender(pContext, view, proj, collider);
+            break;
+    }
 }
 
-void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, 
+void Itsuki::ColliderRenderer::SphereRender(ID3D11DeviceContext* pContext, 
 	const DirectX::SimpleMath::Matrix& view, 
-	const DirectX::SimpleMath::Matrix& proj,
-    SphereCollider& sphereCollider
-)
+	const DirectX::SimpleMath::Matrix& proj, Itsuki::Collider& collider)
 {
 
+    m_color = Colors::Blue;
+
+    const SphereCollider* Sphere = dynamic_cast<const SphereCollider*>(&collider);
+
+
     //半径を取得
-    float r = sphereCollider.GetRadius();
+    float r = Sphere->GetRadius();
 
     //円の中心点を取得
-    SimpleMath::Vector3 center = sphereCollider.GetPosition();
+    SimpleMath::Vector3 center = Sphere->GetPosition();
 
 
     //------------------------------Beginをする際に必要となるもの
@@ -94,52 +101,87 @@ void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext,
     // 球を描画
     m_primitiveBatch->Begin();
 
-
-    // XY平面に円を描く
-    for (int i = 0; i < m_segments; i++)
+    //XZ平面に円を描く
+    for (int j = 0; j < SEGMENTS; j++)
     {
-        float t0 = XM_2PI * i / m_segments;
-        float t1 = XM_2PI * (i + 1) / m_segments;
+        //Φを作成
+        float phi = XM_2PI * j / SEGMENTS; 
 
-        SimpleMath::Vector3 p0 = center + SimpleMath::Vector3(cosf(t0) * r, sinf(t0) * r, 0);
-        SimpleMath::Vector3 p1 = center + SimpleMath::Vector3(cosf(t1) * r, sinf(t1) * r, 0);
 
-        m_primitiveBatch->DrawLine({ p0, m_color }, { p1, m_color });
+        for (int i = 0; i < m_segments; i++)
+        {
+            // 円周に存在する一つの点
+            float t0 = XM_2PI * i / m_segments;
+            // 円周に存在するt0より値の大きな一つの点
+            float t1 = XM_2PI * (i + 1) / m_segments;
+
+
+            //X
+            float x0p = r * cosf(phi) * sin(t0);
+            float x1p = r * cosf(phi) * sin(t1);
+
+            // Y
+            float y0p = r * sin(phi);
+            float y1p = r * sin(phi);
+
+
+            //Z
+            float z0p = r * cosf(phi) * cos(t0);
+            float z1p = r * cosf(phi) * cos(t1);
+
+
+            SimpleMath::Vector3 p0 = center + SimpleMath::Vector3(x0p, y0p, z0p);
+            SimpleMath::Vector3 p1 = center + SimpleMath::Vector3(x1p, y1p, z1p);
+
+            m_primitiveBatch->DrawLine({p0, m_color}, {p1, m_color});
+
+        }
+
+        // YZ平面に円を描く
+        for (int i = 0; i < m_segments; i++)
+        {
+            //円周に存在する一つの点
+            float t0 = XM_2PI * i / m_segments;
+            //円周に存在するt0より値の大きな一つの点
+            float t1 = XM_2PI * (i + 1) / m_segments;
+
+            // YZ上の円
+
+            float z0 = cosf(t0) * r;
+            float y0 = sinf(t0) * r;
+
+            float z1 = cosf(t1) * r;
+            float y1 = sinf(t1) * r;
+
+            // Y軸回転
+            float x0p = z0 * cosf(phi);
+            float z0p = z0 * sinf(phi);
+
+            float x1p = z1 * cosf(phi);
+            float z1p = z1 * sinf(phi);
+
+            SimpleMath::Vector3 p0 = center + SimpleMath::Vector3(x0p, y0, z0p);
+            SimpleMath::Vector3 p1 = center + SimpleMath::Vector3(x1p, y1, z1p);
+
+            m_primitiveBatch->DrawLine({p0, m_color}, {p1, m_color});
+        }
+
     }
 
-    // XZ平面に円を描く
-    for (int i = 0; i < m_segments; i++)
-    {
-        float t0 = XM_2PI * i / m_segments;
-        float t1 = XM_2PI * (i + 1) / m_segments;
-
-        SimpleMath::Vector3 p0 = center + SimpleMath::Vector3(cosf(t0) * r, 0, sinf(t0) * r);
-        SimpleMath::Vector3 p1 = center + SimpleMath::Vector3(cosf(t1) * r, 0, sinf(t1) * r);
-
-        m_primitiveBatch->DrawLine({ p0, m_color }, { p1, m_color });
-    }
-
-    // YZ平面に円を描く
-    for (int i = 0; i < m_segments; i++)
-    {
-        float t0 = XM_2PI * i / m_segments;
-        float t1 = XM_2PI * (i + 1) / m_segments;
-
-        SimpleMath::Vector3 p0 = center + SimpleMath::Vector3(0, cosf(t0) * r, sinf(t0) * r);
-        SimpleMath::Vector3 p1 = center + SimpleMath::Vector3(0, cosf(t1) * r, sinf(t1) * r);
-
-        m_primitiveBatch->DrawLine({ p0, m_color }, { p1, m_color });
-    }
 
     // 球の描画終わり
     m_primitiveBatch->End();
 }
 
-void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, const DirectX::SimpleMath::Matrix& view,
-                                      const DirectX::SimpleMath::Matrix& proj, BoxCollider& boxCollider)
+void Itsuki::ColliderRenderer::BoxRender(ID3D11DeviceContext* pContext, const DirectX::SimpleMath::Matrix& view,
+                                         const DirectX::SimpleMath::Matrix& proj, Itsuki::Collider& collider)
 {
+    m_color = Colors::Green;
 
     using namespace DirectX::SimpleMath;
+
+    const BoxCollider* Box = dynamic_cast<const BoxCollider*>(&collider);
+
 
     //------------------------------Beginをする際に必要となるもの
     // 深度バッファの設定（通常）
@@ -162,10 +204,10 @@ void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, const Direc
     m_primitiveBatch->Begin();
 
     //四角の当たり判定の一番小さい座標を取る
-    Vector3 min = boxCollider.GetMin();
+    Vector3 min = Box->GetMin();
 
     // 四角の当たり判定の一番大きい座標を取る
-    Vector3 max = boxCollider.GetMax();
+    Vector3 max = Box->GetMax();
 
     //四角の角八点を作成
     Vector3 p[8] = {
@@ -176,13 +218,11 @@ void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, const Direc
 
 
     // 12本のエッジを描く
-    auto c = Colors::Black;
-
     for (int i = 0; i < 4; i++)
     {
         int j = (i + 1) % 4;
 
-        m_primitiveBatch->DrawLine({p[i], c}, {p[j], c});
+        m_primitiveBatch->DrawLine({p[i], m_color}, {p[j], m_color});
     }
 
 
@@ -190,22 +230,22 @@ void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, const Direc
     {
         int j = (i + 1) % 4;
 
-        m_primitiveBatch->DrawLine({p[i+4], c}, {p[j+4], c});
+        m_primitiveBatch->DrawLine({p[i+4], m_color}, {p[j+4], m_color});
     }
 
     for (int i = 0; i < 4; i++)
     {
         int j = i + 1;
 
-        m_primitiveBatch->DrawLine({p[i], c}, {p[j + 3], c});
+        m_primitiveBatch->DrawLine({p[i], m_color}, {p[j + 3], m_color});
     }
 
 
 
     //---------------網目状の表現--------------------
-    int divX = (max.x - min.x) * 1.5;
-    int divY = (max.y - min.y) * 1.5;
-    int divZ = (max.z - min.z) * 1.5;
+    int divX = (max.x - min.x) * 1;
+    int divY = (max.y - min.y) * 1;
+    int divZ = (max.z - min.z) * 1;
 
     //全X軸の網の描画
     for (int i = 1; i < divX; i++)
@@ -215,16 +255,16 @@ void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, const Direc
 
         // 四角の上面の縦線
         float x1 = min.x + (max.x - min.x) * t;
-        m_primitiveBatch->DrawLine({Vector3(x1, max.y, min.z), c}, {Vector3(x1, max.y, max.z), c});
+        m_primitiveBatch->DrawLine({Vector3(x1, max.y, min.z), m_color}, {Vector3(x1, max.y, max.z), m_color});
         // 四角の下面の縦線
         float x2 = min.x + (max.x - min.x) * t;
-        m_primitiveBatch->DrawLine({Vector3(x2, min.y, min.z), c}, {Vector3(x2, min.y, max.z), c});
+        m_primitiveBatch->DrawLine({Vector3(x2, min.y, min.z), m_color}, {Vector3(x2, min.y, max.z), m_color});
         // 四角の前面の縦線
         float x3 = min.x + (max.x - min.x) * t;
-        m_primitiveBatch->DrawLine({Vector3(x3, min.y, min.z), c}, {Vector3(x3, max.y, min.z), c});
+        m_primitiveBatch->DrawLine({Vector3(x3, min.y, min.z), m_color}, {Vector3(x3, max.y, min.z), m_color});
         // 四角の後面の縦線
         float x4 = min.x + (max.x - min.x) * t;
-        m_primitiveBatch->DrawLine({Vector3(x4, min.y, max.z), c}, {Vector3(x2, max.y, max.z), c});
+        m_primitiveBatch->DrawLine({Vector3(x4, min.y, max.z), m_color}, {Vector3(x2, max.y, max.z), m_color});
 
     }
 
@@ -235,19 +275,19 @@ void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, const Direc
 
         // 四角の前面の横線
         float y1 = min.y + (max.y - min.y) * t;
-        m_primitiveBatch->DrawLine({Vector3(min.x, y1, max.z), c}, {Vector3(max.x, y1, max.z), c});
+        m_primitiveBatch->DrawLine({Vector3(min.x, y1, max.z), m_color}, {Vector3(max.x, y1, max.z), m_color});
 
         // 四角の後面の横線
         float y2 = min.y + (max.y - min.y) * t;
-        m_primitiveBatch->DrawLine({Vector3(min.x, y2, min.z), c}, {Vector3(max.x, y2, min.z), c});
+        m_primitiveBatch->DrawLine({Vector3(min.x, y2, min.z), m_color}, {Vector3(max.x, y2, min.z), m_color});
 
         // 四角の右側面の横線
         float y3 = min.y + (max.y - min.y) * t;
-        m_primitiveBatch->DrawLine({Vector3(max.x, y3, min.z), c}, {Vector3(max.x, y3, max.z), c});
+        m_primitiveBatch->DrawLine({Vector3(max.x, y3, min.z), m_color}, {Vector3(max.x, y3, max.z), m_color});
 
         // 四角の左側面の横線
         float y4 = min.y + (max.y - min.y) * t;
-        m_primitiveBatch->DrawLine({Vector3(min.x, y4, min.z), c}, {Vector3(min.x, y2, max.z), c});
+        m_primitiveBatch->DrawLine({Vector3(min.x, y4, min.z), m_color}, {Vector3(min.x, y2, max.z), m_color});
 
     }
 
@@ -258,19 +298,19 @@ void Itsuki::ColliderRenderer::Render(ID3D11DeviceContext* pContext, const Direc
 
         // 四角の右側面縦線
         float z1 = min.z + (max.z - min.z) * t;
-        m_primitiveBatch->DrawLine({Vector3(max.x, min.y, z1), c}, {Vector3(max.x, max.y, z1), c});
+        m_primitiveBatch->DrawLine({Vector3(max.x, min.y, z1), m_color}, {Vector3(max.x, max.y, z1), m_color});
 
         // 四角の左側面のZの縦線
         float z2 = min.z + (max.z - min.z) * t;
-        m_primitiveBatch->DrawLine({Vector3(min.x, min.y, z2), c}, {Vector3(min.x, max.y, z2), c});
+        m_primitiveBatch->DrawLine({Vector3(min.x, min.y, z2), m_color}, {Vector3(min.x, max.y, z2), m_color});
 
         // 四角の上面のZの横線
         float z3 = min.z + (max.z - min.z) * t;
-        m_primitiveBatch->DrawLine({Vector3(min.x, max.y, z3), c}, {Vector3(max.x, max.y, z1), c});
+        m_primitiveBatch->DrawLine({Vector3(min.x, max.y, z3), m_color}, {Vector3(max.x, max.y, z1), m_color});
 
         // 四角の下面のZの横線
         float z4 = min.z + (max.z - min.z) * t;
-        m_primitiveBatch->DrawLine({Vector3(min.x, min.y, z4), c}, {Vector3(max.x, min.y, z1), c});
+        m_primitiveBatch->DrawLine({Vector3(min.x, min.y, z4), m_color}, {Vector3(max.x, min.y, z1), m_color});
 
 
     }

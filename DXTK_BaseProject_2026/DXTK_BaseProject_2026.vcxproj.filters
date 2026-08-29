@@ -46,7 +46,6 @@
     <ClInclude Include="GameContext.h" />
     <ClInclude Include="Scene\GamePlayScene\Player.h" />
     <ClInclude Include="ItsukiLib\ColliderRenderer.h" />
-    <ClInclude Include="ItsukiLib\Physics.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="ItsukiLib\CollisionChecker.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
@@ -67,6 +66,7 @@
     <ClInclude Include="SuzukiLib\Audio\Internal\DirectXTKAudioResourceManager.h" />
     <ClInclude Include="Scene\GamePlayScene\Status.h" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
+    <ClInclude Include="ItsukiLib\ColliderFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

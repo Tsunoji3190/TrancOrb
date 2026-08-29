@@ -2,13 +2,19 @@
 #include "Stage.h"
 
 Stage::Stage(GameContext* pGameContext, DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* pPrimitiveBatch,
-             SimpleMath::Vector3 min, SimpleMath::Vector3 max, SimpleMath::Vector3 pos)
-    : m_minPos{min}, m_maxPos{max} , m_pPrimitiveBatch{pPrimitiveBatch} ,m_pGameContext{pGameContext}
+             std::unique_ptr<Itsuki::Collider> collider)
+    :m_pPrimitiveBatch{pPrimitiveBatch} ,m_pGameContext{pGameContext}
 {
-    SetPosition(pos);
-    m_collider = std::make_unique<Itsuki::BoxCollider>(min,max,GetPosition());
+    //位置と当たり判定の形を設定する
+    SetCollider(std::move(collider));
+   
+    //位置の設定
+    SetPosition(m_collider->GetPosition());
 
-    
+    //現在は立方体のステージしか考えていないので直接minとmaxを取ってしまう
+    m_minPos = m_collider->GetParam().min;
+    m_maxPos = m_collider->GetParam().max;
+
     auto device = m_pGameContext->deviceResources.GetD3DDevice();
 
     // ベーシックエフェクトの作成

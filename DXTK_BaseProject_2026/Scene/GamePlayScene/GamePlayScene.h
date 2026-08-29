@@ -17,6 +17,7 @@
 #include "Player.h"
 #include "ItsukiLib/ColliderRenderer.h"
 #include"ItsukiLib/CollisionChecker.h"
+#include"ItsukiLib/ColliderFactory.h"
 
 #include"Manager/StageManager.h"
 #include"Manager/OrbManager.h"
@@ -81,8 +82,8 @@ private:
 	// ウインドウサイズ変更時に呼び出される関数
     void OnWindowSizeChanged(GameContext& gameContext) override;
 
-	//当った際の挙動を行う関数
-    void CheckCollider(Itsuki::SphereCollider* sphere, Itsuki::BoxCollider* aabb);
+	//当った際に当る前の状態に戻す関数（現在は球と立方体の形のみに適応）
+    void ResolveCollision(Itsuki::Collider* col1, Itsuki::Collider* col2);
 
 	// モデルハンドル
     std::unique_ptr<DirectX::Model> m_model;
@@ -164,10 +165,13 @@ private:
 	//当たり判定同氏がぶつかったか判定するもの
 	std::unique_ptr<Itsuki::CollisionChecker> m_collisionChecker;
 
+	//当たり判定Factory
+
 	//一人称のカメラ
     Itsuki::NormalCamera m_camera;
 
-	//
+	//BGM
 	SuzukiLib::Audio::AudioHandle m_bgmHandle;
+
 };
 

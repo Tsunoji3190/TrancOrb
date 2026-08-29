@@ -1,18 +1,15 @@
 #include "pch.h"
 #include "BoxCollider.h"
 
-
-
-Itsuki::BoxCollider::BoxCollider(DirectX::SimpleMath::Vector3 min,
-                                 DirectX::SimpleMath::Vector3 max,
-								 DirectX::SimpleMath::Vector3 pos) 
-	: m_dimensions_min{min}
-	,m_dimensions_max{max}
+Itsuki::BoxCollider::BoxCollider(Itsuki::CollisionParams param) 
+    : Collider{param},
+    m_dimensions_max{param.max},
+    m_dimensions_min{param.min}
 {
-	    // 当たり判定の種類を箱にする
     m_KindShape = SHAPE::BOX;
 
-	SetPosition(pos);
+    SetPosition(param.pos);
+
 }
 
 void Itsuki::BoxCollider::Render()

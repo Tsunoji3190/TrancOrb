@@ -194,11 +194,11 @@
     <ClInclude Include="ItsukiLib\Camera\CameraBase.h" />
     <ClInclude Include="ItsukiLib\Camera\NormalCamera.h" />
     <ClInclude Include="ItsukiLib\Collider.h" />
+    <ClInclude Include="ItsukiLib\ColliderFactory.h" />
     <ClInclude Include="ItsukiLib\ColliderRenderer.h" />
     <ClInclude Include="ItsukiLib\CollisionChecker.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
-    <ClInclude Include="ItsukiLib\Physics.h" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
     <ClInclude Include="Scene\GamePlayScene\Manager\OrbManager.h" />
     <ClInclude Include="Scene\GamePlayScene\Manager\StageManager.h" />

@@ -12,33 +12,33 @@ bool CollisionChecker::CheckCollision(const Collider& collider1, const Collider&
 
     switch (collider1.GetShape())
     {
-        case SHAPE::BOX:
+        case Itsuki::SHAPE::BOX:
 
-            if (collider2.GetShape() == SHAPE::BOX)
+            if (collider2.GetShape() == Itsuki::SHAPE::BOX)
             {
                 return BoxCheck(collider1,collider2);
             }
-            else if (collider2.GetShape() == SHAPE::SPHERE)
+            else if (collider2.GetShape() == Itsuki::SHAPE::SPHERE)
             {
                 return BoxSphireCheck(collider1, collider2);
             }
 
             break;
 
-        case SHAPE::SPHERE:
+        case Itsuki::SHAPE::SPHERE:
 
-            if (collider2.GetShape() == SHAPE::BOX)
+            if (collider2.GetShape() == Itsuki::SHAPE::BOX)
             {
                 return BoxSphireCheck(collider2, collider1);
 
             }
-            else if (collider2.GetShape() == SHAPE::SPHERE)
+            else if (collider2.GetShape() == Itsuki::SHAPE::SPHERE)
             {
                 return SphireCheck(collider1, collider2);
             }
             break;
 
-        case SHAPE::NONE:
+        case Itsuki::SHAPE::NONE:
 
         
             return false;

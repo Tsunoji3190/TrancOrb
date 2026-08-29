@@ -7,18 +7,13 @@ class Orb:public Obj
 public:
 
     Orb(GameContext* pGameContext, DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>* pPrimitiveBatch,
-        ID3D11ShaderResourceView* pTexture);
+        ID3D11ShaderResourceView* pTexture, std::unique_ptr<Itsuki::Collider> collider);
 
     void Update(float elapsedTime) override;
 
     void Render(ID3D11DeviceContext* pContext, const DirectX::SimpleMath::Matrix& view,
                 const DirectX::SimpleMath::Matrix& proj, const DirectX::SimpleMath::Vector3& eye,
                 const DirectX::SimpleMath::Vector3& target);
-
-    Itsuki::SphereCollider* GetCollider()
-    {
-        return m_collider.get();
-    }
 
     void SetRandom();
 
@@ -62,8 +57,6 @@ private:
     // 入力レイアウト
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
-    // 当たり判定
-    std::unique_ptr<Itsuki::SphereCollider> m_collider;
 
     //オーブの価値
     int m_OrbValue = 1;

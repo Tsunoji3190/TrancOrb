@@ -26,25 +26,24 @@ namespace Itsuki
 
 		void Render(ID3D11DeviceContext* pContext,
 			const DirectX::SimpleMath::Matrix& view,
-            const DirectX::SimpleMath::Matrix& proj,
-			Collider& collider);
+            const DirectX::SimpleMath::Matrix& proj, Itsuki::Collider& collider);
 
-		void Render(
+	private:
+
+		void SphereRender(
 			ID3D11DeviceContext* pContext,
 			const DirectX::SimpleMath::Matrix& view,
-			const DirectX::SimpleMath::Matrix& proj,
-			SphereCollider& sphereCollider
+			const DirectX::SimpleMath::Matrix& proj, Itsuki::Collider& collider
 		);
 
-		void Render(ID3D11DeviceContext* pContext,
+		void BoxRender(ID3D11DeviceContext* pContext,
 			const DirectX::SimpleMath::Matrix& view,
-            const DirectX::SimpleMath::Matrix& proj,
-			BoxCollider& boxCollider);
+            const DirectX::SimpleMath::Matrix& proj, Itsuki::Collider& collider);
 
 	private:
 
 		//球に使われる分割
-		static constexpr int SEGMENTS = 16;
+		static constexpr int SEGMENTS = 12;
 
 	private:
 

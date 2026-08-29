@@ -4,7 +4,8 @@
 using namespace DirectX;
 
 Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix& view,
-               const DirectX::SimpleMath::Matrix& projection, DirectX::Model* pModel)
+               const DirectX::SimpleMath::Matrix& projection, DirectX::Model* pModel,
+               std::unique_ptr<Itsuki::Collider> collider)
     : m_gameContext(gameContext)
     , m_view(view)
     , m_projection(projection)
@@ -16,8 +17,8 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_facingAngleRad(.0f,.0f,.0f)
     , m_isGround{true}
 {
-	//半径の情報を入れておく
-	m_collider = std::make_unique<Itsuki::SphereCollider>(0.3);
+    //当たり判定を設定する
+    SetCollider(std::move(collider));
 
     m_collider->SetPosition(m_position);
 
