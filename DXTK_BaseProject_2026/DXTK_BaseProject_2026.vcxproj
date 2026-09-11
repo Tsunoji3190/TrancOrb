@@ -197,6 +197,8 @@
     <ClInclude Include="ItsukiLib\ColliderFactory.h" />
     <ClInclude Include="ItsukiLib\ColliderRenderer.h" />
     <ClInclude Include="ItsukiLib\CollisionChecker.h" />
+    <ClInclude Include="ItsukiLib\SkillNode.h" />
+    <ClInclude Include="ItsukiLib\SkillTree.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
@@ -208,7 +210,7 @@
     <ClInclude Include="Common\StepTimer.h" />
     <ClInclude Include="Scene\BaseScene\BaseScene.h" />
     <ClInclude Include="Scene\GamePlayScene\GamePlayScene.h" />
-    <ClInclude Include="Scene\GamePlayScene\Obj.h" />
+    <ClInclude Include="ItsukiLib\Obj.h" />
     <ClInclude Include="Scene\GamePlayScene\Orb.h" />
     <ClInclude Include="Scene\GamePlayScene\Status.h" />
     <ClInclude Include="Scene\SceneId.h" />

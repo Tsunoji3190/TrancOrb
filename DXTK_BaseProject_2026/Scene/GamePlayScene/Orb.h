@@ -1,5 +1,5 @@
 #pragma once
-#include"Obj.h"
+#include"../../ItsukiLib/Obj.h"
 #include "../../GameContext.h"
 
 class Orb:public Obj

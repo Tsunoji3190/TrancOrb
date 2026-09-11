@@ -36,7 +36,7 @@ public:
             Itsuki::ColliderFactory& colF = Itsuki::ColliderFactory::GetRefInstance();
 
         /// 球
-        Itsuki::CollisionParams orbCol = {{0.0f, 0.0f, .0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.5}};
+        Itsuki::CollisionParams orbCol = {{0.0f, 0.0f, .0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
 
 
         std::unique_ptr<Orb> orb = std::make_unique<Orb>(m_pGameContext, m_pPrimitiveBatch, m_pTexture,
@@ -46,13 +46,13 @@ public:
     }
 
 
-    //指定されたステージを返す
+    //指定されたオーブを返す
     Orb* GetOrb(int Index)
     {
         return m_pOrbs[Index].get();
     }
 
-    //ステージの数を返す
+    //オーブの数を返す
     int GetNumOrbs()
     {
         return m_pOrbs.size();
@@ -74,7 +74,7 @@ public:
 private:
 
     //オーブの数
-    static constexpr int FIRST_ORB = 5;
+    static constexpr int FIRST_ORB = 1;
 
     // ゲームコンテキストへのポインタ
     GameContext* m_pGameContext;
@@ -85,7 +85,7 @@ private:
     // テクスチャへのポインタ
     ID3D11ShaderResourceView* m_pTexture;
 
-    //ステージを格納する箱
+    //オーブを格納する箱
     std::vector<std::unique_ptr<Orb>> m_pOrbs = {};
 
 };

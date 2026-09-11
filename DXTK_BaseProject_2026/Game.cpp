@@ -12,6 +12,7 @@
 extern void ExitGame() noexcept;
 
 using namespace DirectX;
+using CollFactory = Itsuki::ColliderFactory;
 
 using Microsoft::WRL::ComPtr;
 
@@ -26,6 +27,8 @@ Game::Game() noexcept(false)
     //   Add DX::DeviceResources::c_AllowTearing to opt-in to variable rate displays.
     //   Add DX::DeviceResources::c_EnableHDR for HDR10 display.
     m_deviceResources->RegisterDeviceNotify(this);
+
+
 }
 
 // Initialize the Direct3D resources required to run.

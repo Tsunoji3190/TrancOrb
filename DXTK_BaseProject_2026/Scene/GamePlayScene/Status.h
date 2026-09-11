@@ -37,7 +37,7 @@ public:
 
 private:
 
-    int FIRST_TIMER = 10;
+    int FIRST_TIMER = 1000;
 
     //ゲームコンテキスト
     GameContext& m_gameContext;

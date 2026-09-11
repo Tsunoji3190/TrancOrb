@@ -1,5 +1,5 @@
 #pragma once
-#include"Obj.h"
+#include "../../ItsukiLib/Obj.h"
 
 #include"ItsukiLib/SphereCollider.h"
 #include "GameContext.h"
@@ -136,9 +136,17 @@ private:
     // 向きを作成
     SimpleMath::Vector3 m_direction = SimpleMath::Vector3::Zero;
 
-
     //設置しているかどうか判定
     bool m_isGround;
+
+    //プレイヤーが持っているスキル
+    enum struct SkillID
+    {
+        Dash,   //走れるように
+        Vacuum, //存在するオーブをすべて吸い込む
+        LuckGet, // たまに価値が２倍になる
+
+    };
 
 };
 

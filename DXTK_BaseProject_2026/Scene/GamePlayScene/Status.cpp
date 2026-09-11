@@ -152,7 +152,7 @@ void Status::Update(float& timer)
 
 
         // オーブの数がSteakを超えていないなら音を出す
-        if (!IsAboveSteak(1))
+        if (!IsAboveSteak(200))
         {
             m_gameContext.audio.PlayOneShot("Stop");
 

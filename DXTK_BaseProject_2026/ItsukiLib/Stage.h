@@ -1,7 +1,7 @@
 #pragma once
 
 #include"ItsukiLib/BoxCollider.h"
-#include"../Scene/GamePlayScene/Obj.h"
+#include "Obj.h"
 #include <memory>
 #include <GameContext.h>
 

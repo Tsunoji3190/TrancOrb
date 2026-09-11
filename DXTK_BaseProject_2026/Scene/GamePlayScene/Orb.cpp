@@ -96,8 +96,8 @@ void Orb::SetRandom()
     std::mt19937 gen(rd());
 
     // 1〜100の整数を生成する分布
-    std::uniform_real_distribution<float> distXZ(-2, 2);
-    std::uniform_real_distribution<float> distY(1, 3);
+    std::uniform_real_distribution<float> distXZ(-3, 3);
+    std::uniform_real_distribution<float> distY(0.5, 1);
 
     // 乱数を10個生成
     DirectX::SimpleMath::Vector3 Pos = {distXZ(gen), distY(gen), distXZ(gen)};

@@ -10,7 +10,7 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_view(view)
     , m_projection(projection)
     , m_pModel(pModel)
-    , m_position(0,1.0f,2.0f) 
+    , m_position(collider->GetPosition()) 
     , m_velocity(.0f,.0f,.0f)
     , m_speed(MOVE_SPEED)
     , m_jump(JUMP_SPEED)
@@ -61,7 +61,7 @@ void Player::Update(float elapsedTime)
     // 回転行列を作成する
     SimpleMath::Matrix rotY = SimpleMath::Matrix::CreateRotationY(m_facingAngleRad.y);
 
-
+    //対応したキーごとに移動する方向を変える
     if (kb.W)
         m_direction += SimpleMath::Vector3::Forward;
     if (kb.S)
@@ -71,6 +71,8 @@ void Player::Update(float elapsedTime)
     if (kb.D)
         m_direction += SimpleMath::Vector3::Right;
 
+
+    //向きを取得して移動させる
     if (m_direction.LengthSquared() > 0)
     {
         m_direction.Normalize();
@@ -83,6 +85,7 @@ void Player::Update(float elapsedTime)
     //動かないなら
     if (!(kb.W || kb.S || kb.A || kb.D))
     {
+        //重力以外の速度を止める
         m_velocity = {0, m_velocity.y, 0};
     }
 
@@ -96,14 +99,17 @@ void Player::Update(float elapsedTime)
     }
     else if (m_velocity.y>=0 && !m_isGround)
     {
+        //落下させる
         m_velocity.y -= 0.05 * elapsedTime;
     }
 
-
+    //位置の計算を行う
     m_position += m_velocity - (SimpleMath::Vector3(0, Itsuki::Physics::GRAVITY, 0) * elapsedTime);    
 
+    //一定のところまで落下したら
     if (m_position.y <= -10)
     {
+        //初期位置へ戻す
         m_position = {0, 1, 0};
     }
 

@@ -49,8 +49,12 @@ namespace Itsuki
         //当たり判定の追加
         void AddCollider(SHAPE shape)
         {
-            //すでに何か格納されていたら止める
-            assert(m_colliders[shape] == nullptr && "既にあります！");
+            ////すでに何か格納されていたら止める
+            //assert(m_colliders[shape] == nullptr && "既にあります！");
+            if (m_colliders[shape] != nullptr)
+            {
+                return;
+            }
 
             m_colliders[shape] = [](Itsuki::CollisionParams param) { return std::make_unique<Col>(param); };
         }

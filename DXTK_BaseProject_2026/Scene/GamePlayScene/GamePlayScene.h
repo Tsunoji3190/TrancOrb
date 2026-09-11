@@ -46,10 +46,8 @@ private:
 
 	static constexpr int FIRST_TIMER = 10;
 
-	static constexpr int FIRST_ORB = 5;
+	static constexpr int FIRST_ORB = 1;
 
-	
-	
 private:
 
 	// ビュー行列
@@ -155,7 +153,7 @@ private:
 	//----------やむを得ず----------
 
     // 時間制限
-    float m_timer = 10;
+    float m_timer = 1000;
 
 	//----------やむを得ず----------
 
@@ -165,8 +163,6 @@ private:
 	//当たり判定同氏がぶつかったか判定するもの
 	std::unique_ptr<Itsuki::CollisionChecker> m_collisionChecker;
 
-	//当たり判定Factory
-
 	//一人称のカメラ
     Itsuki::NormalCamera m_camera;
 
@@ -174,4 +170,3 @@ private:
 	SuzukiLib::Audio::AudioHandle m_bgmHandle;
 
 };
-

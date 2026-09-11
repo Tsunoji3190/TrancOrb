@@ -223,16 +223,16 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
     //箱の座標
     //床
-    Itsuki::CollisionParams floar1 = {{.0f, 0.0f, .0f}, {-2.5f, -11.0f, -2.5f}, {2.5f, .0f, 2.5f}, {0}};
+    Itsuki::CollisionParams floar1 = {{.0f, 0.0f, .0f}, {-4.0f, -11.0f, -4.0f}, {4.0f, .0f, 4.0f}, {0}};
     Itsuki::CollisionParams floar2 = {{8.0f, 0.0f, .0f}, {-1.5f, -11.0f, -1.5f}, {1.5f, .0f, 1.5f}, {0}};
     Itsuki::CollisionParams floar3 = {{-8.0f, 5.0f, .0f}, {-1.5f, -16.0f, -1.5f}, {1.5f, .0f, 1.5}, {0}};
     Itsuki::CollisionParams floar4 = {{.0f, -11.0f, .0f}, {-10.0f, -.1f, -10.0f}, {10.0f, .0f, 10.0}, {0}};
 
     //壁
-    Itsuki::CollisionParams wall1 = {{-10.0f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 10.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall2 = {{10.0f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 10.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -10.0f}, {-10.0f, -11.0f, -.1f}, {10.0f, 10.0f, .0f}, {0}};
-    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 10.0f}, {-10.0f, -11.0f, .0f}, {10.0f, 10.0f, .1f}, {0}};
+    Itsuki::CollisionParams wall1 = {{-4.0f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 10.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall2 = {{4.0f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 10.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.0f}, {-10.0f, -11.0f, -.1f}, {10.0f, 10.0f, .0f}, {0}};
+    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.0f}, {-10.0f, -11.0f, .0f}, {10.0f, 10.0f, .1f}, {0}};
 
     ///プレイヤー
     Itsuki::CollisionParams player = {{0.0f, 0.0f, .0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
@@ -253,9 +253,9 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_stageManager = std::make_unique<StageManager>(&gameContext, m_CprimitiveBatch.get());
     //ステージの追加
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX,floar1));
-    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar2));
-    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar3));
-    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar4));
+    //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar2));
+    //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar3));
+    //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar4));
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall1));
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall2));
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall3));
