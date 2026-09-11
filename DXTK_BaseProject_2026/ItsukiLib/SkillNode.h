@@ -1,12 +1,17 @@
 #pragma once
 #include <functional>
+#include <string>
+#include <memory>
+#include <Windows.h>
+#include <GameContext.h>
+#include <WICTextureLoader.h>
 
 namespace Itsuki
 {
     class SkillNode
     {
     public:
-        SkillNode() 
+        SkillNode()
             : m_parentNode{nullptr},
             m_skillUp{},
             m_steak{0},
@@ -24,12 +29,27 @@ namespace Itsuki
         }
 
 
-        void SetNode(SkillNode* parent, std::function<void()> skillup,int steak,wchar_t skillimage)
+        void SetNode(GameContext & gameContext,SkillNode * parent, std::function<void()> skillup, int steak,
+                     std::wstring skillimage)
         {
             m_parentNode = parent;
             m_skillUp = skillup;
             m_steak = steak;
             m_skillImage = skillimage;
+
+            // DirectX3Dのデバイスを取得する
+            auto device = gameContext.deviceResources.GetD3DDevice();
+
+            // DirectX3Dのデバイスコンテキストを取得する
+            auto context = gameContext.deviceResources.GetD3DDeviceContext();
+
+            m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
+            m_states = std::make_unique<DirectX::CommonStates>(device);
+
+            DirectX::CreateWICTextureFromFile(device, m_skillImage.c_str(), nullptr,
+                                              m_texture.ReleaseAndGetAddressOf());
+
+
         }
 
         //取得済みかどうか設定する
@@ -57,7 +77,7 @@ namespace Itsuki
         }
 
         //画像名を返す
-        wchar_t GetImage()
+        std::wstring GetImage()
         {
             return m_skillImage;
         }
@@ -80,11 +100,22 @@ namespace Itsuki
         int m_steak;
 
         //スキルの画像名
-        wchar_t m_skillImage;
-
+        std::wstring m_skillImage;
 
         //このスキルが既に取得済みか
         bool m_isGet;
+
+        //当たり判定の大きさ
+        RECT HitDetection;
+
+        //スプライトバッヂ
+        std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+
+        //コモンステート
+        std::unique_ptr<DirectX::CommonStates> m_states;
+
+        //画像
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
     };
 
 }

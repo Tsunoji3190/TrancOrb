@@ -3,7 +3,16 @@
 
 #include"ItsukiLib/SphereCollider.h"
 #include "GameContext.h"
+#include <unordered_set>
 
+// プレイヤーが持っているスキル
+enum struct SkillID
+{
+    Dash = 0, // 走れるように
+    Vacuum,   // 存在するオーブをすべて吸い込む
+    FirstGet,  // たまに価値が２倍になる
+
+};
 
 class Player :public Obj
 {
@@ -88,7 +97,6 @@ public:
         return m_jump;
     }
 
-
 private:
 
     //X軸回転の最大までむける角度
@@ -139,14 +147,7 @@ private:
     //設置しているかどうか判定
     bool m_isGround;
 
-    //プレイヤーが持っているスキル
-    enum struct SkillID
-    {
-        Dash,   //走れるように
-        Vacuum, //存在するオーブをすべて吸い込む
-        LuckGet, // たまに価値が２倍になる
-
-    };
-
+    // 解放済みスキル一覧
+    std::unordered_set<SkillID> m_unlockedSkills; 
 };
 
