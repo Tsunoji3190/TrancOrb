@@ -25,6 +25,7 @@
 
 #include"ItsukiLib/Camera/NormalCamera.h"
 
+
 class GamePlayScene : public Imase::SceneBase<SceneId, GameContext>
 {
 public:

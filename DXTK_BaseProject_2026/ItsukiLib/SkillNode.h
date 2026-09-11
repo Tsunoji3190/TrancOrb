@@ -25,7 +25,11 @@ namespace Itsuki
 
         void Render()
         {
+            m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
+            m_spriteBatch->Draw(m_texture.Get(), DirectX::XMFLOAT2(100, 100));
+
+            m_spriteBatch->End();
         }
 
 

@@ -39,12 +39,6 @@ namespace Itsuki
             //
             m_node[13]->SetNode(gameContext, nullptr, [this] { GetSkill(0); }, 50, L"Resources/Textures/テストオーブ.png");
         }
-        
-        SkillNode* GetNode(int num)
-        {
-            return m_node[num];
-        }
-
 
         //オーブの数の追加
         void AddOrb(int num);

@@ -279,6 +279,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
     m_status = std::make_unique<Status>(gameContext, m_player.get(), m_orbManager.get());
 
+
 }
 
 
