@@ -79,7 +79,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
             //音を鳴らす
             gameContext.audio.PlayOneShot("GetOrb");
             // 持ってるオーブの数の追加
-            m_status->AddOrbCount(pOrb->GetOrbValue());
+            m_status->AddOrbCount(m_orbManager->GetOrbValue());
             //位置を変更する
             pOrb->SetRandom();
 

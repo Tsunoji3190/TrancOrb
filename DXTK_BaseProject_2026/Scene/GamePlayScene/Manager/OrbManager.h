@@ -14,7 +14,8 @@ public:
         : m_pGameContext{pGameContext}
         , m_pPrimitiveBatch{pPrimitiveBatch}
         , m_pTexture{pTexture}
-        , m_pOrbs{}
+        , m_pOrbs{},
+          m_orbValues{1}
     { 
         
         for (size_t i = 0; i < firstorb; i++)
@@ -71,6 +72,18 @@ public:
                   { return (a->GetCameraDistance() > b->GetCameraDistance()); });
     }
 
+    // オーブの価値を追加する
+    void SetOrbValue(int value)
+    {
+        m_orbValues += value;
+    }
+
+    // オーブの価値を返す
+    int GetOrbValue()
+    {
+        return m_orbValues;
+    }
+
 private:
 
     //オーブの数
@@ -88,6 +101,8 @@ private:
     //オーブを格納する箱
     std::vector<std::unique_ptr<Orb>> m_pOrbs = {};
 
+    //オーブの基本価格
+    int m_orbValues;
 };
 
 

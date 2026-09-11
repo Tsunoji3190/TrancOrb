@@ -89,13 +89,7 @@ void Status::Update(float& timer)
         m_OrbCount -= m_OrbValueSteak;
 
         //オーブの価値を追加する
-        for (size_t i = 0; i < m_orbManager->GetNumOrbs(); i++)
-        {
-            auto pOrb = m_orbManager->GetOrb(i);
-
-            pOrb->AddOrbValue(m_OrbValueAdd);
-
-        }
+        m_orbManager->SetOrbValue(1);
 
         //レベルを上げる
         m_OrbValueLevel++;

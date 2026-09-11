@@ -17,18 +17,6 @@ public:
 
     void SetRandom();
 
-    //オーブの価値を追加する 
-    void AddOrbValue(int value)
-    {
-        m_OrbValue += value;
-    }
-
-    //オーブの価値を返す
-    int GetOrbValue()
-    {
-        return m_OrbValue;
-    }
-
     //カメラとの距離を設定する
     void SetCameraDistance(DirectX::SimpleMath::Vector3& eyePosition)
     {
@@ -40,6 +28,7 @@ public:
     {
         return m_cameraDistance;
     }
+
 
 private:
     // ゲームコンテキストへのポインタ
@@ -57,10 +46,9 @@ private:
     // 入力レイアウト
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
-
-    //オーブの価値
-    int m_OrbValue = 1;
-
     //カメラとの距離
     float m_cameraDistance;
+
+    // オーブの価値
+    int m_Value = 1;
 };
