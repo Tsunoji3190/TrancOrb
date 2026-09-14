@@ -77,7 +77,7 @@ namespace Itsuki
     private:
 
         //スキルノードを数分入れる
-        std::vector<SkillNode*> m_node;
+        SkillNode* m_node[15];
 
         //プレイヤー
         Player& ref_player;

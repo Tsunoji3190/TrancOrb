@@ -27,7 +27,7 @@ namespace Itsuki
         {
             m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
-            m_spriteBatch->Draw(m_texture.Get(), DirectX::XMFLOAT2(100, 100));
+            m_spriteBatch->Draw(m_texture.Get(), DirectX::XMFLOAT2(100, 100), 0, Colors::White, 0, {0, 0}, 0.8);
 
             m_spriteBatch->End();
         }
@@ -54,6 +54,18 @@ namespace Itsuki
                                               m_texture.ReleaseAndGetAddressOf());
 
 
+            // 画像のサイズ取得
+            Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+            m_texture->GetResource(resource.GetAddressOf());
+
+            //
+            Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D;
+            if (SUCCEEDED(resource.As(&tex2D)))
+            {
+                D3D11_TEXTURE2D_DESC desc = {};
+                tex2D->GetDesc(&desc);
+                m_textureSize = DirectX::XMUINT2(desc.Width, desc.Height);
+            }
         }
 
         //取得済みかどうか設定する
@@ -120,6 +132,12 @@ namespace Itsuki
 
         //画像
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
+
+        // 画像サイズ
+        DirectX::XMUINT2 m_textureSize;
+
+        //位置
+        DirectX::XMFLOAT2 m_position;
     };
 
 }

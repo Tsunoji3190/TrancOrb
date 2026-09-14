@@ -69,6 +69,7 @@
     <ClInclude Include="ItsukiLib\ColliderFactory.h" />
     <ClInclude Include="ItsukiLib\SkillNode.h" />
     <ClInclude Include="ItsukiLib\SkillTree.h" />
+    <ClInclude Include="ItsukiLib\Button.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

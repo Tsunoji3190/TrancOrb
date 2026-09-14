@@ -22,7 +22,6 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
 
     m_collider->SetPosition(m_position);
 
-    Mouse::Get().SetMode(Mouse::MODE_RELATIVE);
 }
 
 Player::~Player()
@@ -36,6 +35,7 @@ void Player::Initialze()
 
 void Player::Update(float elapsedTime)
 {
+    Mouse::Get().SetMode(Mouse::MODE_RELATIVE);
 
 
     auto kb = Keyboard::Get().GetState();

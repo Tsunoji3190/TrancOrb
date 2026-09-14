@@ -45,6 +45,8 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //タイマーがゼロになったら
     if (m_timer <= 0)
     {
+        Mouse::Get().SetMode(Mouse::MODE_ABSOLUTE);
+
         //ステータスを表示する
         m_status->Update(m_timer);
 

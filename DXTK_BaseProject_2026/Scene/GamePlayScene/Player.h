@@ -106,10 +106,10 @@ private:
     static constexpr float ROTATE_SPEED_DEG = 100.0f;
 
     // 移動の速さ（１秒間あたりの移動量）
-    static constexpr float MOVE_SPEED = 2.0f;
+    static constexpr float MOVE_SPEED = 1.f;
     
     //ジャンプの加速度
-    static constexpr float JUMP_SPEED = 0.1f;
+    static constexpr float JUMP_SPEED = 0.09f;
 
 private:
 

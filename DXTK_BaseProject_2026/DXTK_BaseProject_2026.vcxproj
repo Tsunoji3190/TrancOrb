@@ -191,6 +191,7 @@
     <ClInclude Include="ImaseLib\GridFloor.h" />
     <ClInclude Include="ImaseLib\SceneManager.h" />
     <ClInclude Include="ItsukiLib\BoxCollider.h" />
+    <ClInclude Include="ItsukiLib\Button.h" />
     <ClInclude Include="ItsukiLib\Camera\CameraBase.h" />
     <ClInclude Include="ItsukiLib\Camera\NormalCamera.h" />
     <ClInclude Include="ItsukiLib\Collider.h" />
