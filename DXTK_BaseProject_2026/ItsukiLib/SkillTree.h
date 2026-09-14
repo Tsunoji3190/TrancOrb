@@ -45,88 +45,88 @@ namespace Itsuki
 
             // ノードを作っていく
             m_node[0]->SetNode(
-                gameContext, nullptr, {width/2,height/2},[this] { AddOrb(1); }, 1, L"Resources/Textures/テストオーブ.png");
+                gameContext, nullptr, {width/2-20,height/2-20},[this] { AddOrb(1); }, 1, L"Resources/Textures/追加六角型.png");
 
             //
             m_node[1]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{100, 100}},
-                [this] { AddOrbCost(1); }, 10, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{80, 80}},
+                [this] { AddOrbCost(1); }, 10, L"Resources/Textures/バリュー六角型.png");
 
             m_node[2]->SetNode(
-                gameContext, m_node[1], {m_node[1]->GetPosition() + SimpleMath::Vector2{100, 100}},
-                [this] { AddOrbCost(1); }, 20, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[1], {m_node[1]->GetPosition() + SimpleMath::Vector2{80, 80}},
+                [this] { AddOrbCost(1); }, 20, L"Resources/Textures/バリュー六角型.png");
 
             m_node[3]->SetNode(
-                gameContext, m_node[2], {m_node[1]->GetPosition() + SimpleMath::Vector2{100, 100}},
-                [this] { AddOrbCost(1); }, 50, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[2], {m_node[2]->GetPosition() + SimpleMath::Vector2{80, 80}},
+                [this] { AddOrbCost(1); }, 50, L"Resources/Textures/バリュー六角型.png");
 
             //
             m_node[4]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-100, 100}},
-                [this] { Magnet(0.2); }, 10, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-80, 80}},
+                [this] { Magnet(0.2); }, 10, L"Resources/Textures/マグネ六角型.png");
 
             m_node[5]->SetNode(
-                gameContext, m_node[4], {m_node[4]->GetPosition() + SimpleMath::Vector2{-100, 100}},
-                [this] { Magnet(0.2); }, 15, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[4], {m_node[4]->GetPosition() + SimpleMath::Vector2{-80, 80}},
+                [this] { Magnet(0.2); }, 15, L"Resources/Textures/マグネ六角型.png");
 
             m_node[6]->SetNode(
-                gameContext, m_node[5], {m_node[5]->GetPosition() + SimpleMath::Vector2{-100, 100}},
-                [this] { Magnet(0.2); }, 20, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[5], {m_node[5]->GetPosition() + SimpleMath::Vector2{-80, 80}},
+                [this] { Magnet(0.2); }, 20, L"Resources/Textures/マグネ六角型.png");
 
             //
             m_node[7]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{100, -100}},
-                [this] { IntervalDecrease(0.5); }, 10, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{80, -80}},
+                [this] { IntervalDecrease(0.5); }, 10, L"Resources/Textures/インター六角型.png");
 
             m_node[8]->SetNode(
-                gameContext, m_node[7], {m_node[7]->GetPosition() + SimpleMath::Vector2{100, -100}},
-                [this] { IntervalDecrease(0.5); }, 50, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[7], {m_node[7]->GetPosition() + SimpleMath::Vector2{80, -80}},
+                [this] { IntervalDecrease(0.5); }, 50, L"Resources/Textures/インター六角型.png");
 
             m_node[9]->SetNode(
-                gameContext, m_node[8], {m_node[8]->GetPosition() + SimpleMath::Vector2{100, -100}},
-                [this] { IntervalDecrease(0.5); }, 100, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[8], {m_node[8]->GetPosition() + SimpleMath::Vector2{80, -80}},
+                [this] { IntervalDecrease(0.5); }, 100, L"Resources/Textures/インター六角型.png");
 
             //
             m_node[10]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-100, -100}},
-                [this] { Time(5); }, 10, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-80, -80}},
+                [this] { Time(5); }, 10, L"Resources/Textures/タイム六角型.png");
             m_node[11]->SetNode(
-                gameContext, m_node[10], {m_node[10]->GetPosition() + SimpleMath::Vector2{-100, -100}},
-                [this] { Time(10); }, 100, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[10], {m_node[10]->GetPosition() + SimpleMath::Vector2{-80, -80}},
+                [this] { Time(10); }, 100, L"Resources/Textures/タイム六角型.png");
             m_node[12]->SetNode(
-                gameContext, m_node[11], {m_node[11]->GetPosition() + SimpleMath::Vector2{-100, -100}},
-                [this] { Time(15); }, 1500, L"Resources/Textures/テストオーブ.png");
+                gameContext, m_node[11], {m_node[11]->GetPosition() + SimpleMath::Vector2{-80, -80}},
+                [this] { Time(15); }, 1500, L"Resources/Textures/タイム六角型.png");
 
             //
             m_node[13]->SetNode(
-                gameContext, nullptr, {50, 50}, [this] { GetSkill(0); }, 100, L"Resources/Textures/テストオーブ.png");
+                gameContext, nullptr, {50, 50}, [this] { GetSkill(0); }, 100, L"Resources/Textures/テスト六角型.png");
 
         }
 
-        //オーブの数の追加
+        //六角型の数の追加
         void AddOrb(int num)
         {
-            //num分だけオーブを追加する
+            //num分だけ六角型を追加する
             for (size_t i = 0; i < num; i++)
             {
                 ref_orbManager.AddOrb();
             }
         }
 
-        //オーブの価値増加
+        //六角型の価値増加
         void AddOrbCost(int num)
         {
 
             ref_orbManager.SetOrbValue(num);
         }
 
-        //オーブを取得できる範囲増加
+        //六角型を取得できる範囲増加
         void Magnet(float num)
         {
 
         }
 
-        //価値が2倍オーブの追加
+        //価値が2倍六角型の追加
         void LuckOrb(float num)
         {
 
@@ -157,7 +157,7 @@ namespace Itsuki
 
         }
 
-        //オーブのインターバル減少
+        //六角型のインターバル減少
         void IntervalDecrease(float time)
         {
 
@@ -176,7 +176,7 @@ namespace Itsuki
         //プレイヤー
         Player& ref_player;
 
-        //オーブマネージャー
+        //六角型マネージャー
         OrbManager& ref_orbManager;
     };
 

@@ -46,18 +46,24 @@ namespace Itsuki
 
         void Render()
         {
-            m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
+            //親がそもそもないか親が解放されていたら
+            if (m_parentNode == nullptr || m_parentNode->GetIsGet())
+            {
 
-            m_spriteBatch->Draw(m_texture.Get(), m_position, 0, Colors::White, 0, {0, 0}, IMAGE_MAGNI);
+                m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
-            m_spriteBatch->End();
+                m_spriteBatch->Draw(m_texture.Get(), m_position, 0, Colors::White, 0, {0, 0}, IMAGE_MAGNI);
+
+                m_spriteBatch->End();
+
+            }
 
         }
 
 
         void SetNode(GameContext& gameContext, SkillNode* parent,
                      DirectX::SimpleMath::Vector2 position, std::function<void()> skillup, int steak=10,
-                     std::wstring skillimage = L"Resources/Textures/テストオーブ.png")
+                     std::wstring skillimage = L"Resources/Textures/テスト六角型.png")
         {
 
             //ノードの変数を設定する
