@@ -1,25 +1,47 @@
 #pragma once
 
-class Button
+namespace Itsuki
 {
-public:
+    class Button
+    {
+    public:
+        // 当たり判定の大きさを設定する
+        void SetRect(DirectX::SimpleMath::Vector2 size)
+        {
+            m_size = size;
+        }
 
-	//当たり判定の大きさを設定する
-    void SetRect(DirectX::XMUINT2 size)
-	{
-        m_size = size;
-	}
-	//画像の大きさを当たり判定として設定する
-    void SetRectImage();
+        //位置を設定する
+        void Setpositon(DirectX::SimpleMath::Vector2 position)
+        {
+            m_position = position;
+        }
 
-	//クリックされた瞬間
-	bool IsPushed()
-	{
-	}
+        // クリックされた瞬間
+        bool IsPushed(DirectX::Mouse::State mouse)
+        {
+            if (mouse.leftButton)
+            {
+                auto mx = mouse.x;
+                auto my = mouse.y;
 
-private:
+                auto width = m_size.x + m_position.x;
+                auto height = m_size.y + m_position.y;
 
-	DirectX::XMUINT2 m_size;
+                //ボタンの範囲内で押されていたらtrueを返す
+                return (mx < width && my < height && mx > m_position.x && my > m_position.y) ? true : false;
 
+            }
 
-};
+            return false;
+        }
+
+    private:
+
+        //大きさ
+        DirectX::SimpleMath::Vector2 m_size;
+
+        //位置
+        DirectX::SimpleMath::Vector2 m_position;
+    };
+}

@@ -70,6 +70,7 @@
     <ClInclude Include="ItsukiLib\SkillNode.h" />
     <ClInclude Include="ItsukiLib\SkillTree.h" />
     <ClInclude Include="ItsukiLib\Button.h" />
+    <ClInclude Include="Scene\NodeTestScene\NodeTestScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -108,6 +109,7 @@
     <ClCompile Include="SuzukiLib\Audio\Internal\DirectXTKAudioResourceManager.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Status.cpp" />
     <ClCompile Include="Scene\ClearScene\ClearScene.cpp" />
+    <ClCompile Include="Scene\NodeTestScene\NodeTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

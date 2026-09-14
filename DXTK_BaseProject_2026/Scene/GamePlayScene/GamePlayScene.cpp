@@ -49,7 +49,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
 
         //ステータスを表示する
         m_status->Update(m_timer);
-
+        
         return;
     }
 

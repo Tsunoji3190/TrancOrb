@@ -5,6 +5,7 @@
 #include <Windows.h>
 #include <GameContext.h>
 #include <WICTextureLoader.h>
+#include "Button.h"
 
 namespace Itsuki
 {
@@ -23,13 +24,30 @@ namespace Itsuki
         {
         }
 
+        //更新関数
+        void Update(float elapsedtime, GameContext& gameContext)
+        {
+            // マウスの取得
+            auto mouse = Mouse::Get().GetState();
+
+            //まだ解放されておらずボタンが押されたら
+            if (m_button.IsPushed(mouse) && !m_isGet)
+            {
+                ////解放する
+                //m_isGet = true;
+
+                gameContext.audio.PlayOneShot("Buy");
+            }
+        }
+
         void Render()
         {
             m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
-            m_spriteBatch->Draw(m_texture.Get(), DirectX::XMFLOAT2(100, 100), 0, Colors::White, 0, {0, 0}, 0.8);
+            m_spriteBatch->Draw(m_texture.Get(), DirectX::SimpleMath::Vector2(100, 100), 0, Colors::White, 0, {0, 0}, IMAGE_MAGNI);
 
             m_spriteBatch->End();
+
         }
 
 
@@ -58,14 +76,21 @@ namespace Itsuki
             Microsoft::WRL::ComPtr<ID3D11Resource> resource;
             m_texture->GetResource(resource.GetAddressOf());
 
-            //
+            //画像の大きさを入れておく
             Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D;
             if (SUCCEEDED(resource.As(&tex2D)))
             {
                 D3D11_TEXTURE2D_DESC desc = {};
                 tex2D->GetDesc(&desc);
-                m_textureSize = DirectX::XMUINT2(desc.Width, desc.Height);
+                m_textureSize = DirectX::SimpleMath::Vector2(desc.Width, desc.Height) * IMAGE_MAGNI;
             }
+
+            //ボタンの当たり判定を画像と同じにしておく
+            m_button.SetRect(m_textureSize);
+
+            //ボタンの位置を画像と同じにする
+            m_button.Setpositon({100,100});
+
         }
 
         //取得済みかどうか設定する
@@ -106,6 +131,11 @@ namespace Itsuki
 
     private:
 
+        //画像の大きさの倍率
+        static constexpr float IMAGE_MAGNI = 0.8;
+
+    private:
+
         //自分の前となるノード
         SkillNode* m_parentNode;
 
@@ -121,9 +151,6 @@ namespace Itsuki
         //このスキルが既に取得済みか
         bool m_isGet;
 
-        //当たり判定の大きさ
-        RECT HitDetection;
-
         //スプライトバッヂ
         std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 
@@ -134,10 +161,13 @@ namespace Itsuki
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
 
         // 画像サイズ
-        DirectX::XMUINT2 m_textureSize;
+        DirectX::SimpleMath::Vector2 m_textureSize;
 
         //位置
-        DirectX::XMFLOAT2 m_position;
+        DirectX::SimpleMath::Vector2 m_position;
+
+        //ボタンの判定
+        Itsuki::Button m_button;
     };
 
 }
