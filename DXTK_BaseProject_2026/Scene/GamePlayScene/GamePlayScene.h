@@ -1,7 +1,7 @@
-//--------------------------------------------------------------------------------------
+ï»¿//--------------------------------------------------------------------------------------
 // File: GamePlayScene.h
 //
-// ƒ‚ƒfƒ‹ƒeƒXƒg—pƒV[ƒ“
+// ãƒ¢ãƒ‡ãƒ«ãƒ†ã‚¹ãƒˆç”¨ã‚·ãƒ¼ãƒ³
 //
 // Date: 2026.4.13
 // Author: Hideyasu Imase
@@ -21,7 +21,7 @@
 
 #include"Manager/StageManager.h"
 #include"Manager/OrbManager.h"
-#include"Status.h"
+#include"../../ItsukiLib/SkillTree.h"
 
 #include"ItsukiLib/Camera/NormalCamera.h"
 
@@ -30,61 +30,55 @@ class GamePlayScene : public Imase::SceneBase<SceneId, GameContext>
 {
 public:
 
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     GamePlayScene();
 
-	// XV
+	// æ›´æ–°
 	void Update(Imase::ISceneController<SceneId>& sceneController, GameContext& gameContext) override;
 
-	// •`‰æ
+	// æç”»
 	void Render(GameContext& gameContext) override;
 
-	// ƒV[ƒ“Ø‚è‘Ö‚¦‚ÉŒÄ‚Ño‚³‚ê‚éŠÖ”
+	// ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆæ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹é–¢æ•°
 	void OnEnter(GameContext& gameContext) override;
 
 
 private:
 
-	static constexpr int FIRST_TIMER = 10;
-
-	static constexpr int FIRST_ORB = 1;
-
-private:
-
-	// ƒrƒ…[s—ñ
+	// ãƒ“ãƒ¥ãƒ¼è¡Œåˆ—
     DirectX::SimpleMath::Matrix m_view;
 
-	// ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ
+	// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—
     DirectX::SimpleMath::Matrix m_projection;
 
-	// ƒXƒvƒ‰ƒCƒgƒoƒbƒ`
+	// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆãƒãƒƒãƒ
     std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>> m_primitiveBatch;
     std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> m_CprimitiveBatch;
 
-	// ƒx[ƒVƒbƒNƒGƒtƒFƒNƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	// ãƒ™ãƒ¼ã‚·ãƒƒã‚¯ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã¸ã®ãƒã‚¤ãƒ³ã‚¿
     std::unique_ptr<DirectX::BasicEffect> m_basicEffect;
 
-    // “ü—ÍƒŒƒCƒAƒEƒg
+    // å…¥åŠ›ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆ
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
-    // ƒVƒF[ƒ_[ƒŠƒ\[ƒXƒrƒ…[
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãƒªã‚½ãƒ¼ã‚¹ãƒ“ãƒ¥ãƒ¼
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_orbTexture;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_stageTexture;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timerTexture;
 
-	// ƒfƒoƒbƒOƒJƒƒ‰
+	// ãƒ‡ãƒãƒƒã‚°ã‚«ãƒ¡ãƒ©
     std::unique_ptr<Imase::DebugCamera> m_debugCamera;
 
-	// ƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚ğì¬‚·‚éŠÖ”
+	// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã‚’ä½œæˆã™ã‚‹é–¢æ•°
     DirectX::SimpleMath::Matrix CreateProjectionMatrix(GameContext& gameContext);
 
-	// ƒEƒCƒ“ƒhƒEƒTƒCƒY•ÏX‚ÉŒÄ‚Ño‚³‚ê‚éŠÖ”
+	// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºå¤‰æ›´æ™‚ã«å‘¼ã³å‡ºã•ã‚Œã‚‹é–¢æ•°
     void OnWindowSizeChanged(GameContext& gameContext) override;
 
-	//“–‚Á‚½Û‚É“–‚é‘O‚Ìó‘Ô‚É–ß‚·ŠÖ”iŒ»İ‚Í‹…‚Æ—§•û‘Ì‚ÌŒ`‚Ì‚İ‚É“K‰j
+	//å½“ã£ãŸéš›ã«å½“ã‚‹å‰ã®çŠ¶æ…‹ã«æˆ»ã™é–¢æ•°ï¼ˆç¾åœ¨ã¯çƒã¨ç«‹æ–¹ä½“ã®å½¢ã®ã¿ã«é©å¿œï¼‰
     void ResolveCollision(Itsuki::Collider* col1, Itsuki::Collider* col2);
 
-	// ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹
+	// ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«
     std::unique_ptr<DirectX::Model> m_model;
 
 
@@ -94,42 +88,42 @@ private:
 		GamePlay,
 	};
 
-	// ƒJƒƒ‰ƒ‚[ƒh
+	// ã‚«ãƒ¡ãƒ©ãƒ¢ãƒ¼ãƒ‰
     CameraMode m_cameraMode = CameraMode::Title;
 
-	// ˆêlÌƒJƒƒ‰
+	// ä¸€äººç§°ã‚«ãƒ¡ãƒ©
     void GamePlayCamera(float elapsedTime); 
 	
-	// OlÌƒJƒƒ‰
+	// ä¸‰äººç§°ã‚«ãƒ¡ãƒ©
     void ThirdCamera(float elapsedTime);
 
-	// ƒJƒƒ‰‚ÌY²‚É‘Î‚·‚é‰ñ“]Šp“xiƒ^ƒCƒgƒ‹—pj
+	// ã‚«ãƒ¡ãƒ©ã®Yè»¸ã«å¯¾ã™ã‚‹å›è»¢è§’åº¦ï¼ˆã‚¿ã‚¤ãƒˆãƒ«ç”¨ï¼‰
     float m_titleAngleRad = 0.0f;
 
-	// ƒ^ƒCƒgƒ‹—pƒJƒƒ‰‚Ì‰ñ“]Šp“xi‚P•bŠÔ‚ ‚½‚è‚Ì‰ñ“]Šp“xj
+	// ã‚¿ã‚¤ãƒˆãƒ«ç”¨ã‚«ãƒ¡ãƒ©ã®å›è»¢è§’åº¦ï¼ˆï¼‘ç§’é–“ã‚ãŸã‚Šã®å›è»¢è§’åº¦ï¼‰
     static constexpr float TITLE_CAMERA_MOVE_ANGLE_DEG = 10.0f;
 
-	// ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹i–îˆój
+	// ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«ï¼ˆçŸ¢å°ï¼‰
     std::unique_ptr<DirectX::Model> m_arrowModel;
 
-	// ---- ƒIƒCƒ‰[ŠpƒeƒXƒg—p ----- //
+	// ---- ã‚ªã‚¤ãƒ©ãƒ¼è§’ãƒ†ã‚¹ãƒˆç”¨ ----- //
     float m_angleRad_X = 0.0f;
     float m_angleRad_Y = 0.0f;
     float m_angleRad_Z = 0.0f;
 
-	// ‚P•bŠÔ‚ ‚½‚è‚Ì‰ñ“]Šp“x
+	// ï¼‘ç§’é–“ã‚ãŸã‚Šã®å›è»¢è§’åº¦
     static constexpr float ROTATE_ANGLE_DEG = 90.0f;
 
-	// ƒNƒH[ƒ^ƒjƒIƒ“
+	// ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
     DirectX::SimpleMath::Quaternion m_quaternion;
 
-	// ƒ‚ƒfƒ‹ƒnƒ“ƒhƒ‹iƒ^[ƒQƒbƒgj
+	// ãƒ¢ãƒ‡ãƒ«ãƒãƒ³ãƒ‰ãƒ«ï¼ˆã‚¿ãƒ¼ã‚²ãƒƒãƒˆï¼‰
     std::unique_ptr<DirectX::Model> m_targetModel;
 
-	// ƒ^[ƒQƒbƒg‚ÌˆÊ’u
+	// ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½ç½®
     DirectX::SimpleMath::Vector3 m_targetPosition = { 0.0f, 0.0f, -2.0f };
 
-	//ƒvƒŒƒCƒ„[‚Ìì¬
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½œæˆ
 	std::unique_ptr<Player> m_player;
 
 
@@ -142,32 +136,25 @@ private:
 
 	ControlCamera m_controlCamera = ControlCamera::P1;
 
-	//ƒXƒe[ƒW‚ğŠi”[
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’æ ¼ç´
     std::unique_ptr<StageManager> m_stageManager;
 
-	//ƒI[ƒu‚ğŠi”[
+	//ã‚ªãƒ¼ãƒ–ã‚’æ ¼ç´
     std::unique_ptr<OrbManager> m_orbManager;
 
-	//
-    std::unique_ptr<Status> m_status;
-
-	//----------‚â‚Ş‚ğ“¾‚¸----------
-
-    // ŠÔ§ŒÀ(Šî–{30•b)
-    float m_timer = 5;
-
-	//----------‚â‚Ş‚ğ“¾‚¸----------
-
-	//“–‚½‚è”»’è‚ğ•`‰æ‚·‚é‚à‚Ì
+	//å½“ãŸã‚Šåˆ¤å®šã‚’æç”»ã™ã‚‹ã‚‚ã®
 	std::unique_ptr<Itsuki::ColliderRenderer> m_renderer;
 
-	//“–‚½‚è”»’è“¯‚ª‚Ô‚Â‚©‚Á‚½‚©”»’è‚·‚é‚à‚Ì
+	//å½“ãŸã‚Šåˆ¤å®šåŒæ°ãŒã¶ã¤ã‹ã£ãŸã‹åˆ¤å®šã™ã‚‹ã‚‚ã®
 	std::unique_ptr<Itsuki::CollisionChecker> m_collisionChecker;
 
-	//ˆêlÌ‚ÌƒJƒƒ‰
+	//ä¸€äººç§°ã®ã‚«ãƒ¡ãƒ©
     Itsuki::NormalCamera m_camera;
 
 	//BGM
 	SuzukiLib::Audio::AudioHandle m_bgmHandle;
+
+	//ã‚¹ã‚­ãƒ«ãƒ„ãƒªãƒ¼
+    Itsuki::SkillTree m_skilltree;
 
 };

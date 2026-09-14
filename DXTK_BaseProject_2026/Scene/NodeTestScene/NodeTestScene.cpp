@@ -37,7 +37,7 @@ void NodeTestScene::Render(GameContext& gameContext)
 // シーン切り替え時に呼び出される関数
 void NodeTestScene::OnEnter(GameContext& gameContext)
 {
-	m_node.SetNode(gameContext, nullptr, [this] { void(); }, 1, L"Resources/Textures/テストオーブ.png");
+	gameContext;
 
-    gameContext.audio.LoadSound("Buy", "Resources/Audio/Se/5ac8850c.wav");
+	m_node.SetNode(gameContext, nullptr, {100, 100}, [this] { void(); }, 1, L"Resources/Textures/テストオーブ.png");
 }

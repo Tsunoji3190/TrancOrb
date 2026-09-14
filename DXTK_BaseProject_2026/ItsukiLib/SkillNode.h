@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <functional>
 #include <string>
 #include <memory>
@@ -30,13 +30,17 @@ namespace Itsuki
             // マウスの取得
             auto mouse = Mouse::Get().GetState();
 
-            //まだ解放されておらずボタンが押されたら
+            //まだ解放されておらず,親が解放されていてボタンが押されたら
             if (m_button.IsPushed(mouse) && !m_isGet)
             {
-                ////解放する
-                //m_isGet = true;
-
                 gameContext.audio.PlayOneShot("Buy");
+
+                //ノードに応じたスキルを強化
+                GetSkillUp();
+
+                //解放する
+                m_isGet = true;
+
             }
         }
 
@@ -44,20 +48,25 @@ namespace Itsuki
         {
             m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
-            m_spriteBatch->Draw(m_texture.Get(), DirectX::SimpleMath::Vector2(100, 100), 0, Colors::White, 0, {0, 0}, IMAGE_MAGNI);
+            m_spriteBatch->Draw(m_texture.Get(), m_position, 0, Colors::White, 0, {0, 0}, IMAGE_MAGNI);
 
             m_spriteBatch->End();
 
         }
 
 
-        void SetNode(GameContext & gameContext,SkillNode * parent, std::function<void()> skillup, int steak,
-                     std::wstring skillimage)
+        void SetNode(GameContext& gameContext, SkillNode* parent,
+                     DirectX::SimpleMath::Vector2 position, std::function<void()> skillup, int steak=10,
+                     std::wstring skillimage = L"Resources/Textures/テストオーブ.png")
         {
+
+            //ノードの変数を設定する
             m_parentNode = parent;
+            m_position = position;
             m_skillUp = skillup;
             m_steak = steak;
             m_skillImage = skillimage;
+
 
             // DirectX3Dのデバイスを取得する
             auto device = gameContext.deviceResources.GetD3DDevice();
@@ -89,7 +98,7 @@ namespace Itsuki
             m_button.SetRect(m_textureSize);
 
             //ボタンの位置を画像と同じにする
-            m_button.Setpositon({100,100});
+            m_button.Setpositon(m_position);
 
         }
 
@@ -127,6 +136,12 @@ namespace Itsuki
         bool GetIsGet()
         {
             return m_isGet;
+        }
+
+        //位置の取得
+        SimpleMath::Vector2 GetPosition()
+        {
+            return m_position;
         }
 
     private:

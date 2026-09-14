@@ -77,7 +77,9 @@ public:
         return m_isGround;
     }
 
-    void SetSpeed(float speed)
+    //-----------------------強化に使う部分-----------------------//
+
+    void AddSpeed(float speed)
     {
         m_speed += speed;
     }
@@ -97,7 +99,45 @@ public:
         return m_jump;
     }
 
-private:
+    //持っているオーブを追加する
+    void AddOrbCount(int num)
+    {
+        m_haveOrb += num;
+    }
+
+    //どれだけ持っているかを返す
+    int GetHaveOrb()
+    {
+        return m_haveOrb;
+    }
+
+    //持っているオーブを減らす
+    void RemoveOrbCount(int num)
+    {
+        m_haveOrb -= num;
+    }
+
+    void SetTimer(float time)
+    {
+        m_time = time;
+    }
+
+    float GetTimer()
+    {
+        return m_time;
+    }
+
+    void RemoveTimer(float time)
+    {
+        m_time -= time;
+    }
+
+    void AddMaxTimer(float time)
+    {
+        m_maxTime = time;
+    }
+
+ private:
 
     //X軸回転の最大までむける角度
     static constexpr float MAX_ROTATE_X = 85.0f;
@@ -110,6 +150,10 @@ private:
     
     //ジャンプの加速度
     static constexpr float JUMP_SPEED = 0.09f;
+
+    //最初の時間
+    static constexpr float FIRST_TIMER = 1;
+
 
 private:
 
@@ -132,20 +176,31 @@ private:
     //速度
     DirectX::SimpleMath::Vector3 m_velocity;
 
-    //移動の速さ
-    float m_speed;
-
-    //ジャンプ力の高さ
-    float m_jump;
-
     // それぞれ向いている角度（ラジアン）
     DirectX::SimpleMath::Vector3 m_facingAngleRad;
 
     // 向きを作成
     SimpleMath::Vector3 m_direction = SimpleMath::Vector3::Zero;
 
-    //設置しているかどうか判定
+    // 設置しているかどうか判定
     bool m_isGround;
+
+    //持っているオーブの数
+    int m_haveOrb;
+
+private:
+    
+    //移動の速さ
+    float m_speed;
+
+    //ジャンプ力の高さ
+    float m_jump;
+
+    //動ける時間の長さ
+    float m_time;
+
+    //動ける最大時間
+    float m_maxTime;
 
     // 解放済みスキル一覧
     std::unordered_set<SkillID> m_unlockedSkills; 

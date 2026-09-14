@@ -9,16 +9,15 @@ class OrbManager
 public:
 
     OrbManager(GameContext* pGameContext, DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>* pPrimitiveBatch,
-        ID3D11ShaderResourceView* pTexture,
-               const int firstorb = FIRST_ORB)
+        ID3D11ShaderResourceView* pTexture)
         : m_pGameContext{pGameContext}
         , m_pPrimitiveBatch{pPrimitiveBatch}
         , m_pTexture{pTexture}
         , m_pOrbs{},
-          m_orbValues{1}
+          m_orbValues{FIRST_ORBVALUE}
     { 
         
-        for (size_t i = 0; i < firstorb; i++)
+        for (size_t i = 0; i < FIRST_ORB; i++)
         {
             AddOrb();
         }
@@ -34,7 +33,7 @@ public:
     void AddOrb()
     {
         // 当たり判定工場の作成
-            Itsuki::ColliderFactory& colF = Itsuki::ColliderFactory::GetRefInstance();
+        Itsuki::ColliderFactory& colF = Itsuki::ColliderFactory::GetRefInstance();
 
         /// 球
         Itsuki::CollisionParams orbCol = {{0.0f, 0.0f, .0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
@@ -89,6 +88,9 @@ private:
     //オーブの数
     static constexpr int FIRST_ORB = 1;
 
+    static constexpr int FIRST_ORBVALUE = 1;
+
+private:
     // ゲームコンテキストへのポインタ
     GameContext* m_pGameContext;
 
@@ -99,7 +101,7 @@ private:
     ID3D11ShaderResourceView* m_pTexture;
 
     //オーブを格納する箱
-    std::vector<std::unique_ptr<Orb>> m_pOrbs = {};
+    std::vector<std::unique_ptr<Orb>> m_pOrbs;
 
     //オーブの基本価格
     int m_orbValues;

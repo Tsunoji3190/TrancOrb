@@ -71,7 +71,7 @@ void Game::Initialize(HWND window, int width, int height)
     );
 
     // 起動シーンの設定
-    m_sceneManager.SetFirstScene(SceneId::NodeScene, *m_gameContext);
+    m_sceneManager.SetFirstScene(SceneId::GamePlayScene, *m_gameContext);
 
 
 }

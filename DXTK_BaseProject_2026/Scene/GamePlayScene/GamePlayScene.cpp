@@ -20,6 +20,7 @@ using CollFactory = Itsuki::ColliderFactory;
 // コンストラクタ
 GamePlayScene::GamePlayScene() 
     : m_camera(SimpleMath::Vector3(0.0f, 0.0f, 0.0f), SimpleMath::Vector3(0.0f, 0.1f, 0.0f))
+    , m_skilltree(*m_player, *m_orbManager)
 {
     // 当たり判定工場の作成
     CollFactory& colF = CollFactory::GetRefInstance();
@@ -35,21 +36,19 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
 	// 経過時間を取得する
 	float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
 
-    //ステータスがクリアを示していたなら
-    if (m_status->IsClear())
-    {
-        //クリアシーンに切り替える
-        sceneController.RequestSwitch(SceneId::ClearScene);
-    }
+    ////ステータスがクリアを示していたなら
+    //if (m_status->IsClear())
+    //{
+    //    //クリアシーンに切り替える
+    //    sceneController.RequestSwitch(SceneId::ClearScene);
+    //}
 
     //タイマーがゼロになったら
-    if (m_timer <= 0)
+    if (m_player->GetTimer() <= 0)
     {
         Mouse::Get().SetMode(Mouse::MODE_ABSOLUTE);
 
-        //ステータスを表示する
-        m_status->Update(m_timer);
-        
+        m_skilltree.Update(elapsedTime,gameContext);
         return;
     }
 
@@ -74,14 +73,18 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //オーブとの当たり判定
     for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
     {
+
         Orb* pOrb = m_orbManager->GetOrb(i);
         // もしプレイヤーとオーブがぶつかったら
         if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *pOrb->GetCollider()))
         {
+
             //音を鳴らす
             gameContext.audio.PlayOneShot("GetOrb");
+
             // 持ってるオーブの数の追加
-            m_status->AddOrbCount(m_orbManager->GetOrbValue());
+            m_player->AddOrbCount(m_orbManager->GetOrbValue());
+
             //位置を変更する
             pOrb->SetRandom();
 
@@ -89,11 +92,11 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     }
 
     //時間を減らす
-    m_timer -= elapsedTime;
+    m_player->RemoveTimer(elapsedTime);
 
     //テキストの設定
-    std::wstring text = L"Time: " + std::to_wstring(m_timer);
-    std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_status->GetOrbCount());
+    std::wstring text = L"Time: " + std::to_wstring(m_player->GetTimer());
+    std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_player->GetHaveOrb());
 
     //テキストの描画
     debugRenderer.DrawText({500.0f, 0.0f}, text);
@@ -128,11 +131,9 @@ void GamePlayScene::Render(GameContext& gameContext)
 	//m_player->Render(context, m_view, m_projection, eye, target);
 
     //制限時間が0になったら
-    if (m_timer <= 0)
+    if (m_player->GetTimer() <= 0)
     {
-        //ステータスの描画を行う
-        m_status->Render();
-
+        m_skilltree.Render();
          return;
     }
 
@@ -149,6 +150,7 @@ void GamePlayScene::Render(GameContext& gameContext)
         pStage->Render(context, m_view, m_projection, eye, target);
     }
 
+    ////当たり判定描画
     //for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
     //{
     //    Orb* pOrb = m_orbManager->GetOrb(i);
@@ -249,7 +251,6 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     // プレイヤーの作成
     m_player = std::make_unique<Player>(gameContext, m_view, m_projection, m_model.get(),
                                         colF.MakeCollider(Itsuki::SHAPE::SPHERE, player));
-    // m_player2 = std::make_unique<Player>(gameContext, m_view, m_projection, m_model.get());
 
 
     m_stageManager = std::make_unique<StageManager>(&gameContext, m_CprimitiveBatch.get());
@@ -263,7 +264,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall3));
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall4));
 
-    m_orbManager = std::make_unique<OrbManager>(&gameContext, m_primitiveBatch.get(), m_orbTexture.Get() ,FIRST_ORB);
+    m_orbManager = std::make_unique<OrbManager>(&gameContext, m_primitiveBatch.get(), m_orbTexture.Get());
 
     //bgmの設定
     gameContext.audio.LoadSound("Bgm", "Resources/Audio/Bgm/GameBgm.wav");
@@ -278,9 +279,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_bgmHandle = gameContext.audio.Play("Bgm", desc);
     gameContext.audio.SetVolume(m_bgmHandle, 1.0f);
 
-
-    m_status = std::make_unique<Status>(gameContext, m_player.get(), m_orbManager.get());
-
+    m_skilltree.SetTrees(gameContext);
 
 }
 

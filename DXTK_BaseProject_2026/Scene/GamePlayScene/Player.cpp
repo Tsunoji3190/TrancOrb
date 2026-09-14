@@ -12,10 +12,12 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_pModel(pModel)
     , m_position(collider->GetPosition()) 
     , m_velocity(.0f,.0f,.0f)
+    , m_facingAngleRad(.0f, .0f, .0f)
+    , m_isGround{true}
+    , m_haveOrb{0}
     , m_speed(MOVE_SPEED)
     , m_jump(JUMP_SPEED)
-    , m_facingAngleRad(.0f,.0f,.0f)
-    , m_isGround{true}
+    , m_time(FIRST_TIMER)
 {
     //当たり判定を設定する
     SetCollider(std::move(collider));
