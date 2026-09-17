@@ -126,6 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Shaders\Gauge.hlsli" />
+    <None Include="Shaders\Particle.hlsli" />
+    <None Include="Shaders\UI.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Audio\Se\Accept.wav">
@@ -140,5 +143,16 @@
     <Media Include="Resources\Audio\Se\se_hirameki02.wav">
       <Filter>Assets</Filter>
     </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\GaugeGS.hlsl" />
+    <FxCompile Include="Shaders\GaugePS.hlsl" />
+    <FxCompile Include="Shaders\GaugeVS.hlsl" />
+    <FxCompile Include="Shaders\ParticleGS.hlsl" />
+    <FxCompile Include="Shaders\ParticlePS.hlsl" />
+    <FxCompile Include="Shaders\ParticleVS.hlsl" />
+    <FxCompile Include="Shaders\UIGS.hlsl" />
+    <FxCompile Include="Shaders\UIPS.hlsl" />
+    <FxCompile Include="Shaders\UIVS.hlsl" />
   </ItemGroup>
 </Project>

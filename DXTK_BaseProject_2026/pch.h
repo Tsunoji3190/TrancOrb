@@ -87,14 +87,18 @@ namespace DX
 // DirectXTK
 #include "Keyboard.h"
 #include "Mouse.h"
+
 #include "SimpleMath.h"
 #include "CommonStates.h"
+
 #include "Effects.h"
 #include "DDSTextureLoader.h"
+//#include "WICTextureLoader.h"
 #include "SpriteBatch.h"
 #include "SpriteFont.h"
 #include "Model.h"
 #include "PrimitiveBatch.h"
+
 #include "VertexTypes.h"
 #include "DirectXHelpers.h"
 

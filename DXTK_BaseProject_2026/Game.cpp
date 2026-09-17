@@ -52,8 +52,9 @@ void Game::Initialize(HWND window, int width, int height)
 
         // シーンの登録
     m_sceneManager.RegisterScene<BaseScene>(SceneId::BaseScene);
-    m_sceneManager.RegisterScene<GamePlayScene>(SceneId::GamePlayScene);
+
     m_sceneManager.RegisterScene<TitleScene>(SceneId::TitleScene);
+    m_sceneManager.RegisterScene<GamePlayScene>(SceneId::GamePlayScene);
     m_sceneManager.RegisterScene<ClearScene>(SceneId::ClearScene);
     m_sceneManager.RegisterScene<NodeTestScene>(SceneId::NodeScene);
 
@@ -71,7 +72,7 @@ void Game::Initialize(HWND window, int width, int height)
     );
 
     // 起動シーンの設定
-    m_sceneManager.SetFirstScene(SceneId::GamePlayScene, *m_gameContext);
+    m_sceneManager.SetFirstScene(SceneId::TitleScene, *m_gameContext);
 
 
 }
