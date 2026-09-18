@@ -20,8 +20,7 @@
 #include <vector>
 
 Effect3D::BackGround::BackGround()
-    : m_backgroundIndex(0)
-    , m_windowHeight(0)
+    : m_windowHeight(0)
     , m_windowWidth(0)
     , m_pDR(nullptr)
 {
@@ -51,7 +50,6 @@ void Effect3D::BackGround::Initialize(DX::DeviceResources* pDR, int width, int h
 
         }
     }
-
 }
 
 void Effect3D::BackGround::Render()

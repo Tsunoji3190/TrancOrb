@@ -133,6 +133,7 @@ void GamePlayScene::Render(GameContext& gameContext)
     //制限時間が0になったら
     if (m_player->GetTimer() <= 0)
     {
+        m_background->Render();
         m_skilltree.Render();
          return;
     }
@@ -279,8 +280,17 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_bgmHandle = gameContext.audio.Play("Bgm", desc);
     gameContext.audio.SetVolume(m_bgmHandle, 1.0f);
 
+    //スキルツリーの設定
     m_skilltree.SetTrees(gameContext);
 
+    // 背景の作成
+    m_background = std::make_unique<Effect3D::BackGround>();
+
+    // 背景の初期化処理
+    m_background->Initialize(&gameContext.deviceResources, (int)gameContext.deviceResources.GetScreenViewport().Width,
+                             (int)gameContext.deviceResources.GetScreenViewport().Height);
+    //背景の画像設定
+    m_background->SetTexture(L"Resources/Textures/Grid3.png");
 }
 
 

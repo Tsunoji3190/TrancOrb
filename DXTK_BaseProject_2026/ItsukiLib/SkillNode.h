@@ -30,18 +30,25 @@ namespace Itsuki
             // マウスの取得
             auto mouse = Mouse::Get().GetState();
 
-            //まだ解放されておらず,親が解放されていてボタンが押されたら
-            if (m_button.IsPushed(mouse) && !m_isGet)
+            // 親がそもそもないか親が解放されており、まだ解放されていなかったら
+            if ((m_parentNode == nullptr || m_parentNode->GetIsGet() ) && !m_isGet)
             {
-                gameContext.audio.PlayOneShot("Buy");
 
-                //ノードに応じたスキルを強化
-                GetSkillUp();
+                // ボタンが押されたら
+                if (m_button.IsPushed(mouse))
+                {
+                    gameContext.audio.PlayOneShot("Buy");
 
-                //解放する
-                m_isGet = true;
+                    // ノードに応じたスキルを強化
+                    GetSkillUp();
+
+                    // 解放する
+                    m_isGet = true;
+                }
 
             }
+
+
         }
 
         void Render()
@@ -96,12 +103,14 @@ namespace Itsuki
             if (SUCCEEDED(resource.As(&tex2D)))
             {
                 D3D11_TEXTURE2D_DESC desc = {};
+                //tex2Dの大きさをdescに入れる
                 tex2D->GetDesc(&desc);
                 m_textureSize = DirectX::SimpleMath::Vector2(desc.Width, desc.Height) * IMAGE_MAGNI;
             }
 
-            //ボタンの当たり判定を画像と同じにしておく
-            m_button.SetRect(m_textureSize);
+
+            //ボタンの当たり判定を画像より少し小さくしておく
+            m_button.SetRect(m_textureSize * BUTTON_MAGNI);
 
             //ボタンの位置を画像と同じにする
             m_button.Setpositon(m_position);
@@ -154,6 +163,10 @@ namespace Itsuki
 
         //画像の大きさの倍率
         static constexpr float IMAGE_MAGNI = 0.8;
+
+        //ボタンの大きさの倍率
+        static constexpr float BUTTON_MAGNI = 0.8;
+
 
     private:
 

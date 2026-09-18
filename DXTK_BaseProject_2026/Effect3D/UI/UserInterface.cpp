@@ -63,7 +63,7 @@ Effect3D::UserInterface::~UserInterface()
 /// <param name="path">相対パス(Resources/Textures/・・・.pngなど）</param>
 void Effect3D::UserInterface::LoadTexture(const wchar_t* path)
 {
-	//	善子画像を読み込む
+	//	pathがなかった場合の画像を読み込む
 	HRESULT result = DirectX::CreateWICTextureFromFile(m_pDR->GetD3DDevice(), L"Resources/Textures/NOIMAGE.png", m_yoshiRes.ReleaseAndGetAddressOf(), m_yoshiTexture.ReleaseAndGetAddressOf());
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> yoshiTex;
 	DX::ThrowIfFailed(m_yoshiRes.As(&yoshiTex));
@@ -81,11 +81,11 @@ void Effect3D::UserInterface::LoadTexture(const wchar_t* path)
 	m_textureWidth = desc.Width;
 	m_textureHeight = desc.Height;
 
-	//	善子画像の情報を取得する
+	//	pathがなかった場合の画像の情報を取得する
 	D3D11_TEXTURE2D_DESC desc2;
 	yoshiTex->GetDesc(&desc2);
 
-	//	善子画像のサイズを取得する
+	//	pathがなかった場合の画像のサイズを取得する
 	m_yoshiTextureWidth = desc2.Width;
 	m_yoshiTextureHeight = desc2.Height;
 

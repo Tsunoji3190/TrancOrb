@@ -23,6 +23,25 @@ namespace Effect3D
 
 	class BackGround
 	{
+    public:
+        BackGround();
+        ~BackGround();
+
+        void Initialize(DX::DeviceResources* pDR, int width, int height);
+        void Render();
+
+        void Add(const wchar_t* path, DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale,
+                 Effect3D::ANCHOR anchor);
+
+		//画像の設定
+		void SetTexture(const wchar_t* path)
+		{
+            for (int i = 0; i < m_userInterface.size(); i++)
+            {
+                m_userInterface[i]->LoadTexture(path);
+            }
+		}
+
 	public:
 
 		static constexpr int SIZE = 64;
@@ -31,7 +50,6 @@ namespace Effect3D
 	private:
 
 
-		unsigned int m_backgroundIndex;
 		DX::DeviceResources* m_pDR;
 
 		std::vector<std::unique_ptr<Effect3D::UserInterface>> m_userInterface;
@@ -43,29 +61,6 @@ namespace Effect3D
 		DirectX::Keyboard::KeyboardStateTracker m_tracker;
 
 		float m_timer;
-		//	関数
-	public:
-		BackGround();
-		~BackGround();
-
-
-		void Initialize(DX::DeviceResources* pDR, int width, int height);
-		void Render();
-
-		void Add(const wchar_t* path
-			, DirectX::SimpleMath::Vector2 position
-			, DirectX::SimpleMath::Vector2 scale
-			, Effect3D::ANCHOR anchor);
-
-		int GetBackGroundState()
-		{
-			return m_backgroundIndex;
-		}
-
-		void SetBackGroundState(int backgroundIndex)
-		{
-			m_backgroundIndex = backgroundIndex;
-		}
 
 	};
 }

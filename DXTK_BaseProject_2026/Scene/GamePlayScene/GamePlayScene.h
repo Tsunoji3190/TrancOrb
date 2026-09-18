@@ -25,6 +25,7 @@
 
 #include"ItsukiLib/Camera/NormalCamera.h"
 
+#include "Effect3D/UI/BackGround.h"
 
 class GamePlayScene : public Imase::SceneBase<SceneId, GameContext>
 {
@@ -157,4 +158,6 @@ private:
 	//スキルツリー
     Itsuki::SkillTree m_skilltree;
 
+	// 背景
+    std::unique_ptr<Effect3D::BackGround> m_background;
 };
