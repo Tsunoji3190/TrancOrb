@@ -12,6 +12,12 @@
 #include "GameContext.h"
 #include "../SceneId.h"
 
+#include "Effect3D/ParticleManager/ParticleManager.h"
+#include "Effect3D/UI/Menu.h"
+
+#include "Effect3D/UI/Title.h"
+#include "Effect3D/UI/BackGround.h"
+
 class TitleScene : public Imase::SceneBase<SceneId, GameContext>
 {
 public:
@@ -27,5 +33,15 @@ public:
 
 private:
 
+	// タイトル
+    std::unique_ptr<Effect3D::Title> m_title;
+
+    // メニュー
+    std::unique_ptr<Effect3D::Menu> m_menu;
+
+    // 背景
+    std::unique_ptr<Effect3D::BackGround> m_background;
+
+    int m_isMenu;
 };
 

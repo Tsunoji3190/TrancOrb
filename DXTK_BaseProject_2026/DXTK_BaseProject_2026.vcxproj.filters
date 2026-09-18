@@ -71,6 +71,15 @@
     <ClInclude Include="ItsukiLib\SkillTree.h" />
     <ClInclude Include="ItsukiLib\Button.h" />
     <ClInclude Include="Scene\NodeTestScene\NodeTestScene.h" />
+    <ClInclude Include="Effect3D\ParticleManager\ParticleManager.h" />
+    <ClInclude Include="Effect3D\ParticleManager\ParticlePosition.h" />
+    <ClInclude Include="Effect3D\UI\BackGround.h" />
+    <ClInclude Include="Effect3D\UI\Drawer.h" />
+    <ClInclude Include="Effect3D\UI\Menu.h" />
+    <ClInclude Include="Effect3D\UI\Title.h" />
+    <ClInclude Include="Effect3D\UI\UserInterface.h" />
+    <ClInclude Include="Effect3D\BinaryFile.h" />
+    <ClInclude Include="Effect3D\Particle.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -110,6 +119,15 @@
     <ClCompile Include="Scene\GamePlayScene\Status.cpp" />
     <ClCompile Include="Scene\ClearScene\ClearScene.cpp" />
     <ClCompile Include="Scene\NodeTestScene\NodeTestScene.cpp" />
+    <ClCompile Include="Effect3D\ParticleManager\ParticleManager.cpp" />
+    <ClCompile Include="Effect3D\ParticleManager\ParticlePosition.cpp" />
+    <ClCompile Include="Effect3D\UI\BackGround.cpp" />
+    <ClCompile Include="Effect3D\UI\Drawer.cpp" />
+    <ClCompile Include="Effect3D\UI\Menu.cpp" />
+    <ClCompile Include="Effect3D\UI\Title.cpp" />
+    <ClCompile Include="Effect3D\UI\UserInterface.cpp" />
+    <ClCompile Include="Effect3D\BinaryFile.cpp" />
+    <ClCompile Include="Effect3D\Particle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
