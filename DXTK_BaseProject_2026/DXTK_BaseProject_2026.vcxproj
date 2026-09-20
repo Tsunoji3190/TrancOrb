@@ -212,6 +212,7 @@
     <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
+    <ClInclude Include="Scene\GamePlayScene\BackButton.h" />
     <ClInclude Include="Scene\GamePlayScene\Manager\OrbManager.h" />
     <ClInclude Include="Scene\GamePlayScene\Manager\StageManager.h" />
     <ClInclude Include="Scene\GamePlayScene\Player.h" />

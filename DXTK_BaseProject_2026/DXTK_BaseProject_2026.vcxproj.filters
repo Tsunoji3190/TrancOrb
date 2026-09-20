@@ -80,6 +80,7 @@
     <ClInclude Include="Effect3D\UI\UserInterface.h" />
     <ClInclude Include="Effect3D\BinaryFile.h" />
     <ClInclude Include="Effect3D\Particle.h" />
+    <ClInclude Include="Scene\GamePlayScene\BackButton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
