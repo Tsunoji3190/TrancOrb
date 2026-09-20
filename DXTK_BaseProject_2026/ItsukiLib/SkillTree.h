@@ -19,7 +19,12 @@ namespace Itsuki
         {
             for (int i = 0; i < NODE_COUNT; i++)
             {
-                m_node[i]->Update(elapsedtime, gameContext);
+                if (IsCanGet(m_node[i]))
+                {
+                    m_node[i]->Update(elapsedtime, gameContext);
+
+                }
+
             }
 
         }
@@ -28,7 +33,11 @@ namespace Itsuki
         {
             for (int i = 0; i < NODE_COUNT; i++)
             {
-                m_node[i]->Render();
+                if (IsCanGet(m_node[i]))
+                {
+                    m_node[i]->Render();
+                }
+
             }
         }
 
@@ -101,6 +110,28 @@ namespace Itsuki
             m_node[13]->SetNode(
                 gameContext, nullptr, {50, 50}, [this] { GetSkill(0); }, 100, L"Resources/Textures/テスト六角型.png");
 
+
+        }
+
+        //取得可能かどうか判定する関数
+        bool IsCanGet(SkillNode* node)
+        {
+            bool IsGet;
+
+            //親がいないなら取得してもいい
+            if (node->GetPrevNode() == nullptr)
+            {
+                return true;
+            }
+
+            //親が解放されているなら取得してもいい
+            else if (node->GetPrevNode()->GetIsGet())
+            {
+                return true;
+            }
+
+
+            return false;
         }
 
         //六角型の数の追加
@@ -157,7 +188,7 @@ namespace Itsuki
 
         }
 
-        //六角型のインターバル減少
+        //オーブのインターバル減少
         void IntervalDecrease(float time)
         {
 

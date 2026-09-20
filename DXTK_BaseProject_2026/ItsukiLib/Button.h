@@ -36,6 +36,19 @@ namespace Itsuki
             return false;
         }
 
+        //カーソルが重なったか返す関数
+        bool IsCursored(DirectX::Mouse::State mouse)
+        {
+            auto mx = mouse.x;
+            auto my = mouse.y;
+
+            auto width = m_size.x + m_position.x;
+            auto height = m_size.y + m_position.y;
+
+            // ボタンの範囲内にカーソルがあったらtrueを返す
+            return (mx < width && my < height && mx > m_position.x && my > m_position.y) ? true : false;
+        }
+
     private:
 
         //大きさ

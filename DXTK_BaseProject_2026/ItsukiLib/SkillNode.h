@@ -16,7 +16,8 @@ namespace Itsuki
             : m_parentNode{nullptr},
             m_skillUp{},
             m_steak{0},
-            m_isGet{false}
+            m_isGet{false},
+            m_color{Colors::Gray}
         {
         }
 
@@ -27,43 +28,46 @@ namespace Itsuki
         //更新関数
         void Update(float elapsedtime, GameContext& gameContext)
         {
+
+            //取得してるならもう更新しない
+            if (GetIsGet()) return;
+
             // マウスの取得
             auto mouse = Mouse::Get().GetState();
 
-            // 親がそもそもないか親が解放されており、まだ解放されていなかったら
-            if ((m_parentNode == nullptr || m_parentNode->GetIsGet() ) && !m_isGet)
+            // カーソルがボタンの上に乗ったら
+            if (m_button.IsCursored(mouse))
             {
-
-                // ボタンが押されたら
-                if (m_button.IsPushed(mouse))
-                {
-                    gameContext.audio.PlayOneShot("Buy");
-
-                    // ノードに応じたスキルを強化
-                    GetSkillUp();
-
-                    // 解放する
-                    m_isGet = true;
-                }
-
+                SetColor(Colors::White);
+            }
+            else
+            {
+                SetColor(Colors::Gray);
             }
 
+            // ボタンが押されたら
+            if (m_button.IsPushed(mouse))
+            {
+                gameContext.audio.PlayOneShot("Buy");
+
+                // ノードに応じたスキルを強化
+                GetSkillUp();
+
+                // 解放する
+                SetIsGet(true);
+            }
 
         }
 
         void Render()
         {
-            //親がそもそもないか親が解放されていたら
-            if (m_parentNode == nullptr || m_parentNode->GetIsGet())
-            {
 
                 m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
 
-                m_spriteBatch->Draw(m_texture.Get(), m_position, 0, Colors::White, 0, {0, 0}, IMAGE_MAGNI);
+                m_spriteBatch->Draw(m_texture.Get(), m_position, 0, m_color, 0, {0, 0}, IMAGE_MAGNI);
 
                 m_spriteBatch->End();
 
-            }
 
         }
 
@@ -159,6 +163,12 @@ namespace Itsuki
             return m_position;
         }
 
+        //色の設定
+        void SetColor(DirectX::XMVECTORF32 color)
+        {
+            m_color = color;
+        }
+
     private:
 
         //画像の大きさの倍率
@@ -190,6 +200,9 @@ namespace Itsuki
 
         //コモンステート
         std::unique_ptr<DirectX::CommonStates> m_states;
+
+        //色
+        DirectX::SimpleMath::Color m_color;
 
         //画像
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
