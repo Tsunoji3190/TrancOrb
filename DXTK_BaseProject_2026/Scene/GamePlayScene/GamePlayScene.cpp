@@ -101,7 +101,6 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //テキストの描画
     debugRenderer.DrawText({500.0f, 0.0f}, text);
     debugRenderer.DrawText({.0f, 100.0f}, OrbCounttext);
-
     //debugRenderer.DrawText({0.0f, 0.0f}, L"GamePlayScene");
 
 }
@@ -289,7 +288,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_skilltree->SetTrees(gameContext);
 
     //バックボタンの設定
-    m_backButton.Initialize(gameContext, {900, 600}, L"Resources/Textures/NextButton.png");
+    m_backButton.Initialize(gameContext, {1200, 600}, L"Resources/Textures/NextButton.png");
 
 
     // 背景の作成

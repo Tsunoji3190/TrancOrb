@@ -95,6 +95,7 @@ namespace Imase
             , m_text2DCommands{}
             , m_text3DCommands{}
         {
+            
         }
 
 

@@ -152,7 +152,7 @@ public:
     static constexpr float JUMP_SPEED = 0.09f;
 
     //最初の時間
-    static constexpr float FIRST_TIMER = 10;
+    static constexpr float FIRST_TIMER = 1;
 
 
 private:
