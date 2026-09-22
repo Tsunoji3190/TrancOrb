@@ -15,13 +15,14 @@ namespace Itsuki
         {
         }
 
+        //更新処理
         void Update(float elapsedtime,GameContext& gameContext)
         {
             for (int i = 0; i < NODE_COUNT; i++)
             {
                 if (IsCanGet(m_node[i]))
                 {
-                    m_node[i]->Update(elapsedtime, gameContext);
+                    m_node[i]->Update(elapsedtime, gameContext,ref_player);
 
                 }
 
@@ -29,6 +30,7 @@ namespace Itsuki
 
         }
 
+        //描画処理
         void Render()
         {
             for (int i = 0; i < NODE_COUNT; i++)

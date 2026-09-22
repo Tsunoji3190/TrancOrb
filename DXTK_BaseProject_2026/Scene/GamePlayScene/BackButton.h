@@ -1,21 +1,26 @@
 #pragma once
+#include"pch.h"
+
+#include <string>
+#include <memory>
+#include <Windows.h>
+#include <GameContext.h>
+#include <WICTextureLoader.h>
 
 #include"../../ItsukiLib/Button.h"
-#include <memory>
-#include <string>
 
 namespace Itsuki
 {
     class BackButton
     {
     public:
-        BackButton();
-        ~BackButton();
 
         void Initialize(GameContext& gameContext, DirectX::SimpleMath::Vector2 position,
                         std::wstring buttonimage = L"Resources/Textures/テスト六角型.png")
         {
+
             m_position = position;
+            m_image = buttonimage;
 
             // DirectX3Dのデバイスを取得する
             auto device = gameContext.deviceResources.GetD3DDevice();
@@ -26,7 +31,7 @@ namespace Itsuki
             m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
             m_states = std::make_unique<DirectX::CommonStates>(device);
 
-            DirectX::CreateWICTextureFromFile(device, m_skillImage.c_str(), nullptr,
+            DirectX::CreateWICTextureFromFile(device, m_image.c_str(), nullptr,
                                               m_texture.ReleaseAndGetAddressOf());
 
             // 画像のサイズ取得
@@ -51,15 +56,45 @@ namespace Itsuki
 
         }
 
-        void Update()
+        void Update(float elapsedtime, Player* player)
         {
+            // マウスの取得
+            auto mouse = Mouse::Get().GetState();
+
+            // カーソルがボタンの上に乗ったら
+            if (m_button.IsCursored(mouse))
+            {
+                SetColor(Colors::White);
+            }
+            else
+            {
+                SetColor(Colors::Gray);
+            }
+
+            // ボタンが押されたら
+            if (m_button.IsPushed(mouse))
+            {
+                player->SetTimer();
+            }
 
         }
 
         void Render()
         {
+            m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
+
+            m_spriteBatch->Draw(m_texture.Get(), m_position, 0, m_color, 0, {0, 0}, IMAGE_MAGNI);
+
+            m_spriteBatch->End();
 
         }
+
+        // 色の設定
+        void SetColor(DirectX::XMVECTORF32 color)
+        {
+            m_color = color;
+        }
+
 
         
     private:
@@ -70,6 +105,8 @@ namespace Itsuki
         static constexpr float BUTTON_MAGNI = 0.8;
 
     private:    
+        // 画像名
+        std::wstring m_image;
 
         // スプライトバッヂ
         std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;

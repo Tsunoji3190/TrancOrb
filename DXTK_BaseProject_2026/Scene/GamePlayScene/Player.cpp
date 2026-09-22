@@ -15,9 +15,10 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_facingAngleRad(.0f, .0f, .0f)
     , m_isGround{true}
     , m_haveOrb{0}
-    , m_speed(MOVE_SPEED)
-    , m_jump(JUMP_SPEED)
-    , m_time(FIRST_TIMER)
+    , m_speed(0)
+    , m_jump(0)
+    , m_time(0)
+    , m_maxTime(0)
 {
     //当たり判定を設定する
     SetCollider(std::move(collider));
@@ -32,7 +33,10 @@ Player::~Player()
 
 void Player::Initialze()
 {
-
+    m_speed = MOVE_SPEED;
+    m_jump = JUMP_SPEED;
+    m_time = FIRST_TIMER;
+    m_maxTime = FIRST_TIMER;
 }
 
 void Player::Update(float elapsedTime)

@@ -8,7 +8,6 @@
 #include "Scene/GamePlayScene/GamePlayScene.h"
 #include "Scene/TitleScene/TitleScene.h"
 #include "Scene/ClearScene/ClearScene.h"
-#include"Scene/NodeTestScene/NodeTestScene.h"
 
 extern void ExitGame() noexcept;
 
@@ -55,7 +54,6 @@ void Game::Initialize(HWND window, int width, int height)
     m_sceneManager.RegisterScene<GamePlayScene>(SceneId::GamePlayScene);
     m_sceneManager.RegisterScene<TitleScene>(SceneId::TitleScene);
     m_sceneManager.RegisterScene<ClearScene>(SceneId::ClearScene);
-    m_sceneManager.RegisterScene<NodeTestScene>(SceneId::NodeScene);
 
     //オーディオの初期化
     m_audio = std::make_unique<SuzukiLib::Audio::AudioSystem>();

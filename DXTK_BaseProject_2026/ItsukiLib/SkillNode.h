@@ -6,6 +6,7 @@
 #include <GameContext.h>
 #include <WICTextureLoader.h>
 #include "Button.h"
+#include <Scene/GamePlayScene/Player.h>
 
 namespace Itsuki
 {
@@ -26,7 +27,7 @@ namespace Itsuki
         }
 
         //更新関数
-        void Update(float elapsedtime, GameContext& gameContext)
+        void Update(float elapsedtime, GameContext& gameContext, Player& player)
         {
 
             //取得してるならもう更新しない
@@ -48,13 +49,21 @@ namespace Itsuki
             // ボタンが押されたら
             if (m_button.IsPushed(mouse))
             {
-                gameContext.audio.PlayOneShot("Buy");
+                //プレイヤーのオーブが必要オーブ数より多かったら
+                if (player.GetHaveOrb() >= GetSteak())
+                {
+                    gameContext.audio.PlayOneShot("Buy");
 
-                // ノードに応じたスキルを強化
-                GetSkillUp();
+                    // ノードに応じたスキルを強化
+                    GetSkillUp();
+                    // 解放する
+                    SetIsGet(true);
 
-                // 解放する
-                SetIsGet(true);
+                }
+                else
+                {
+                
+                }
             }
 
         }
@@ -134,9 +143,9 @@ namespace Itsuki
         }
 
         //実行する関数を返す
-        std::function<void()> GetSkillUp()
+        void GetSkillUp()
         {
-            return m_skillUp;
+            m_skillUp;
         }
 
         //必要なオーブ数を返す

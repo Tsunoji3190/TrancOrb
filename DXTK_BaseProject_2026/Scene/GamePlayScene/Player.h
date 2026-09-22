@@ -117,9 +117,9 @@ public:
         m_haveOrb -= num;
     }
 
-    void SetTimer(float time)
+    void SetTimer()
     {
-        m_time = time;
+        m_time = m_maxTime;
     }
 
     float GetTimer()
@@ -152,7 +152,7 @@ public:
     static constexpr float JUMP_SPEED = 0.09f;
 
     //最初の時間
-    static constexpr float FIRST_TIMER = 1;
+    static constexpr float FIRST_TIMER = 10;
 
 
 private:

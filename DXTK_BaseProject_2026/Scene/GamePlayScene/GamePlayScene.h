@@ -22,6 +22,7 @@
 #include"Manager/StageManager.h"
 #include"Manager/OrbManager.h"
 #include"../../ItsukiLib/SkillTree.h"
+#include"BackButton.h"
 
 #include"ItsukiLib/Camera/NormalCamera.h"
 
@@ -156,7 +157,10 @@ private:
 	SuzukiLib::Audio::AudioHandle m_bgmHandle;
 
 	//スキルツリー
-    Itsuki::SkillTree m_skilltree;
+    std::unique_ptr<Itsuki::SkillTree> m_skilltree;
+
+	//バックボタン
+    Itsuki::BackButton m_backButton;
 
 	// 背景
     std::unique_ptr<Effect3D::BackGround> m_background;

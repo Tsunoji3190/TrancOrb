@@ -224,7 +224,6 @@
     <ClInclude Include="ItsukiLib\Obj.h" />
     <ClInclude Include="Scene\GamePlayScene\Orb.h" />
     <ClInclude Include="Scene\GamePlayScene\Status.h" />
-    <ClInclude Include="Scene\NodeTestScene\NodeTestScene.h" />
     <ClInclude Include="Scene\SceneId.h" />
     <ClInclude Include="Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioChannel.h" />
@@ -271,7 +270,6 @@
     <ClCompile Include="Scene\GamePlayScene\GamePlayScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Orb.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Status.cpp" />
-    <ClCompile Include="Scene\NodeTestScene\NodeTestScene.cpp" />
     <ClCompile Include="Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="SuzukiLib\Audio\AudioSystem.cpp" />
     <ClCompile Include="SuzukiLib\Audio\Internal\AudioVolumeMixer.cpp" />

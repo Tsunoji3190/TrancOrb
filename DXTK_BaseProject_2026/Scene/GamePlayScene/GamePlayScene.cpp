@@ -20,7 +20,6 @@ using CollFactory = Itsuki::ColliderFactory;
 // コンストラクタ
 GamePlayScene::GamePlayScene() 
     : m_camera(SimpleMath::Vector3(0.0f, 0.0f, 0.0f), SimpleMath::Vector3(0.0f, 0.1f, 0.0f))
-    , m_skilltree(*m_player, *m_orbManager)
 {
     // 当たり判定工場の作成
     CollFactory& colF = CollFactory::GetRefInstance();
@@ -48,7 +47,8 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     {
         Mouse::Get().SetMode(Mouse::MODE_ABSOLUTE);
 
-        m_skilltree.Update(elapsedTime,gameContext);
+        m_skilltree->Update(elapsedTime,gameContext);
+        m_backButton.Update(elapsedTime, m_player.get());
         return;
     }
 
@@ -134,7 +134,8 @@ void GamePlayScene::Render(GameContext& gameContext)
     if (m_player->GetTimer() <= 0)
     {
         m_background->Render();
-        m_skilltree.Render();
+        m_skilltree->Render();
+        m_backButton.Render();
          return;
     }
 
@@ -252,6 +253,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     // プレイヤーの作成
     m_player = std::make_unique<Player>(gameContext, m_view, m_projection, m_model.get(),
                                         colF.MakeCollider(Itsuki::SHAPE::SPHERE, player));
+    m_player->Initialze();
 
 
     m_stageManager = std::make_unique<StageManager>(&gameContext, m_CprimitiveBatch.get());
@@ -280,8 +282,15 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_bgmHandle = gameContext.audio.Play("Bgm", desc);
     gameContext.audio.SetVolume(m_bgmHandle, 1.0f);
 
+    //スキルツリーの生成
+    m_skilltree = std::make_unique<Itsuki::SkillTree>(*m_player, *m_orbManager);
+
     //スキルツリーの設定
-    m_skilltree.SetTrees(gameContext);
+    m_skilltree->SetTrees(gameContext);
+
+    //バックボタンの設定
+    m_backButton.Initialize(gameContext, {900, 600}, L"Resources/Textures/NextButton.png");
+
 
     // 背景の作成
     m_background = std::make_unique<Effect3D::BackGround>();
