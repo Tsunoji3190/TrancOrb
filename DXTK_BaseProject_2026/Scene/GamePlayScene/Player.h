@@ -65,6 +65,7 @@ public:
     void ResetAngle()
     {
         m_facingAngleRad = DirectX::SimpleMath::Vector3::Zero;
+        m_nextmousedelta = true;
     }
 
     void SetIsGround(bool isGround)
@@ -137,7 +138,26 @@ public:
         m_maxTime = time;
     }
 
- private:
+    
+public:
+
+    void SetMouseModeRelative()
+    {
+        if (Mouse::Get().GetState().positionMode != Mouse::MODE_RELATIVE)
+        {
+            Mouse::Get().SetMode(Mouse::MODE_RELATIVE);
+        }
+        m_nextmousedelta = true;
+
+    }
+
+    void SetMouseModeAbsolute()
+    {
+
+        Mouse::Get().SetMode(Mouse::MODE_ABSOLUTE);
+
+    }
+private:
 
     //X軸回転の最大までむける角度
     static constexpr float MAX_ROTATE_X = 85.0f;
@@ -182,6 +202,9 @@ private:
     // 向きを作成
     SimpleMath::Vector3 m_direction = SimpleMath::Vector3::Zero;
 
+    //マウスの変更を遅らせる
+    bool m_nextmousedelta=false;
+
     // 設置しているかどうか判定
     bool m_isGround;
 
@@ -189,7 +212,7 @@ private:
     int m_haveOrb;
 
 private:
-    
+
     //移動の速さ
     float m_speed;
 

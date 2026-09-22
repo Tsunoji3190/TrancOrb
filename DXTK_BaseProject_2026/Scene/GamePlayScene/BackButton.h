@@ -29,7 +29,9 @@ namespace Itsuki
 
             if (m_imageButton.IsPushed(mouse))
             {
+                player->ResetAngle();
                 player->SetTimer();
+                player->SetMouseModeRelative();
             }
         }
 

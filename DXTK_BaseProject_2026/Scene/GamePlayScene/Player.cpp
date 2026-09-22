@@ -41,24 +41,27 @@ void Player::Initialze()
 
 void Player::Update(float elapsedTime)
 {
-    Mouse::Get().SetMode(Mouse::MODE_RELATIVE);
-
 
     auto kb = Keyboard::Get().GetState();
-    
     // マウスの取得
     auto state = Mouse::Get().GetState();
     
 
-// マウスの相対移動量（Relative モード時）
+    // マウスの相対移動量（Relative モード時）
     float dx = state.x;
     float dy = state.y;
+
+    if (m_nextmousedelta)
+    {
+        dx = 0.0f;
+        dy = 0.0f;
+        m_nextmousedelta = false;
+    }
 
     const float mouseSensitivity = 0.005f; // 調整用
 
     // Yaw（左右回転）
     m_facingAngleRad.y -= dx * mouseSensitivity;
-
     // Pitch（上下回転）
     m_facingAngleRad.x -= dy * mouseSensitivity;
     // ピッチの制限（上下向きすぎ防止）

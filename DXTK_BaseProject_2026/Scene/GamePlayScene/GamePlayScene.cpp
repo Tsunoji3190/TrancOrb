@@ -45,8 +45,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //タイマーがゼロになったら
     if (m_player->GetTimer() <= 0)
     {
-        Mouse::Get().SetMode(Mouse::MODE_ABSOLUTE);
-
+        m_player->SetMouseModeAbsolute();
         m_skilltree->Update(elapsedTime,gameContext);
         m_backButton.Update(elapsedTime, m_player.get());
         return;
@@ -254,6 +253,8 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
                                         colF.MakeCollider(Itsuki::SHAPE::SPHERE, player));
     m_player->Initialze();
 
+    // マウスの状態を変える
+    m_player->SetMouseModeRelative();
 
     m_stageManager = std::make_unique<StageManager>(&gameContext, m_CprimitiveBatch.get());
     //ステージの追加
