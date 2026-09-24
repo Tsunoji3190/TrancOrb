@@ -149,6 +149,11 @@ namespace Itsuki
             return m_position;
         }
 
+        DirectX::SpriteBatch* GetSpriteBatch()
+        {
+            return m_spriteBatch.get();
+        }
+
     private:
         XMFLOAT2 m_origin;
         std::wstring m_image;

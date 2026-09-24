@@ -299,7 +299,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_background->Initialize(&gameContext.deviceResources, (int)gameContext.deviceResources.GetScreenViewport().Width,
                              (int)gameContext.deviceResources.GetScreenViewport().Height);
     //背景の画像設定
-    m_background->SetTexture(L"Resources/Textures/Grid3.png");
+    m_background->SetTexture(L"Resources/Textures/Grid4.png");
 }
 
 

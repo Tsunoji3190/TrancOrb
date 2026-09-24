@@ -60,9 +60,6 @@ namespace Itsuki
         // 画像名
         std::wstring m_image;
 
-        // スプライトバッヂ
-        std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-
         // コモンステート
         std::unique_ptr<DirectX::CommonStates> m_states;
 

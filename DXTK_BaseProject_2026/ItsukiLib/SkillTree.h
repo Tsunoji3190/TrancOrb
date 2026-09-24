@@ -48,7 +48,7 @@ namespace Itsuki
             auto size = gameContext.deviceResources.GetOutputSize();
             float width = size.right;   // ウィンドウのクライアント幅
             float height = size.bottom; // ウィンドウのクライアント高さ
-
+            
               for (auto& node : m_node)
             {
                 node = new SkillNode();
@@ -56,7 +56,7 @@ namespace Itsuki
 
             // ノードを作っていく
             m_node[0]->SetNode(
-                gameContext, nullptr, {width/2,height/2},[this] { AddOrb(1); }, 1, L"Resources/Textures/追加六角型.png");
+                gameContext, nullptr, {width/2,height/2},[this] { AddOrb(1); }, 1, L"Resources/Textures/追加六角型.png",ADD_TEXT);
 
             //
             m_node[1]->SetNode(
@@ -201,6 +201,7 @@ namespace Itsuki
         static constexpr int NODE_COUNT = 14;
 
         //テキスト群
+        std::wstring ADD_TEXT = L"オーブのかずがふえます。";
         std::wstring TIMER_TEXT = L"オーブを収集できる時間が増えます。";
         std::wstring VALUE_TEXT = L"オーブの価値が増えます";
         std::wstring MAGNET_TEXT = L"オーブを取得できる範囲が増えます";

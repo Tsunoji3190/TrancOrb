@@ -13,11 +13,7 @@ namespace Itsuki
     class SkillNode
     {
     public:
-        SkillNode()
-            : m_parentNode{nullptr},
-            m_skillUp{},
-            m_steak{0},
-            m_isGet{false}
+        SkillNode() : m_parentNode{nullptr}, m_skillUp{}, m_steak{0}, m_isGet{false}
         {
         }
 
@@ -25,7 +21,7 @@ namespace Itsuki
         {
         }
 
-        //更新関数
+        // 更新関数
         void Update(float elapsedtime, GameContext& gameContext, Player& player)
         {
 
@@ -44,15 +40,28 @@ namespace Itsuki
             }
         }
 
-    void Render()
+        void Render()
         {
+            auto mouse = Mouse::Get().GetState();
+
             m_imageButton.Render();
+
+            if (m_imageButton.IsCursored(mouse))
+            {
+                m_spriteBatch->Begin();
+                m_spriteFont->DrawString(
+                    m_spriteBatch.get(),
+                    m_text.c_str(),
+                    DirectX::SimpleMath::Vector2{20.0f, 600.0f},
+                    DirectX::Colors::White);
+                m_spriteBatch->End();
+
+            }
         }
 
         void SetNode(GameContext& gameContext, SkillNode* parent, DirectX::SimpleMath::Vector2 position,
                      std::function<void()> skillup, int steak = 10,
-                     std::wstring skillimage = L"Resources/Textures/テスト六角型.png",
-                     std::wstring text = L"データ無し")
+                     std::wstring skillimage = L"Resources/Textures/テスト六角型.png", std::wstring text = L"データ無し")
         {
             m_parentNode = parent;
             m_skillUp = skillup;
@@ -60,8 +69,14 @@ namespace Itsuki
             m_text = text;
 
             m_imageButton.Initialize(gameContext, position, skillimage, IMAGE_MAGNI, BUTTON_MAGNI);
-        }
 
+            auto device = gameContext.deviceResources.GetD3DDevice();
+            auto context = gameContext.deviceResources.GetD3DDeviceContext();
+
+            m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
+            // テキストの初期化
+            m_spriteFont = std::make_unique<DirectX::SpriteFont>(device, L"Resources/Font/Meiryo.spritefont");
+        }
 
         // 取得済みかどうか設定する
         void SetIsGet(bool isget)
@@ -99,25 +114,31 @@ namespace Itsuki
             return m_imageButton.GetPosition();
         }
 
-        private:
-        //画像の大きさ
-        static constexpr float IMAGE_MAGNI = 0.8f;
-        //ボタンの大きさ
-        static constexpr float BUTTON_MAGNI = 0.7f;
     private:
+        // 画像の大きさ
+        static constexpr float IMAGE_MAGNI = 0.8f;
+        // ボタンの大きさ
+        static constexpr float BUTTON_MAGNI = 0.7f;
 
-        //親のノード
+    private:
+        std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+
+        // スプライトフォント
+        std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
+
+        // 親のノード
         SkillNode* m_parentNode;
-        //関数
+        // 関数
         std::function<void()> m_skillUp;
-        //必要なオーブ数
+        // 必要なオーブ数
         int m_steak;
-        //取得したか
+        // 取得したか
         bool m_isGet = false;
-        //
+
+        // 説明文
         std::wstring m_text;
 
-        //イメージボタン
+        // イメージボタン
         ImageButton m_imageButton;
     };
 
