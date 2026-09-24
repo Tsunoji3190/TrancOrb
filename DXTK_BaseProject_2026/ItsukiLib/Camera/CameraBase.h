@@ -91,5 +91,60 @@ namespace Itsuki
 
     };
 
+    class Camera2DBase
+    {
+    public:
+        // コンストラクタ
+        Camera2DBase(const DirectX::SimpleMath::Vector2 pos) : m_position{pos}
+        {
+            UpdateTransMatrix();
+        }
+
+        // デストラクタ
+        virtual ~Camera2DBase() = default;
+
+        // 位置を取得する関数
+        DirectX::SimpleMath::Vector2 GetPosition() const
+        {
+            return m_position;
+        }
+
+        // 平行移動行列を取得する関数
+        DirectX::SimpleMath::Matrix GetTransMatrix() const
+        {
+            return m_transMat;
+        }
+
+    protected:
+        // 視点の設定関数
+        void SetPosition(DirectX::SimpleMath::Vector2 pos)
+        {
+            m_position = pos;
+
+            // 設定したらすかさず更新
+            void UpdateTransMatrix();
+        }
+
+    private:
+        // 横回転
+        float m_yAngle, m_yTmp;
+
+        // 縦回転
+        float m_xAngle, m_xTmp;
+
+        // 位置
+        DirectX::SimpleMath::Vector2 m_position;
+
+        // 平行移動マトリクス
+        DirectX::SimpleMath::Matrix m_transMat;
+
+        // 平行移動行列を更新する関数（今見ている位置を常に更新）
+        void UpdateTransMatrix()
+        {
+            m_transMat = DirectX::SimpleMath::Matrix::CreateTranslation(m_position.x, m_position.y, 0.0);
+        }
+
+    };
+
 
 }

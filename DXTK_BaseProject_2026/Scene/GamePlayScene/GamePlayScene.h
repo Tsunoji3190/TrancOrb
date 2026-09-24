@@ -84,21 +84,9 @@ private:
     std::unique_ptr<DirectX::Model> m_model;
 
 
-	enum class CameraMode
-	{
-		Title,
-		GamePlay,
-	};
-
-	// カメラモード
-    CameraMode m_cameraMode = CameraMode::Title;
-
 	// 一人称カメラ
     void GamePlayCamera(float elapsedTime); 
 	
-	// 三人称カメラ
-    void ThirdCamera(float elapsedTime);
-
 	// カメラのY軸に対する回転角度（タイトル用）
     float m_titleAngleRad = 0.0f;
 

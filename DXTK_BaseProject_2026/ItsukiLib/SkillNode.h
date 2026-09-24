@@ -13,7 +13,12 @@ namespace Itsuki
     class SkillNode
     {
     public:
-        SkillNode() : m_parentNode{nullptr}, m_skillUp{}, m_steak{0}, m_isGet{false}
+        SkillNode() 
+        : m_matrix{},
+        m_parentNode{nullptr},
+        m_skillUp{},
+        m_steak{0},
+        m_isGet{false}
         {
         }
 
@@ -26,6 +31,16 @@ namespace Itsuki
         {
 
             auto mouse = Mouse::Get().GetState();
+
+            auto kb = Keyboard::Get().GetState();
+
+            // 対応したキーごとに移動する方向を変える
+            if (kb.W)
+            if (kb.S)
+            if (kb.A)
+            if (kb.D)
+
+
 
             if (GetIsGet())
                 return;
@@ -57,7 +72,9 @@ namespace Itsuki
         {
             auto mouse = Mouse::Get().GetState();
 
+            m_imageButton.SpriteBegin();
             m_imageButton.Render();
+            m_imageButton.SpriteEnd();
 
             if (m_imageButton.IsCursored(mouse))
             {
@@ -146,6 +163,11 @@ namespace Itsuki
         static constexpr float BUTTON_MAGNI = 0.7f;
 
     private:
+
+        //カメラ移動のマトリクス
+        DirectX::SimpleMath::Matrix m_matrix;
+
+        //
         std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 
         // スプライトフォント

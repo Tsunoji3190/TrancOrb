@@ -68,7 +68,7 @@ namespace Itsuki
         DirectX::SimpleMath::Vector2 m_position;
     };
 
-        class ImageButton
+    class ImageButton
     {
     public:
         // 初期化関数
@@ -85,7 +85,6 @@ namespace Itsuki
             auto context = gameContext.deviceResources.GetD3DDeviceContext();
 
             m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
-            m_states = std::make_unique<DirectX::CommonStates>(device);
 
             DirectX::CreateWICTextureFromFile(device, m_image.c_str(), nullptr, m_texture.ReleaseAndGetAddressOf());
 
@@ -132,10 +131,27 @@ namespace Itsuki
             return m_button.IsCursored(mouse);
         }
 
+        //描画関数
         void Render()
         {
-            m_spriteBatch->Begin(DirectX::SpriteSortMode_Deferred, m_states->NonPremultiplied());
             m_spriteBatch->Draw(m_texture.Get(), m_position, nullptr, m_color, 0.0f, m_origin, m_imageMagni);
+        }
+
+        void SpriteBegin(SpriteSortMode sortMode = SpriteSortMode_Deferred,
+                          ID3D11BlendState* blendState = nullptr,
+                          ID3D11SamplerState* samplerState = nullptr,
+                          ID3D11DepthStencilState* depthStencilState = nullptr,
+                          ID3D11RasterizerState* rasterizerState = nullptr,
+                          std::function<void __cdecl()> setCustomShaders = nullptr,
+                         FXMMATRIX transformMatrix = XMMatrixIdentity())
+        {
+            m_spriteBatch->Begin(sortMode, blendState, samplerState, depthStencilState, rasterizerState,
+                                 setCustomShaders, transformMatrix);
+
+        }
+
+        void SpriteEnd()
+        {
             m_spriteBatch->End();
         }
 
@@ -160,7 +176,6 @@ namespace Itsuki
         float m_imageMagni = 0.8f;
 
         std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-        std::unique_ptr<DirectX::CommonStates> m_states;
 
         DirectX::SimpleMath::Color m_color = Colors::Gray;
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;

@@ -53,7 +53,9 @@ namespace Itsuki
 
         void Render()
         {
+            m_imageButton.SpriteBegin();
             m_imageButton.Render();
+            m_imageButton.SpriteEnd();
         }
 
         

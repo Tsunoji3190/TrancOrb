@@ -57,12 +57,12 @@ namespace Itsuki
             // ノードを作っていく
             m_node[0]->SetNode(
                 gameContext, nullptr, {width / 2, height / 2}, [this] { Time(5); }, 1, L"Resources/Textures/Star.png",
-                ADD_TEXT);
+                TIMER_TEXT);
 
             //
             m_node[1]->SetNode(
                 gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{80, 80}},
-                [this] { AddOrbCost(1); }, 10, L"Resources/Textures/Star.png", TIMER_TEXT);
+                [this] { AddOrbCost(1); }, 10, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             m_node[2]->SetNode(
                 gameContext, m_node[1], {m_node[1]->GetPosition() + SimpleMath::Vector2{80, 80}},
