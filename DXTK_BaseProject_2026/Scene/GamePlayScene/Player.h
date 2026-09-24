@@ -135,7 +135,7 @@ public:
 
     void AddMaxTimer(float time)
     {
-        m_maxTime = time;
+        m_maxTime += time;
     }
 
     
@@ -172,7 +172,7 @@ private:
     static constexpr float JUMP_SPEED = 0.09f;
 
     //最初の時間
-    static constexpr float FIRST_TIMER = 1;
+    static constexpr float FIRST_TIMER = 10;
 
 
 private:

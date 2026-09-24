@@ -13,8 +13,11 @@ public:
         : m_pGameContext{pGameContext}
         , m_pPrimitiveBatch{pPrimitiveBatch}
         , m_pTexture{pTexture}
-        , m_pOrbs{},
-          m_orbValues{FIRST_ORBVALUE}
+        , m_pOrbs{}
+        , m_orbValues{FIRST_ORBVALUE}
+        , m_orbInterval{FIRST_INTERVAL}
+        , m_count{0}
+
     { 
         
         for (size_t i = 0; i < FIRST_ORB; i++)
@@ -26,7 +29,17 @@ public:
 
     ~OrbManager() = default;
 
-    void Update();
+    void Update(float elapsedtime)
+    {
+        m_count += elapsedtime;
+
+        //一定の時間で追加していく
+        if (m_count >= m_orbInterval)
+        {
+            AddOrb();
+            m_count = 0;
+        }
+    }
 
     void Render();
 
@@ -45,6 +58,21 @@ public:
         m_pOrbs.push_back(std::move(orb));
     }
 
+    //指定したオーブを消す
+    void DeleteOrb(int index)
+    {
+        if (index < 0 || static_cast<size_t>(index) >= m_pOrbs.size())
+            return;
+        
+        m_pOrbs.erase(m_pOrbs.begin() + index);
+
+    }
+
+    //すべてのオーブを消す
+    void ResetOrb()
+    {
+        m_pOrbs.clear();
+    }
 
     //指定されたオーブを返す
     Orb* GetOrb(int Index)
@@ -83,12 +111,22 @@ public:
         return m_orbValues;
     }
 
+    //Intervalを減少させる
+    void Remomveinterval(float num)
+    {
+        m_orbInterval -= num;
+    }
+
 private:
 
     //オーブの数
     static constexpr int FIRST_ORB = 1;
 
+    //オーブの価値
     static constexpr int FIRST_ORBVALUE = 1;
+
+    //インターバル(1=1フレーム)
+    static constexpr float FIRST_INTERVAL = 5;
 
 private:
     // ゲームコンテキストへのポインタ
@@ -105,6 +143,12 @@ private:
 
     //オーブの基本価格
     int m_orbValues;
+
+    //オーブのインターバル
+    float m_orbInterval;
+
+    //時間をカウントする
+    float m_count;
 };
 
 

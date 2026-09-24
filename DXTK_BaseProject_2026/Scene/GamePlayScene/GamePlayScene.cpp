@@ -47,7 +47,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     {
         m_player->SetMouseModeAbsolute();
         m_skilltree->Update(elapsedTime,gameContext);
-        m_backButton.Update(elapsedTime, m_player.get());
+        m_backButton.Update(elapsedTime, m_player.get(), m_orbManager.get());
         return;
     }
 
@@ -56,6 +56,9 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
 
     //プレイヤーの更新
     m_player->Update(elapsedTime);
+
+    //オーブマネージャーの更新
+    m_orbManager->Update(elapsedTime);
 
     //ステージとの当たり判定
     for (int i=0;i<m_stageManager->GetNumStages();i++)
@@ -84,9 +87,8 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
             // 持ってるオーブの数の追加
             m_player->AddOrbCount(m_orbManager->GetOrbValue());
 
-            //位置を変更する
-            pOrb->SetRandom();
-
+            //オーブを削除する
+            m_orbManager->DeleteOrb(i);
         }
     }
 
@@ -289,7 +291,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_skilltree->SetTrees(gameContext);
 
     //バックボタンの設定
-    m_backButton.Initialize(gameContext, {1200, 600}, L"Resources/Textures/NextButton.png");
+    m_backButton.Initialize(gameContext, {1200, 625}, L"Resources/Textures/NextButton.png");
 
 
     // 背景の作成
@@ -299,7 +301,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_background->Initialize(&gameContext.deviceResources, (int)gameContext.deviceResources.GetScreenViewport().Width,
                              (int)gameContext.deviceResources.GetScreenViewport().Height);
     //背景の画像設定
-    m_background->SetTexture(L"Resources/Textures/Grid4.png");
+    m_background->SetTexture(L"Resources/Textures/Grid2.png");
 }
 
 
@@ -346,27 +348,6 @@ void GamePlayScene::GamePlayCamera(float elapsedTime)
     m_camera.SetCamera(m_player->GetPosition() + v, m_player->GetPosition());
 
     //一人称のカメラの更新
-    m_camera.Update(elapsedTime);
-
-}
-
-// タイトル用カメラ
-void GamePlayScene::ThirdCamera(float elapsedTime)
-{
-    // プレイヤーの位置からのカメラの相対位置
-    SimpleMath::Vector3 cameraPosition(0.0f, 2.5f, 4.0f);
-
-
-	// 回転行列を作成
-    SimpleMath::Matrix rotY = SimpleMath::Matrix::CreateRotationY(m_player->GetFacingAngleRad().y);
-
-	// カメラの相対位置を回転させる
-    SimpleMath::Vector3 v = SimpleMath::Vector3::Transform(cameraPosition, rotY);
-
-    // バネカメラの見る位置を設定
-    m_camera.SetCamera(m_player->GetPosition() + v, m_player->GetPosition());
-
-
     m_camera.Update(elapsedTime);
 
 }

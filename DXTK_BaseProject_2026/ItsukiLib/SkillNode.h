@@ -26,7 +26,18 @@ namespace Itsuki
         {
 
             auto mouse = Mouse::Get().GetState();
-            m_imageButton.Update(mouse);
+
+            if (GetIsGet())
+                return;
+
+            if (m_imageButton.IsCursored(mouse))
+            {
+                m_imageButton.SetColor(Colors::White);
+            }
+            else
+            {
+                m_imageButton.SetColor(Colors::Gray);
+            }
 
             if (m_imageButton.IsPushed(mouse))
             {
@@ -36,6 +47,8 @@ namespace Itsuki
 
                     GetSkillUp();
                     SetIsGet(true);
+                    m_imageButton.SetColor(Colors::White);
+
                 }
             }
         }
@@ -53,7 +66,11 @@ namespace Itsuki
                     m_spriteBatch.get(),
                     m_text.c_str(),
                     DirectX::SimpleMath::Vector2{20.0f, 600.0f},
-                    DirectX::Colors::White);
+                    DirectX::Colors::White,
+                    0.0,
+                    {0,0},
+                    {1.2,1.2});
+
                 m_spriteBatch->End();
 
             }
@@ -66,7 +83,12 @@ namespace Itsuki
             m_parentNode = parent;
             m_skillUp = skillup;
             m_steak = steak;
-            m_text = text;
+
+                // テキストの設定
+            std::wstring alltext = text + L" コスト:" + std::to_wstring(m_steak);
+
+
+            m_text = alltext;
 
             m_imageButton.Initialize(gameContext, position, skillimage, IMAGE_MAGNI, BUTTON_MAGNI);
 
@@ -93,7 +115,10 @@ namespace Itsuki
         // 実行する関数を返す
         void GetSkillUp()
         {
-            m_skillUp;
+            if (m_skillUp)
+            {
+                m_skillUp();
+            }
         }
 
         // 必要なオーブ数を返す

@@ -21,17 +21,33 @@ namespace Itsuki
             m_imageButton.Initialize(gameContext, position, buttonimage, IMAGE_MAGNI, IMAGE_MAGNI);
         }
 
-        void Update(float elapsedtime, Player* player)
+        void Update(float elapsedtime, Player* player,OrbManager* orbmanager)
         {
 
             auto mouse = Mouse::Get().GetState();
-            m_imageButton.Update(mouse);
+            
+            if (m_imageButton.IsCursored(mouse))
+            {
+                m_imageButton.SetColor(Colors::White);
+            }
+            else
+            {
+                m_imageButton.SetColor(Colors::Gray);
+            }
 
             if (m_imageButton.IsPushed(mouse))
             {
+                //リセットしていく
+                player->SetPosition({0, 0, 0});
+                player->SetVelocityY(0);
+
                 player->ResetAngle();
                 player->SetTimer();
                 player->SetMouseModeRelative();
+
+                orbmanager->ResetOrb();
+                orbmanager->AddOrb();
+
             }
         }
 
@@ -39,13 +55,6 @@ namespace Itsuki
         {
             m_imageButton.Render();
         }
-
-        // 色の設定
-        void SetColor(DirectX::XMVECTORF32 color)
-        {
-            m_color = color;
-        }
-
 
         
     private:
