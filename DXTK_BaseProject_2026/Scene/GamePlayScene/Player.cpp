@@ -10,7 +10,7 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_view(view)
     , m_projection(projection)
     , m_pModel(pModel)
-    , m_position(collider->GetPosition()) 
+    , m_position(.0,.0,.0) 
     , m_velocity(.0f,.0f,.0f)
     , m_facingAngleRad(.0f, .0f, .0f)
     , m_isGround{true}
@@ -23,7 +23,6 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     //当たり判定を設定する
     SetCollider(std::move(collider));
 
-    m_collider->SetPosition(m_position);
 
 }
 
@@ -37,6 +36,10 @@ void Player::Initialze()
     m_jump = JUMP_SPEED;
     m_time = FIRST_TIMER;
     m_maxTime = FIRST_TIMER;
+
+    //位置の設定
+    SetPosition({.0, .5, .0});
+    m_collider->SetPosition(m_position);
 }
 
 void Player::Update(float elapsedTime)
@@ -70,6 +73,10 @@ void Player::Update(float elapsedTime)
     // 回転行列を作成する
     SimpleMath::Matrix rotY = SimpleMath::Matrix::CreateRotationY(m_facingAngleRad.y);
 
+    //移動する方向の初期化
+    m_direction = SimpleMath::Vector3::Zero;
+
+
     //対応したキーごとに移動する方向を変える
     if (kb.W)
         m_direction += SimpleMath::Vector3::Forward;
@@ -82,7 +89,7 @@ void Player::Update(float elapsedTime)
 
 
     //向きを取得して移動させる
-    if (m_direction.LengthSquared() > 0)
+    if (m_direction.LengthSquared() > 0.0f)
     {
         m_direction.Normalize();
         SimpleMath::Vector3 worldDir = SimpleMath::Vector3::Transform(m_direction, rotY);
@@ -90,12 +97,10 @@ void Player::Update(float elapsedTime)
         m_velocity.x = worldDir.x * m_speed * elapsedTime;
         m_velocity.z = worldDir.z * m_speed * elapsedTime;
     }
-
-    //動かないなら
-    if (!(kb.W || kb.S || kb.A || kb.D))
+    else
     {
-        //重力以外の速度を止める
-        m_velocity = {0, m_velocity.y, 0};
+        m_velocity.x = 0.0f;
+        m_velocity.z = 0.0f;
     }
 
     //スペースキーでジャンプ
@@ -112,14 +117,21 @@ void Player::Update(float elapsedTime)
         m_velocity.y -= 0.05 * elapsedTime;
     }
 
+    // 重力を速度に加える
+    if (!m_isGround)
+    {
+        m_velocity.y -= Itsuki::Physics::GRAVITY * elapsedTime;
+    }
+
     //位置の計算を行う
-    m_position += m_velocity - (SimpleMath::Vector3(0, Itsuki::Physics::GRAVITY, 0) * elapsedTime);    
+    m_position += m_velocity * elapsedTime;
 
     //一定のところまで落下したら
     if (m_position.y <= -10)
     {
         //初期位置へ戻す
         m_position = {0, 1, 0};
+
     }
 
     // 当たり判定も移動させる

@@ -42,6 +42,7 @@ public:
     {
         //位置を変える
         m_position = position;
+
     }
 
     // 速度を取得する関数
@@ -166,10 +167,10 @@ private:
     static constexpr float ROTATE_SPEED_DEG = 100.0f;
 
     // 移動の速さ（１秒間あたりの移動量）
-    static constexpr float MOVE_SPEED = 1.f;
+    static constexpr float MOVE_SPEED = 100.f;
     
     //ジャンプの加速度
-    static constexpr float JUMP_SPEED = 0.09f;
+    static constexpr float JUMP_SPEED = 5.0f;
 
     //最初の時間
     static constexpr float FIRST_TIMER = 10;
