@@ -14,7 +14,7 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_velocity(.0f,.0f,.0f)
     , m_facingAngleRad(.0f, .0f, .0f)
     , m_isGround{true}
-    , m_haveOrb{0}
+    , m_haveOrb{10000}
     , m_speed(0)
     , m_jump(0)
     , m_time(0)
@@ -138,7 +138,7 @@ void Player::Render()
     m_pModel->Draw(m_gameContext.deviceResources.GetD3DDeviceContext(), m_gameContext.commonStates, world, m_view,
                    m_projection);
 
-       Imase::DebugRenderer& debugRenderer = m_gameContext.debugRenderer;
+    Imase::DebugRenderer& debugRenderer = m_gameContext.debugRenderer;
 
    //向きを知る
    //std::wstring textX = L"Xradius: " + std::to_wstring(m_facingAngleRad.x);

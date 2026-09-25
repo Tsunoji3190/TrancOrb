@@ -53,9 +53,11 @@ private:
 	// プロジェクション行列
     DirectX::SimpleMath::Matrix m_projection;
 
-	// スプライトバッチ
+	// バッチ
     std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>> m_primitiveBatch;
     std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> m_CprimitiveBatch;
+    std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+
 
 	// ベーシックエフェクトへのポインタ
     std::unique_ptr<DirectX::BasicEffect> m_basicEffect;
@@ -117,15 +119,6 @@ private:
 	std::unique_ptr<Player> m_player;
 
 
-		enum class ControlCamera
-    {
-        P1,
-        P2
-    };
-
-
-	ControlCamera m_controlCamera = ControlCamera::P1;
-
 	//ステージを格納
     std::unique_ptr<StageManager> m_stageManager;
 
@@ -135,7 +128,7 @@ private:
 	//当たり判定を描画するもの
 	std::unique_ptr<Itsuki::ColliderRenderer> m_renderer;
 
-	//当たり判定同氏がぶつかったか判定するもの
+	//当たり判定同士がぶつかったか判定するもの
 	std::unique_ptr<Itsuki::CollisionChecker> m_collisionChecker;
 
 	//一人称のカメラ

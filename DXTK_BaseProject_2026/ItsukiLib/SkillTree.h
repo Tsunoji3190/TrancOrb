@@ -22,11 +22,27 @@ namespace Itsuki
             {
                 if (IsCanGet(m_node[i]))
                 {
-                    m_node[i]->Update(elapsedtime, gameContext,ref_player);
+                    m_node[i]->Update(elapsedtime, gameContext,ref_player,m_pos);
 
                 }
 
             }
+            
+            auto kb = Keyboard::Get().GetState();
+
+            // 対応したキーごとに移動する方向を変える
+            if (kb.Up)
+                m_pos.y += 5 * elapsedtime * 60;
+
+            if (kb.Down)
+                m_pos.y -= 5 * elapsedtime * 60;
+
+            if (kb.Left)
+                m_pos.x -= 5 * elapsedtime * 60;
+
+            if (kb.Right)
+                m_pos.x += 5 * elapsedtime * 60;
+
 
         }
 
@@ -37,7 +53,7 @@ namespace Itsuki
             {
                 if (IsCanGet(m_node[i]))
                 {
-                    m_node[i]->Render();
+                    m_node[i]->Render(m_pos);
                 }
 
             }
@@ -221,6 +237,10 @@ namespace Itsuki
 
         //オーブマネージャー
         OrbManager& ref_orbManager;
+
+        //スキルツリーの位置
+        DirectX::SimpleMath::Vector2 m_pos;
+
     };
 
 }

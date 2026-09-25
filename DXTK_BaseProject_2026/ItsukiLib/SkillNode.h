@@ -27,25 +27,20 @@ namespace Itsuki
         }
 
         // 更新関数
-        void Update(float elapsedtime, GameContext& gameContext, Player& player)
+        void Update(float elapsedtime, GameContext& gameContext, Player& player,DirectX::SimpleMath::Vector2 pos)
         {
 
             auto mouse = Mouse::Get().GetState();
 
             auto kb = Keyboard::Get().GetState();
 
-            // 対応したキーごとに移動する方向を変える
-            if (kb.W)
-            if (kb.S)
-            if (kb.A)
-            if (kb.D)
 
 
 
             if (GetIsGet())
                 return;
 
-            if (m_imageButton.IsCursored(mouse))
+            if (m_imageButton.IsCursored(mouse, {pos.x, -pos.y}))
             {
                 m_imageButton.SetColor(Colors::White);
             }
@@ -54,7 +49,7 @@ namespace Itsuki
                 m_imageButton.SetColor(Colors::Gray);
             }
 
-            if (m_imageButton.IsPushed(mouse))
+            if (m_imageButton.IsPushed(mouse, {pos.x, -pos.y}))
             {
                 if (player.GetHaveOrb() >= GetSteak())
                 {
@@ -68,15 +63,19 @@ namespace Itsuki
             }
         }
 
-        void Render()
+        void Render(DirectX::SimpleMath::Vector2 pos)
         {
             auto mouse = Mouse::Get().GetState();
 
-            m_imageButton.SpriteBegin();
+
+            SimpleMath::Matrix trans =
+                SimpleMath::Matrix::CreateTranslation(SimpleMath::Vector3(pos.x, -pos.y, 0.0f));
+
+            m_imageButton.SpriteBegin(SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, trans);
             m_imageButton.Render();
             m_imageButton.SpriteEnd();
 
-            if (m_imageButton.IsCursored(mouse))
+            if (m_imageButton.IsCursored(mouse, {pos.x, -pos.y}))
             {
                 m_spriteBatch->Begin();
                 m_spriteFont->DrawString(

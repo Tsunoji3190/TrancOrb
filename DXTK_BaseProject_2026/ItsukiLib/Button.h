@@ -29,35 +29,29 @@ namespace Itsuki
             return m_position;
         }
 
-        // クリックされた瞬間
-        bool IsPushed(DirectX::Mouse::State mouse)
-        {
-            //左クリックした際にマウスカーソルが重なっていたら
-            if (mouse.leftButton&& IsCursored(mouse))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        //カーソルが重なったか返す関数
-        bool IsCursored(DirectX::Mouse::State mouse)
+        //マウスが重なったら
+        bool IsCursored(DirectX::Mouse::State mouse, DirectX::SimpleMath::Vector2 offset = {})
         {
             auto mx = mouse.x;
             auto my = mouse.y;
 
-            // 中心から左上・右下を逆算する
-            auto left = m_position.x - m_size.x * 0.5;
-            auto top = m_position.y - m_size.y * 0.5;
-            auto right = m_position.x + m_size.x * 0.5;
-            auto bottom = m_position.y + m_size.y * 0.5;
+            //動いた分の位置を足す
+            auto centerX = m_position.x + offset.x;
+            auto centerY = m_position.y + offset.y;
 
-            // ボタンの範囲内にカーソルがあったらtrueを返す
-            return (mx > left && mx < right && my > top && my < bottom);
+            auto left = centerX - m_size.x * 0.5f;
+            auto top = centerY - m_size.y * 0.5f;
+            auto right = centerX + m_size.x * 0.5f;
+            auto bottom = centerY + m_size.y * 0.5f;
+
+            return mx > left && mx < right && my > top && my < bottom;
         }
 
-
+        //マウスが押されたら
+        bool IsPushed(DirectX::Mouse::State mouse, DirectX::SimpleMath::Vector2 offset = {})
+        {
+            return mouse.leftButton && IsCursored(mouse, offset);
+        }
 
     private:
 
@@ -117,18 +111,19 @@ namespace Itsuki
             {
                 SetColor(Colors::Gray);
             }
+
         }
 
         // 押されたかどうかを返す
-        bool IsPushed(DirectX::Mouse::State mouse)
+        bool IsPushed(DirectX::Mouse::State mouse, DirectX::SimpleMath::Vector2 offset = {})
         {
-            return m_button.IsPushed(mouse);
+            return m_button.IsPushed(mouse,offset);
         }
 
         // カーソルが
-        bool IsCursored(DirectX::Mouse::State mouse)
+        bool IsCursored(DirectX::Mouse::State mouse, DirectX::SimpleMath::Vector2 offset = {})
         {
-            return m_button.IsCursored(mouse);
+            return m_button.IsCursored(mouse,offset);
         }
 
         //描画関数
@@ -165,6 +160,7 @@ namespace Itsuki
             return m_position;
         }
 
+
         DirectX::SpriteBatch* GetSpriteBatch()
         {
             return m_spriteBatch.get();
@@ -182,8 +178,10 @@ namespace Itsuki
 
         // 画像の大きさ
         DirectX::SimpleMath::Vector2 m_textureSize;
+
         // 位置
         DirectX::SimpleMath::Vector2 m_position;
+
         //ボタン
         Itsuki::Button m_button;
     };

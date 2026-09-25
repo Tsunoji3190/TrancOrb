@@ -133,7 +133,9 @@ void GamePlayScene::Render(GameContext& gameContext)
     //制限時間が0になったら
     if (m_player->GetTimer() <= 0)
     {
+
         m_background->Render();
+        m_spriteBatch->Begin();
         m_skilltree->Render();
         m_backButton.Render();
          return;
@@ -189,6 +191,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     // スプライトバッチの作成
     m_primitiveBatch = std::make_unique<DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>>(context);
     m_CprimitiveBatch = std::make_unique<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>(context);
+    m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
 
     // ---テクスチャのロード---//
     DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Resources/Textures/Orb.dds", nullptr,
