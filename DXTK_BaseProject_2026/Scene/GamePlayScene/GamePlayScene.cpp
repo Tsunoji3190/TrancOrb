@@ -135,7 +135,7 @@ void GamePlayScene::Render(GameContext& gameContext)
     {
 
         m_background->Render();
-        m_spriteBatch->Begin();
+
         m_skilltree->Render();
         m_backButton.Render();
          return;
@@ -305,6 +305,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
                              (int)gameContext.deviceResources.GetScreenViewport().Height);
     //背景の画像設定
     m_background->SetTexture(L"Resources/Textures/Grid2.png");
+
 }
 
 

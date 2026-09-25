@@ -32,17 +32,16 @@ namespace Itsuki
 
             // 対応したキーごとに移動する方向を変える
             if (kb.Up)
-                m_pos.y += 5 * elapsedtime * 60;
+                m_pos.y += NODE_MOVE_SPEED * elapsedtime * 60;
 
             if (kb.Down)
-                m_pos.y -= 5 * elapsedtime * 60;
+                m_pos.y -= NODE_MOVE_SPEED * elapsedtime * 60;
 
             if (kb.Left)
-                m_pos.x -= 5 * elapsedtime * 60;
+                m_pos.x -= NODE_MOVE_SPEED * elapsedtime * 60;
 
             if (kb.Right)
-                m_pos.x += 5 * elapsedtime * 60;
-
+                m_pos.x += NODE_MOVE_SPEED * elapsedtime * 60;
 
         }
 
@@ -217,7 +216,11 @@ namespace Itsuki
 
     private:
 
+        //ノードの数
         static constexpr int NODE_COUNT = 14;
+
+        //スキルツリーを動かす速さ
+        static constexpr float NODE_MOVE_SPEED = 6;
 
         //テキスト群
         std::wstring ADD_TEXT = L"オーブを増やすものが追加されます";

@@ -145,4 +145,5 @@ private:
 
 	// 背景
     std::unique_ptr<Effect3D::BackGround> m_background;
+
 };
