@@ -34,9 +34,6 @@ namespace Itsuki
 
             auto kb = Keyboard::Get().GetState();
 
-
-
-
             if (GetIsGet())
                 return;
 
@@ -65,7 +62,6 @@ namespace Itsuki
 
         void Render(DirectX::SimpleMath::Vector2 pos)
         {
-            auto mouse = Mouse::Get().GetState();
 
 
             SimpleMath::Matrix trans =
@@ -75,34 +71,20 @@ namespace Itsuki
             m_imageButton.Render();
             m_imageButton.SpriteEnd();
 
-            m_spriteBatch->Begin();
-            // 描画したい四角形の範囲（左, 上, 右, 下）
-            RECT rect;
-            rect.left = 0;
-            rect.top = 575;
-            rect.right = 1280; // 幅 300 ピクセル
-            rect.bottom = 720; // 高さ 200 ピクセル
+        }
 
-            // 塗りつぶしたい色（例：不透明な赤）
-            XMVECTOR color = Colors::Black;
-
-            // 1x1の白色テクスチャをRECTのサイズに拡大して描画
-            m_spriteBatch->Draw(m_whiteTexture.Get(), rect, color * 0.5);
+        void TextRender(DirectX::SimpleMath::Vector2 pos)
+        {
+            auto mouse = Mouse::Get().GetState();
 
             if (m_imageButton.IsCursored(mouse, {pos.x, -pos.y}))
             {
-                m_spriteFont->DrawString(
-                    m_spriteBatch.get(),
-                    m_text.c_str(),
-                    DirectX::SimpleMath::Vector2{20.0f, 600.0f},
-                    DirectX::Colors::White,
-                    0.0,
-                    {0,0},
-                    {1.2,1.2});
-
+                m_spriteBatch->Begin();
+                m_spriteFont->DrawString(m_spriteBatch.get(), m_text.c_str(),
+                                         DirectX::SimpleMath::Vector2{20.0f, 600.0f}, DirectX::Colors::White, 0.0,
+                                         {0, 0}, {1.2, 1.2});
+                m_spriteBatch->End();
             }
-                            
-            m_spriteBatch->End();
 
         }
 
@@ -128,9 +110,6 @@ namespace Itsuki
             m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
             // テキストの初期化
             m_spriteFont = std::make_unique<DirectX::SpriteFont>(device, L"Resources/Font/Meiryo.spritefont");
-                
-            // 文字の背景の初期化
-            CreateWhiteTexture(device);
 
         }
 
@@ -204,26 +183,6 @@ namespace Itsuki
 
         // イメージボタン
         ImageButton m_imageButton;
-
-        // 説明時の文字の後ろの画像
-        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_whiteTexture;
-
-        // ↑の初期化処理
-        void CreateWhiteTexture(ID3D11Device* device)
-        {
-            UINT whitePixel = 0xFFFFFFFF; // RGBA(255, 255, 255, 255)
-
-            D3D11_SUBRESOURCE_DATA initData = {};
-            initData.pSysMem = &whitePixel;
-            initData.SysMemPitch = sizeof(UINT);
-
-            CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1, 1, 1, // 幅1, 高さ1, ミップレベル1, 配列サイズ1
-                                       D3D11_BIND_SHADER_RESOURCE);
-
-            Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
-            device->CreateTexture2D(&desc, &initData, texture.GetAddressOf());
-            device->CreateShaderResourceView(texture.Get(), nullptr, m_whiteTexture.GetAddressOf());
-        }
 
     };
 

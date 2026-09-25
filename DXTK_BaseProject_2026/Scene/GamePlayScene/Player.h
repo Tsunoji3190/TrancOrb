@@ -204,7 +204,7 @@ private:
     SimpleMath::Vector3 m_direction = SimpleMath::Vector3::Zero;
 
     //マウスの変更を遅らせる
-    bool m_nextmousedelta=false;
+    bool m_nextmousedelta = false;
 
     // 設置しているかどうか判定
     bool m_isGround;

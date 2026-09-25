@@ -31,16 +31,16 @@ namespace Itsuki
             auto kb = Keyboard::Get().GetState();
 
             // 対応したキーごとに移動する方向を変える
-            if (kb.Up)
+            if (kb.Up && m_pos.y<=MAX_SKILLTREE_MOVE)
                 m_pos.y += NODE_MOVE_SPEED * elapsedtime * 60;
 
-            if (kb.Down)
+            if (kb.Down && m_pos.y >= -MAX_SKILLTREE_MOVE)
                 m_pos.y -= NODE_MOVE_SPEED * elapsedtime * 60;
 
-            if (kb.Left)
+            if (kb.Left && m_pos.x >= -MAX_SKILLTREE_MOVE)
                 m_pos.x -= NODE_MOVE_SPEED * elapsedtime * 60;
 
-            if (kb.Right)
+            if (kb.Right && m_pos.x <= MAX_SKILLTREE_MOVE)
                 m_pos.x += NODE_MOVE_SPEED * elapsedtime * 60;
 
         }
@@ -56,6 +56,35 @@ namespace Itsuki
                 }
 
             }
+
+            
+            m_spriteBatch->Begin();
+
+            // 描画したい四角形の範囲（左, 上, 右, 下）
+            RECT rect;
+            rect.left = 0;
+            rect.top = 575;
+            rect.right = 1280; // 幅 300 ピクセル
+            rect.bottom = 720; // 高さ 200 ピクセル
+
+            // 塗りつぶしたい色（例：不透明な赤）
+            XMVECTOR color = Colors::Black;
+
+            // 1x1の白色テクスチャをRECTのサイズに拡大して描画
+            m_spriteBatch->Draw(m_whiteTexture.Get(), rect, color * 0.5);
+
+            m_spriteBatch->End();
+
+            for (size_t i = 0; i < NODE_COUNT; i++)
+            {
+                if (IsCanGet(m_node[i]))
+                {
+                    m_node[i]->TextRender(m_pos);
+                }
+            }
+
+
+
         }
 
         void SetTrees(GameContext& gameContext)
@@ -127,6 +156,17 @@ namespace Itsuki
             //
             m_node[13]->SetNode(
                 gameContext, m_node[0], {50, 50}, [this] { GetSkill(0); }, 100, L"Resources/Textures/Star.png");
+
+                            
+            
+            auto device = gameContext.deviceResources.GetD3DDevice();
+            auto context = gameContext.deviceResources.GetD3DDeviceContext();
+
+            m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
+
+            // 文字の背景の初期化
+            CreateWhiteTexture(device);
+
 
         }
 
@@ -222,6 +262,9 @@ namespace Itsuki
         //スキルツリーを動かす速さ
         static constexpr float NODE_MOVE_SPEED = 6;
 
+        //スキルツリーの最大可動範囲
+        static constexpr int MAX_SKILLTREE_MOVE = 100;
+
         //テキスト群
         std::wstring ADD_TEXT = L"オーブを増やすものが追加されます";
         std::wstring TIMER_TEXT = L"オーブを収集できる時間が増えます。";
@@ -231,6 +274,10 @@ namespace Itsuki
         std::wstring SPEED_TEXT = L"あなたの足が速くなります";
 
     private:
+
+        //
+        std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+
 
         //スキルノードを数分入れる
         SkillNode* m_node[NODE_COUNT];
@@ -243,6 +290,27 @@ namespace Itsuki
 
         //スキルツリーの位置
         DirectX::SimpleMath::Vector2 m_pos;
+
+        // 説明時の文字の後ろの画像
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_whiteTexture;
+
+        // ↑の初期化処理
+        void CreateWhiteTexture(ID3D11Device* device)
+        {
+            UINT whitePixel = 0xFFFFFFFF; // RGBA(255, 255, 255, 255)
+
+            D3D11_SUBRESOURCE_DATA initData = {};
+            initData.pSysMem = &whitePixel;
+            initData.SysMemPitch = sizeof(UINT);
+
+            CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, 1, 1, 1, 1, // 幅1, 高さ1, ミップレベル1, 配列サイズ1
+                                       D3D11_BIND_SHADER_RESOURCE);
+
+            Microsoft::WRL::ComPtr<ID3D11Texture2D> texture;
+            device->CreateTexture2D(&desc, &initData, texture.GetAddressOf());
+            device->CreateShaderResourceView(texture.Get(), nullptr, m_whiteTexture.GetAddressOf());
+        }
+
 
     };
 
