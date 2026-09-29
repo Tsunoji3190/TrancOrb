@@ -139,7 +139,18 @@ public:
         m_maxTime += time;
     }
 
-    
+    // 運を取得する
+    int GetLuck()
+    {
+        return m_luck;
+    }
+
+
+    void AddLuck(int luck)
+    {
+        m_luck += luck;
+    }
+
 public:
 
     void SetMouseModeRelative()
@@ -158,6 +169,7 @@ public:
         Mouse::Get().SetMode(Mouse::MODE_ABSOLUTE);
 
     }
+
 private:
 
     //X軸回転の最大までむける角度
@@ -167,13 +179,14 @@ private:
     static constexpr float ROTATE_SPEED_DEG = 100.0f;
 
     // 移動の速さ（１秒間あたりの移動量）
-    static constexpr float MOVE_SPEED = 100.f;
+    static constexpr float MOVE_SPEED = 1.f;
     
     //ジャンプの加速度
-    static constexpr float JUMP_SPEED = 5.0f;
+    static constexpr float JUMP_SPEED = 4.0f;
 
     //最初の時間
-    static constexpr float FIRST_TIMER = 10;
+    static constexpr float FIRST_TIMER = 1;
+
 
 
 private:
@@ -212,6 +225,7 @@ private:
     //持っているオーブの数
     int m_haveOrb;
 
+    //----------変化するパラメータ----------//
 private:
 
     //移動の速さ
@@ -225,6 +239,9 @@ private:
 
     //動ける最大時間
     float m_maxTime;
+
+    //運
+    int m_luck;
 
     // 解放済みスキル一覧
     std::unordered_set<SkillID> m_unlockedSkills; 

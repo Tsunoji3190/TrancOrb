@@ -38,7 +38,7 @@ namespace Itsuki
             if (m_imageButton.IsPushed(mouse))
             {
                 //リセットしていく
-                player->SetPosition({0, 0, 0});
+                player->SetPosition({0, 0.5, 3.0});
                 player->SetVelocityY(0);
 
                 player->ResetAngle();

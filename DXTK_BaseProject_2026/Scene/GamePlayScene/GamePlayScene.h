@@ -109,8 +109,8 @@ private:
 	// クォータニオン
     DirectX::SimpleMath::Quaternion m_quaternion;
 
-	// モデルハンドル（ターゲット）
-    std::unique_ptr<DirectX::Model> m_targetModel;
+	// 背景モデル
+    std::unique_ptr<DirectX::Model> m_backGroundModel;
 
 	// ターゲットの位置
     DirectX::SimpleMath::Vector3 m_targetPosition = { 0.0f, 0.0f, -2.0f };

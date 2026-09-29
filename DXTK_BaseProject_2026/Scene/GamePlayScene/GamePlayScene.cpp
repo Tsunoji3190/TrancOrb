@@ -13,6 +13,7 @@
 #include"ItsukiLib/BoxCollider.h"
 #include "Orb.h"
 #include <ItsukiLib/ColliderFactory.h>
+#include <random>
 
 using namespace DirectX;
 using CollFactory = Itsuki::ColliderFactory;
@@ -80,12 +81,37 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
         // もしプレイヤーとオーブがぶつかったら
         if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *pOrb->GetCollider()))
         {
+            //ランダム抽選を始める
+            std::random_device rd;
+            std::mt19937 gen(rd());
 
-            //音を鳴らす
-            gameContext.audio.PlayOneShot("GetOrb");
+            std::uniform_int_distribution<int> dist(1, 100);
 
-            // 持ってるオーブの数の追加
-            m_player->AddOrbCount(m_orbManager->GetOrbValue());
+            // 3. ランダムな値を取得
+            int random_value = dist(gen);
+
+            //もし運が上回ったら
+            if (m_player->GetLuck() >= random_value)
+            {
+                // ピッチを高くした音を鳴らす
+                gameContext.audio.PlayOneShot(
+                    "GetOrb", SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3, 0.5});
+
+                // 持ってるオーブの数の2倍を追加
+                m_player->AddOrbCount(m_orbManager->GetOrbValue() * 2);
+
+            }
+            //ダメだったら
+            else
+            {
+                // 音を鳴らす
+                gameContext.audio.PlayOneShot("GetOrb",
+                                              SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
+
+                // そのままオーブを追加
+                m_player->AddOrbCount(m_orbManager->GetOrbValue());
+
+            }
 
             //オーブを削除する
             m_orbManager->DeleteOrb(i);
@@ -197,9 +223,6 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Resources/Textures/Orb.dds", nullptr,
                                                m_orbTexture.ReleaseAndGetAddressOf()));
 
-    //DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Resources/Textures/.dds", nullptr,
-    //                                           m_timerTexture.ReleaseAndGetAddressOf()));
-
     // ---テクスチャのロード---//
 
 
@@ -214,6 +237,8 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColorTexture>(device, m_basicEffect.get(),
                                                                               m_inputLayout.ReleaseAndGetAddressOf()));
 
+    //モデルの作成
+    m_backGroundModel = std::make_unique<DirectX::Model>();
 
 	// デバッグカメラの作成
     m_debugCamera = std::make_unique<Imase::DebugCamera>(rect.right, rect.bottom);
@@ -244,7 +269,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.0f}, {-10.0f, -11.0f, .0f}, {10.0f, 10.0f, .1f}, {0}};
 
     ///プレイヤー
-    Itsuki::CollisionParams player = {{0.0f, 0.0f, .0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
+    Itsuki::CollisionParams player = {{0.0f, 0.5f, 3.0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
     // ーーーーーーーーーーーーーーーーーーーーーーオブジェクトの当たり判定設定ーーーーーーーーーーーーーーーーーーーーーーーーーー
 
     // 当たり判定工場の作成
@@ -281,11 +306,15 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     gameContext.audio.LoadSound("Stop", "Resources/Audio/Se/電子ルーレットの出目が点滅.wav");
     gameContext.audio.LoadSound("Buy", "Resources/Audio/Se/5ac8850c.wav");
 
+
+
+
+
     SuzukiLib::Audio::AudioPlayDesc desc;
     desc.channel = SuzukiLib::Audio::AudioChannel::Bgm;
     desc.loop = true;
     m_bgmHandle = gameContext.audio.Play("Bgm", desc);
-    gameContext.audio.SetVolume(m_bgmHandle, 1.0f);
+    gameContext.audio.SetVolume(m_bgmHandle, 0.8f);
 
     //スキルツリーの生成
     m_skilltree = std::make_unique<Itsuki::SkillTree>(*m_player, *m_orbManager);

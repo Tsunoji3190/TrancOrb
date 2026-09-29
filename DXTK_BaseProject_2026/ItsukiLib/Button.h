@@ -50,7 +50,9 @@ namespace Itsuki
         //マウスが押されたら
         bool IsPushed(DirectX::Mouse::State mouse, DirectX::SimpleMath::Vector2 offset = {})
         {
-            return mouse.leftButton && IsCursored(mouse, offset);
+            m_state.Update(mouse);
+
+            return (m_state.leftButton==Mouse::ButtonStateTracker::RELEASED) && IsCursored(mouse, offset);
         }
 
     private:
@@ -60,6 +62,10 @@ namespace Itsuki
 
         //位置
         DirectX::SimpleMath::Vector2 m_position;
+
+        //
+        Mouse::ButtonStateTracker m_state;
+
     };
 
     class ImageButton
@@ -184,6 +190,7 @@ namespace Itsuki
 
         //ボタン
         Itsuki::Button m_button;
+
     };
 
 }

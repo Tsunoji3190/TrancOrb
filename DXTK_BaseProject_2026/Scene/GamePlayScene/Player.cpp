@@ -36,10 +36,10 @@ void Player::Initialze()
     m_jump = JUMP_SPEED;
     m_time = FIRST_TIMER;
     m_maxTime = FIRST_TIMER;
+    m_luck = 0;
 
     //位置の設定
-    SetPosition({.0, .5, .0});
-    m_collider->SetPosition(m_position);
+    SetPosition(m_collider->GetParam().pos);
 }
 
 void Player::Update(float elapsedTime)
@@ -94,8 +94,8 @@ void Player::Update(float elapsedTime)
         m_direction.Normalize();
         SimpleMath::Vector3 worldDir = SimpleMath::Vector3::Transform(m_direction, rotY);
 
-        m_velocity.x = worldDir.x * m_speed * elapsedTime;
-        m_velocity.z = worldDir.z * m_speed * elapsedTime;
+        m_velocity.x = worldDir.x * m_speed;
+        m_velocity.z = worldDir.z * m_speed;
     }
     else
     {

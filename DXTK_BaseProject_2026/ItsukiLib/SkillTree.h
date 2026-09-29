@@ -11,7 +11,7 @@ namespace Itsuki
     public:
 
         SkillTree(Player& player, OrbManager& manager) 
-            : ref_player{player}, ref_orbManager{manager}
+            : ref_player{player}, ref_orbManager{manager}, m_mouse{}
         {
         }
 
@@ -30,19 +30,46 @@ namespace Itsuki
             
             auto kb = Keyboard::Get().GetState();
 
+            MouseDragging();
+
             // 対応したキーごとに移動する方向を変える
-            if (kb.Up && m_pos.y<=MAX_SKILLTREE_MOVE)
+            if (kb.Up)
                 m_pos.y += NODE_MOVE_SPEED * elapsedtime * 60;
 
-            if (kb.Down && m_pos.y >= -MAX_SKILLTREE_MOVE)
+            if (kb.Down)
                 m_pos.y -= NODE_MOVE_SPEED * elapsedtime * 60;
 
-            if (kb.Left && m_pos.x >= -MAX_SKILLTREE_MOVE)
+            if (kb.Left)
                 m_pos.x -= NODE_MOVE_SPEED * elapsedtime * 60;
 
-            if (kb.Right && m_pos.x <= MAX_SKILLTREE_MOVE)
+            if (kb.Right)
                 m_pos.x += NODE_MOVE_SPEED * elapsedtime * 60;
 
+            if (m_stateTrack.leftButton == Mouse::ButtonStateTracker::PRESSED)
+            {
+                // マウスの相対移動量（Relative モード時）
+                // mouseState.x と mouseState.y に前フレームからの移動差分が入る
+                float moveSpeed = 1.0f;
+                m_pos.x += static_cast<float>(m_mouse.x) * moveSpeed * elapsedtime;
+                m_pos.y = static_cast<float>(m_mouse.y) * moveSpeed * elapsedtime;
+            }
+
+            if (m_pos.y > MAX_SKILLTREE_MOVE)
+            {
+                m_pos.y = MAX_SKILLTREE_MOVE;
+            }
+            if (m_pos.y < -MAX_SKILLTREE_MOVE)
+            {
+                m_pos.y = -MAX_SKILLTREE_MOVE;
+            }
+            if (m_pos.x < -MAX_SKILLTREE_MOVE)
+            {
+                m_pos.x = -MAX_SKILLTREE_MOVE;
+            }
+            if (m_pos.x > MAX_SKILLTREE_MOVE)
+            {
+                m_pos.x = MAX_SKILLTREE_MOVE;
+            }
         }
 
         //描画処理
@@ -157,8 +184,22 @@ namespace Itsuki
             m_node[13]->SetNode(
                 gameContext, m_node[0], {50, 50}, [this] { GetSkill(0); }, 100, L"Resources/Textures/Star.png");
 
-                            
+            //運
+            m_node[14]->SetNode(
+                gameContext, m_node[0], {200, 500}, [this] { Luck(10); }, 150, L"Resources/Textures/Star.png",LUCK_TEXT);
+
+            m_node[15]->SetNode(
+                gameContext, m_node[0], {100, 400}, [this] { Luck(10); }, 150, L"Resources/Textures/Star.png",LUCK_TEXT);
+
+            m_node[16]->SetNode(
+                gameContext, m_node[0], {300, 400}, [this] { Luck(10); }, 150, L"Resources/Textures/Star.png",LUCK_TEXT);
+
+            m_node[17]->SetNode(
+                gameContext, m_node[0], {200, 300}, [this] { Luck(10); }, 150, L"Resources/Textures/Star.png",LUCK_TEXT);
+
             
+
+
             auto device = gameContext.deviceResources.GetD3DDevice();
             auto context = gameContext.deviceResources.GetD3DDeviceContext();
 
@@ -214,16 +255,10 @@ namespace Itsuki
 
         }
 
-        //価値が2倍オーブの追加
-        void LuckOrb(float num)
-        {
-
-        }
-
         //いいことが起きる確率を増加させる
         void Luck(float num)
         {
-
+            ref_player.AddLuck(num);
         }
 
         //脚の速さ増加
@@ -253,11 +288,30 @@ namespace Itsuki
 
         }
 
+        //マウスの反応
+        void MouseDragging()
+        {
+            m_mouse = Mouse::Get().GetState();
+
+            m_stateTrack.Update(m_mouse);
+
+            if (m_stateTrack.leftButton == Mouse::ButtonStateTracker::PRESSED)
+            {
+
+            }
+
+            if (m_stateTrack.leftButton == Mouse::ButtonStateTracker::RELEASED)
+            {
+
+            }
+
+        }
+
 
     private:
 
         //ノードの数
-        static constexpr int NODE_COUNT = 14;
+        static constexpr int NODE_COUNT = 18;
 
         //スキルツリーを動かす速さ
         static constexpr float NODE_MOVE_SPEED = 6;
@@ -272,6 +326,7 @@ namespace Itsuki
         std::wstring MAGNET_TEXT = L"オーブを取得できる範囲が増えます";
         std::wstring INTERVAL_TEXT = L"オーブが出てくる間隔が減ります";
         std::wstring SPEED_TEXT = L"あなたの足が速くなります";
+        std::wstring LUCK_TEXT = L"オーブを手に入れた際、そのオーブの価値が倍になる確率が増えます";
 
     private:
 
@@ -310,6 +365,10 @@ namespace Itsuki
             device->CreateTexture2D(&desc, &initData, texture.GetAddressOf());
             device->CreateShaderResourceView(texture.Get(), nullptr, m_whiteTexture.GetAddressOf());
         }
+
+        Mouse::State m_mouse;
+        //
+        Mouse::ButtonStateTracker m_stateTrack;
 
 
     };
