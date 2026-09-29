@@ -85,7 +85,6 @@ private:
 	// モデルハンドル
     std::unique_ptr<DirectX::Model> m_model;
 
-
 	// 一人称カメラ
     void GamePlayCamera(float elapsedTime); 
 	
@@ -95,8 +94,6 @@ private:
 	// タイトル用カメラの回転角度（１秒間あたりの回転角度）
     static constexpr float TITLE_CAMERA_MOVE_ANGLE_DEG = 10.0f;
 
-	// モデルハンドル（矢印）
-    std::unique_ptr<DirectX::Model> m_arrowModel;
 
 	// ---- オイラー角テスト用 ----- //
     float m_angleRad_X = 0.0f;

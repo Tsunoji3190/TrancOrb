@@ -2,6 +2,7 @@
 #include "SkillNode.h"
 #include"../Scene/GamePlayScene/Player.h"
 #include"../Scene/GamePlayScene/Manager/OrbManager.h"
+#include <cmath>
 namespace Itsuki
 {
 	using namespace Itsuki;
@@ -34,10 +35,10 @@ namespace Itsuki
 
             // 対応したキーごとに移動する方向を変える
             if (kb.Up)
-                m_pos.y += NODE_MOVE_SPEED * elapsedtime * 60;
+                m_pos.y -= NODE_MOVE_SPEED * elapsedtime * 60;
 
             if (kb.Down)
-                m_pos.y -= NODE_MOVE_SPEED * elapsedtime * 60;
+                m_pos.y += NODE_MOVE_SPEED * elapsedtime * 60;
 
             if (kb.Left)
                 m_pos.x -= NODE_MOVE_SPEED * elapsedtime * 60;
@@ -87,18 +88,14 @@ namespace Itsuki
             
             m_spriteBatch->Begin();
 
-            // 描画したい四角形の範囲（左, 上, 右, 下）
-            RECT rect;
-            rect.left = 0;
-            rect.top = 575;
-            rect.right = 1280; // 幅 300 ピクセル
-            rect.bottom = 720; // 高さ 200 ピクセル
+            // 描画したい四角形の範囲
+            RECT rect = {0, 575, 1280, 720};
 
-            // 塗りつぶしたい色（例：不透明な赤）
+            // 塗りつぶしたい色
             XMVECTOR color = Colors::Black;
 
             // 1x1の白色テクスチャをRECTのサイズに拡大して描画
-            m_spriteBatch->Draw(m_whiteTexture.Get(), rect, color * 0.5);
+            m_spriteBatch->Draw(m_whiteTexture.Get(), rect, color * 0.8);
 
             m_spriteBatch->End();
 
@@ -132,52 +129,52 @@ namespace Itsuki
 
             //
             m_node[1]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{80, 80}},
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{65, 65}},
                 [this] { AddOrbCost(1); }, 10, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             m_node[2]->SetNode(
-                gameContext, m_node[1], {m_node[1]->GetPosition() + SimpleMath::Vector2{80, 80}},
+                gameContext, m_node[1], {m_node[1]->GetPosition() + SimpleMath::Vector2{65, 65}},
                 [this] { AddOrbCost(1); }, 20, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             m_node[3]->SetNode(
-                gameContext, m_node[2], {m_node[2]->GetPosition() + SimpleMath::Vector2{80, 80}},
+                gameContext, m_node[2], {m_node[2]->GetPosition() + SimpleMath::Vector2{65, 65}},
                 [this] { AddOrbCost(1); }, 50, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             //
             m_node[4]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-80, 80}},
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, 65}},
                 [this] { Speed(0.25); }, 10, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             m_node[5]->SetNode(
-                gameContext, m_node[4], {m_node[4]->GetPosition() + SimpleMath::Vector2{-80, 80}},
+                gameContext, m_node[4], {m_node[4]->GetPosition() + SimpleMath::Vector2{-65, 65}},
                 [this] { Speed(0.25); }, 15, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             m_node[6]->SetNode(
-                gameContext, m_node[5], {m_node[5]->GetPosition() + SimpleMath::Vector2{-80, 80}},
+                gameContext, m_node[5], {m_node[5]->GetPosition() + SimpleMath::Vector2{-65, 65}},
                 [this] { Speed(0.5); }, 20, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             //
             m_node[7]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{80, -80}},
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{65, -65}},
                 [this] { IntervalDecrease(0.5); }, 10, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             m_node[8]->SetNode(
-                gameContext, m_node[7], {m_node[7]->GetPosition() + SimpleMath::Vector2{80, -80}},
+                gameContext, m_node[7], {m_node[7]->GetPosition() + SimpleMath::Vector2{65, -65}},
                 [this] { IntervalDecrease(0.5); }, 50, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             m_node[9]->SetNode(
-                gameContext, m_node[8], {m_node[8]->GetPosition() + SimpleMath::Vector2{80, -80}},
+                gameContext, m_node[8], {m_node[8]->GetPosition() + SimpleMath::Vector2{65, -65}},
                 [this] { IntervalDecrease(0.5); }, 100, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             //
             m_node[10]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-80, -80}}, [this] { Time(5); },
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, -65}}, [this] { Time(5); },
                 50, L"Resources/Textures/Star.png", TIMER_TEXT);
             m_node[11]->SetNode(
-                gameContext, m_node[10], {m_node[10]->GetPosition() + SimpleMath::Vector2{-80, -80}},
+                gameContext, m_node[10], {m_node[10]->GetPosition() + SimpleMath::Vector2{-65, -65}},
                 [this] { Time(5); }, 300, L"Resources/Textures/Star.png", TIMER_TEXT);
             m_node[12]->SetNode(
-                gameContext, m_node[11], {m_node[11]->GetPosition() + SimpleMath::Vector2{-80, -80}},
+                gameContext, m_node[11], {m_node[11]->GetPosition() + SimpleMath::Vector2{-65, -65}},
                 [this] { Time(15); }, 1500, L"Resources/Textures/Star.png", TIMER_TEXT);
 
             //
@@ -185,19 +182,20 @@ namespace Itsuki
                 gameContext, m_node[0], {50, 50}, [this] { GetSkill(0); }, 100, L"Resources/Textures/Star.png");
 
             //運
-            m_node[14]->SetNode(
-                gameContext, m_node[0], {200, 500}, [this] { Luck(10); }, 150, L"Resources/Textures/Star.png",LUCK_TEXT);
+            for (int i = 0; i < 8; i++)
+            {
+                auto rad = DirectX::XMConvertToRadians(45 * i);
 
-            m_node[15]->SetNode(
-                gameContext, m_node[0], {100, 400}, [this] { Luck(10); }, 150, L"Resources/Textures/Star.png",LUCK_TEXT);
+                auto sinx = (90 * std::cosf(rad));
+                auto cosy = (90 * std::sinf(rad));
 
-            m_node[16]->SetNode(
-                gameContext, m_node[0], {300, 400}, [this] { Luck(10); }, 150, L"Resources/Textures/Star.png",LUCK_TEXT);
-
-            m_node[17]->SetNode(
-                gameContext, m_node[0], {200, 300}, [this] { Luck(10); }, 150, L"Resources/Textures/Star.png",LUCK_TEXT);
-
+                m_node[14 + i]->SetNode(
+                    gameContext, m_node[0], {200 + sinx, 500 + cosy}, [this] { Luck(10); }, 150,
+                    L"Resources/Textures/Star.png", LUCK_TEXT);
             
+
+            }
+
 
 
             auto device = gameContext.deviceResources.GetD3DDevice();
@@ -311,7 +309,7 @@ namespace Itsuki
     private:
 
         //ノードの数
-        static constexpr int NODE_COUNT = 18;
+        static constexpr int NODE_COUNT = 22;
 
         //スキルツリーを動かす速さ
         static constexpr float NODE_MOVE_SPEED = 6;

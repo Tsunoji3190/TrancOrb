@@ -263,10 +263,10 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     Itsuki::CollisionParams floar4 = {{.0f, -11.0f, .0f}, {-10.0f, -.1f, -10.0f}, {10.0f, .0f, 10.0}, {0}};
 
     //壁
-    Itsuki::CollisionParams wall1 = {{-4.0f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 10.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall2 = {{4.0f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 10.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.0f}, {-10.0f, -11.0f, -.1f}, {10.0f, 10.0f, .0f}, {0}};
-    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.0f}, {-10.0f, -11.0f, .0f}, {10.0f, 10.0f, .1f}, {0}};
+    Itsuki::CollisionParams wall1 = {{-4.0f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 7.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall2 = {{4.0f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 7.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.0f}, {-10.0f, -11.0f, -.1f}, {10.0f, 7.0f, .0f}, {0}};
+    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.0f}, {-10.0f, -11.0f, .0f}, {10.0f, 7.0f, .1f}, {0}};
 
     ///プレイヤー
     Itsuki::CollisionParams player = {{0.0f, 0.5f, 3.0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};

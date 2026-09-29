@@ -154,7 +154,7 @@ namespace Itsuki
 
     private:
         // 画像の大きさ
-        static constexpr float IMAGE_MAGNI = 0.75f;
+        static constexpr float IMAGE_MAGNI = 0.7f;
         // ボタンの大きさ
         static constexpr float BUTTON_MAGNI = 0.6f;
 
