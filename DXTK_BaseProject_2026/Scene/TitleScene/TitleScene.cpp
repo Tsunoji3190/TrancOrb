@@ -14,21 +14,10 @@ using namespace DirectX;
 // 更新
 void TitleScene::Update(Imase::ISceneController<SceneId>& sceneController, GameContext& gameContext)
 {
-	//キーボードの取得
-	auto kb = Keyboard::Get().GetState();
+    //マウスの取得
+    auto mouse = Mouse::Get().GetState();
 
     float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
-
-    if (gameContext.keyboardTracker.pressed.Space && m_isMenu)
-    {
-        m_isMenu = 0;
-    }
-
-    if (gameContext.keyboardTracker.pressed.C && !m_isMenu)
-    {
-        m_menu->SetMenuState(Effect3D::Menu::STATE::START);
-        m_isMenu = 1;
-    }
 
     if (m_isMenu)
     {
@@ -36,15 +25,18 @@ void TitleScene::Update(Imase::ISceneController<SceneId>& sceneController, GameC
         m_menu->Update();
     }
 
+    m_state.Update(mouse);
     //STARTの状態で押されたら
-    if (gameContext.keyboardTracker.pressed.Space && m_menu->GetMenuState() == Effect3D::Menu::STATE::START)
+    if (m_state.leftButton == Mouse::ButtonStateTracker::RELEASED &&
+        m_menu->GetMenuState() == Effect3D::Menu::STATE::START)
     {
         sceneController.RequestSwitch(SceneId::GamePlayScene);
     }
 
 
     // Exitの状態で押されたら
-    if (gameContext.keyboardTracker.pressed.Space && m_menu->GetMenuState() == Effect3D::Menu::STATE::EXIT)
+    if (m_state.leftButton == Mouse::ButtonStateTracker::RELEASED
+        &&m_menu->GetMenuState() == Effect3D::Menu::STATE::EXIT)
     {
         // ゲームを終える
         PostQuitMessage(0);

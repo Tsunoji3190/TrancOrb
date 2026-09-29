@@ -33,16 +33,17 @@
     <MeshContentTask Include="Models\Skydome.obj">
       <Filter>Models</Filter>
     </MeshContentTask>
-    <MeshContentTask Include="Models\SkydomeHorror.obj">
-      <Filter>Models</Filter>
-    </MeshContentTask>
+    <MeshContentTask Include="Models\SkydomeMoon.obj" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Models\朝の空こわい.png">
-      <Filter>Models</Filter>
-    </Image>
     <Image Include="Models\朝の空通常.png">
       <Filter>Models</Filter>
     </Image>
+    <Image Include="Models\夜の空.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Models\SkydomeMoon.mtl" />
   </ItemGroup>
 </Project>

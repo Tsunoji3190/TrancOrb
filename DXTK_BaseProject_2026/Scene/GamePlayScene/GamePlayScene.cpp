@@ -156,6 +156,9 @@ void GamePlayScene::Render(GameContext& gameContext)
 
 	//m_player->Render(context, m_view, m_projection, eye, target);
 
+    SimpleMath::Matrix SkyWorld = SimpleMath::Matrix::CreateScale(15);
+
+
     //制限時間が0になったら
     if (m_player->GetTimer() <= 0)
     {
@@ -166,6 +169,9 @@ void GamePlayScene::Render(GameContext& gameContext)
         m_backButton.Render();
          return;
     }
+
+    m_skyModelSun->Draw(context, gameContext.commonStates, SkyWorld, m_view, m_projection);
+
 
     //ステージの線形描画
     for (int i = 0; i < m_stageManager->GetNumStages(); i++)
@@ -246,6 +252,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 	// エフェクトを作成する工場
     EffectFactory fx(device);
     fx.SetDirectory(L"Resources/Models");	// <- ddsのフォルダ
+    
 
     //レンダラーの読み込み
     m_renderer = std::make_unique<Itsuki::ColliderRenderer>(device, context, &gameContext.commonStates);
@@ -277,6 +284,45 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
 	// モデルの読み込み
     m_model = Model::CreateFromCMO(device, L"Resources/Models/Dammy.cmo", fx);
+
+
+    //空のモデルの読み込み
+    m_skyModelSun = Model::CreateFromCMO(device, L"Resources/Models/Skydome.cmo", fx);
+    m_skyModelMoon = Model::CreateFromCMO(device, L"Resources/Models/SkydomeMoon.cmo", fx);
+
+
+
+    for (auto& mesh : m_skyModelSun->meshes)
+    {
+        for (auto& parts:mesh->meshParts )
+        {
+            // IEffect から BasicEffect にキャストする
+            auto lights = dynamic_cast<DirectX::BasicEffect*>(parts->effect.get());
+            if (lights)
+            {
+
+                //自己発光させる
+                lights->SetEmissiveColor({0.8f, 0.8f, 0.8f});
+            }
+        }
+    }
+
+        for (auto& mesh : m_skyModelMoon->meshes)
+    {
+        for (auto& parts : mesh->meshParts)
+        {
+            // IEffect から BasicEffect にキャストする
+            auto lights = dynamic_cast<DirectX::BasicEffect*>(parts->effect.get());
+            if (lights)
+            {
+
+                // 自己発光させる
+                lights->SetEmissiveColor({0.8f, 0.8f, 0.8f});
+            }
+        }
+    }
+
+
 
     // プレイヤーの作成
     m_player = std::make_unique<Player>(gameContext, m_view, m_projection, m_model.get(),

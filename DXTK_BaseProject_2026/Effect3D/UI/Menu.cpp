@@ -20,7 +20,7 @@
 #include <vector>
 
 Effect3D::Menu::Menu()
-    : m_menuIndex(0)
+    : m_menuIndex(-1)
     , m_windowHeight(0)
     , m_windowWidth(0)
     , m_pDR(nullptr)
@@ -41,44 +41,47 @@ void Effect3D::Menu::Initialize(DX::DeviceResources* pDR,int width,int height)
 
     //  メニュー１画像を読み込む
     Add(L"Resources/Textures/TrancPorinStart.png"
-        , DirectX::SimpleMath::Vector2(m_windowWidth/2, 400)
+        , DirectX::SimpleMath::Vector2(m_windowWidth/2, 420)
         , DirectX::SimpleMath::Vector2(0.8f,0.8f)
         , Effect3D::ANCHOR::MIDDLE_CENTER);
-    //  メニュー２画像を読み込む
-    Add(L"Resources/Textures/TrancPorinContinue.png"
-        , DirectX::SimpleMath::Vector2(m_windowWidth / 2, 520)
-        , DirectX::SimpleMath::Vector2(0.8f, 0.8f)
-        , Effect3D::ANCHOR::MIDDLE_CENTER);
-    //  メニュー３の画像を読み込む
+    //  メニュー2の画像を読み込む
     Add(L"Resources/Textures/TrancPorinExit.png"
-        , DirectX::SimpleMath::Vector2(m_windowWidth / 2, 640)
+        , DirectX::SimpleMath::Vector2(m_windowWidth / 2, 620)
         , DirectX::SimpleMath::Vector2(0.8f, 0.8f)
         , Effect3D::ANCHOR::MIDDLE_CENTER);
+
+    for (size_t i = 0; i < m_userInterface.size(); i++)
+    {
+        Itsuki::Button button;
+        //画像
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture = m_userInterface[i]->GetTexture();
+        // 画像の大きさ
+        DirectX::SimpleMath::Vector2 textureSize;
+
+        // 画像のサイズ取得
+        Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+        texture->GetResource(resource.GetAddressOf());
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D;
+        if (SUCCEEDED(resource.As(&tex2D)))
+        {
+            D3D11_TEXTURE2D_DESC desc = {};
+            tex2D->GetDesc(&desc);
+            textureSize = DirectX::SimpleMath::Vector2(desc.Width, desc.Height);
+        }
+
+        // ボタンの当たり判定を表示サイズに合わせて設定
+        button.SetRect(textureSize);
+        button.Setpositon(m_userInterface[i]->GetPosition());
+
+        m_button.push_back(button);
+    }
 
 }
 
 void Effect3D::Menu::Update()
 {
-    DirectX::Keyboard::State keystate = DirectX::Keyboard::Get().GetState();
-    m_tracker.Update(keystate);
-    if (m_tracker.pressed.Down)
-    {
-        //  ↓キーを押したら、選択先を1つ進める
-        m_menuIndex += 1;
-        m_menuIndex %= m_userInterface.size();
-    }
-    if (m_tracker.pressed.Up)
-    {
-        //  ↑キーを押したら、選択先を1つ戻す。
-        //  ただし、選択先のオーバーを割り算の余りで補正するため、（アイテムの最大個数 - 1）を足して必ず余りで計算する形にしておく。
-        //  以下の式は、例えばメニューが4つあったら、現在値に3を足すという事。
-        //  例）選択中のメニューが0～3まである内の2番目だった場合、
-        //  (2 + (4 - 1)) % 4 = 1 ← 選択中の番号が1つ減った
-        //  ということ
-
-        m_menuIndex += static_cast<unsigned int>(m_userInterface.size()) - 1;
-        m_menuIndex %= m_userInterface.size();
-    }
+    auto mouse = Mouse::Get().GetState();
 
     //  各アイテムに表示する画像の初期サイズを設定する
     for (int i = 0; i < m_userInterface.size(); i++)
@@ -86,14 +89,26 @@ void Effect3D::Menu::Update()
         m_userInterface[i]->SetScale(m_userInterface[i]->GetBaseScale());
     }
 
-    //  選択中の初期サイズを取得する
-    DirectX::SimpleMath::Vector2 select = m_userInterface[m_menuIndex]->GetBaseScale();
-    //  選択状態とするための変化用サイズを算出する
-    DirectX::SimpleMath::Vector2 selectScale = DirectX::SimpleMath::Vector2::Lerp(m_userInterface[m_menuIndex]->GetBaseScale(), DirectX::SimpleMath::Vector2::One, 1);
-    //  選択状態は初期状態＋30％の大きさとする
-    select += selectScale * 0.3f;
-    //  算出後のサイズを現在のサイズとして設定する
-    m_userInterface[m_menuIndex]->SetScale(select);
+    for (size_t i = 0; i < m_userInterface.size(); i++)
+    { 
+        if (m_button[i].IsCursored(mouse, { 0,0 }))
+        {
+            //  選択中の初期サイズを取得する
+            DirectX::SimpleMath::Vector2 select = m_userInterface[i]->GetBaseScale();
+            //  選択状態とするための変化用サイズを算出する
+            DirectX::SimpleMath::Vector2 selectScale = DirectX::SimpleMath::Vector2::Lerp(
+                m_userInterface[i]->GetBaseScale(), DirectX::SimpleMath::Vector2::One, 1);
+            //  選択状態は初期状態＋30％の大きさとする
+            select += selectScale * 0.3f;
+            //  算出後のサイズを現在のサイズとして設定する
+            m_userInterface[i]->SetScale(select);
+
+            //メニューを合わせたやつと同じにする
+            SetMenuState(i);
+
+        }
+    }
+
 }
 
 void Effect3D::Menu::Render()

@@ -18,6 +18,7 @@
 #include <CommonStates.h>
 #include <vector>
 #include "Keyboard.h"
+#include"../../ItsukiLib/Button.h"
 namespace Effect3D
 {
 	
@@ -38,7 +39,8 @@ namespace Effect3D
 
 		int m_windowWidth, m_windowHeight;
 
-		DirectX::Keyboard::KeyboardStateTracker m_tracker;
+		//É{É^Éì
+        std::vector<Itsuki::Button> m_button; 
 
 
 //	ä÷êî
@@ -68,12 +70,12 @@ namespace Effect3D
 			m_menuIndex = menuIndex;
 		}
 
+
 		//	íeÇÃèÛë‘
 		enum STATE
 		{
 			NONE = -1,
 			START,
-			CONTINUE,
 			EXIT,
 		};
 

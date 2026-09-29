@@ -85,6 +85,11 @@ private:
 	// モデルハンドル
     std::unique_ptr<DirectX::Model> m_model;
 
+	//空のモデル
+	std::unique_ptr<DirectX::Model> m_skyModelSun;
+	std::unique_ptr<DirectX::Model> m_skyModelMoon;
+
+
 	// 一人称カメラ
     void GamePlayCamera(float elapsedTime); 
 	

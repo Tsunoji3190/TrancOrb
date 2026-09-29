@@ -27,7 +27,8 @@ namespace Itsuki
         }
 
         // 更新関数
-        void Update(float elapsedtime, GameContext& gameContext, Player& player,DirectX::SimpleMath::Vector2 pos)
+        void Update(float elapsedtime, GameContext& gameContext, Player& player, DirectX::SimpleMath::Vector2 pos,
+                    bool canClick)
         {
 
             auto mouse = Mouse::Get().GetState();
@@ -46,16 +47,14 @@ namespace Itsuki
                 m_imageButton.SetColor(Colors::Gray);
             }
 
-            if (m_imageButton.IsPushed(mouse, {pos.x, -pos.y}))
+            if (m_imageButton.IsPushed(mouse, {pos.x, -pos.y}) && canClick)
             {
                 if (player.GetHaveOrb() >= GetSteak())
                 {
                     gameContext.audio.PlayOneShot("Buy");
-
                     GetSkillUp();
                     SetIsGet(true);
                     m_imageButton.SetColor(Colors::White);
-
                 }
             }
         }

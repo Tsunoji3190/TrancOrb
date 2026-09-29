@@ -19,11 +19,18 @@ namespace Itsuki
         //更新処理
         void Update(float elapsedtime,GameContext& gameContext)
         {
+
+                        
+            MouseDragging();
+
+            //押せるかどうかの距離の判断
+            bool canClick = m_dragDistance < CLICK_DRAG_THRESHOLD;
+
             for (int i = 0; i < NODE_COUNT; i++)
             {
                 if (IsCanGet(m_node[i]))
                 {
-                    m_node[i]->Update(elapsedtime, gameContext,ref_player,m_pos);
+                    m_node[i]->Update(elapsedtime, gameContext,ref_player,m_pos,canClick);
 
                 }
 
@@ -31,7 +38,6 @@ namespace Itsuki
             
             auto kb = Keyboard::Get().GetState();
 
-            MouseDragging();
 
             // 対応したキーごとに移動する方向を変える
             if (kb.Up)
@@ -46,14 +52,6 @@ namespace Itsuki
             if (kb.Right)
                 m_pos.x += NODE_MOVE_SPEED * elapsedtime * 60;
 
-            if (m_stateTrack.leftButton == Mouse::ButtonStateTracker::PRESSED)
-            {
-                // マウスの相対移動量（Relative モード時）
-                // mouseState.x と mouseState.y に前フレームからの移動差分が入る
-                float moveSpeed = 1.0f;
-                m_pos.x += static_cast<float>(m_mouse.x) * moveSpeed * elapsedtime;
-                m_pos.y = static_cast<float>(m_mouse.y) * moveSpeed * elapsedtime;
-            }
 
             if (m_pos.y > MAX_SKILLTREE_MOVE)
             {
@@ -286,26 +284,38 @@ namespace Itsuki
 
         }
 
-        //マウスの反応
+        //マウスを掴んだ際の反応
         void MouseDragging()
         {
             m_mouse = Mouse::Get().GetState();
-
             m_stateTrack.Update(m_mouse);
 
+            DirectX::SimpleMath::Vector2 cur{static_cast<float>(m_mouse.x), static_cast<float>(m_mouse.y)};
+
+            //もしマウスが押されたら
             if (m_stateTrack.leftButton == Mouse::ButtonStateTracker::PRESSED)
             {
-
+                m_isDragging = true;
+                m_lastMousePos = cur;
+                m_dragDistance = 0.0f;
             }
-
-            if (m_stateTrack.leftButton == Mouse::ButtonStateTracker::RELEASED)
+            else if (m_stateTrack.leftButton == Mouse::ButtonStateTracker::HELD && m_isDragging)    //ホールドされていたら
             {
+                DirectX::SimpleMath::Vector2 delta = cur - m_lastMousePos;
 
+                // ノードは (m_pos.x, -m_pos.y) で描画しているので、yだけ符号を反転
+                m_pos.x += delta.x;
+                m_pos.y -= delta.y;
+
+                //長さを取得
+                m_dragDistance += delta.Length();
+                m_lastMousePos = cur;
             }
-
+            else if (m_stateTrack.leftButton == Mouse::ButtonStateTracker::RELEASED)    //離されたら
+            {
+                m_isDragging = false;
+            }
         }
-
-
     private:
 
         //ノードの数
@@ -316,6 +326,9 @@ namespace Itsuki
 
         //スキルツリーの最大可動範囲
         static constexpr int MAX_SKILLTREE_MOVE = 100;
+
+        //ノードをクリックできる移動量
+        static constexpr float CLICK_DRAG_THRESHOLD = 5.0f; 
 
         //テキスト群
         std::wstring ADD_TEXT = L"オーブを増やすものが追加されます";
@@ -368,7 +381,11 @@ namespace Itsuki
         //
         Mouse::ButtonStateTracker m_stateTrack;
 
-
+        //クリックの状態か
+        bool m_isDragging = false;
+        //マウスの位置（ドラッグを離した瞬間）
+        DirectX::SimpleMath::Vector2 m_lastMousePos{};
+        float m_dragDistance = 0.0f; 
     };
 
 }

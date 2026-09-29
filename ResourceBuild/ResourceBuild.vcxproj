@@ -22,12 +22,15 @@
     <MeshContentTask Include="Models\Dammy.obj" />
     <MeshContentTask Include="Models\floor.obj" />
     <MeshContentTask Include="Models\Skydome.obj" />
-    <MeshContentTask Include="Models\SkydomeHorror.obj" />
+    <MeshContentTask Include="Models\SkydomeMoon.obj" />
     <MeshContentTask Include="Models\wall.obj" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Models\朝の空こわい.png" />
+    <Image Include="Models\夜の空.png" />
     <Image Include="Models\朝の空通常.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Models\SkydomeMoon.mtl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>

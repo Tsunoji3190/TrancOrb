@@ -14,7 +14,7 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_velocity(.0f,.0f,.0f)
     , m_facingAngleRad(.0f, .0f, .0f)
     , m_isGround{true}
-    , m_haveOrb{10000}
+    , m_haveOrb{0}
     , m_speed(0)
     , m_jump(0)
     , m_time(0)

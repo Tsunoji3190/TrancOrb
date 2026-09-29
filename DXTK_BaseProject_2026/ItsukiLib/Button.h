@@ -1,4 +1,6 @@
 #pragma once
+#include <GameContext.h>
+#include <memory>
 
 namespace Itsuki
 {

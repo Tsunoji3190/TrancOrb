@@ -42,6 +42,10 @@ private:
     // 背景
     std::unique_ptr<Effect3D::BackGround> m_background;
 
+	    // ステートの取得
+    Mouse::ButtonStateTracker m_state;
+
+
     int m_isMenu;
 };
 

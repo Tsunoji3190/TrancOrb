@@ -107,6 +107,10 @@ namespace Effect3D
 		void SetAnchor(Effect3D::ANCHOR anchor);
 		Effect3D::ANCHOR GetAnchor() { return m_anchor; }
 
+		auto GetTexture()
+		{
+            return m_texture;
+		}
 
 	private:
 
