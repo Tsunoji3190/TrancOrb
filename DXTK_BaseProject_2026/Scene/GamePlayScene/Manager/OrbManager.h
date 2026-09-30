@@ -17,7 +17,7 @@ public:
         , m_orbValues{FIRST_ORBVALUE}
         , m_orbInterval{FIRST_INTERVAL}
         , m_count{0}
-
+        , m_startingOrbCount{0}
     { 
         
         for (size_t i = 0; i < FIRST_ORB; i++)
@@ -72,6 +72,12 @@ public:
     void ResetOrb()
     {
         m_pOrbs.clear();
+        m_count = 0;
+
+        for (size_t i = 0; i < m_startingOrbCount; i++)
+        {
+            AddOrb();
+        }
     }
 
     //指定されたオーブを返す
@@ -117,6 +123,11 @@ public:
         m_orbInterval -= num;
     }
 
+    void AddFirst(int num)
+    {
+        m_startingOrbCount += num;
+    }
+
 private:
 
     //オーブの数
@@ -127,6 +138,10 @@ private:
 
     //インターバル
     static constexpr float FIRST_INTERVAL = 5;
+
+    //収集フェーズ始めに存在するオーブ
+    static constexpr int FIRST = 0;
+
 
 private:
     // ゲームコンテキストへのポインタ
@@ -149,6 +164,9 @@ private:
 
     //時間をカウントする
     float m_count;
+
+    //最初にどんだけオーブを入れるか
+    int m_startingOrbCount;
 };
 
 

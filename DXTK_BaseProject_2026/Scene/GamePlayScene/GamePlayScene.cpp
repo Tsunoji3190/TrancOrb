@@ -46,6 +46,8 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //タイマーがゼロになったら
     if (m_player->GetTimer() <= 0)
     {
+
+
         //マウスの表示
         m_player->SetMouseModeAbsolute();
         m_skilltree->Update(elapsedTime,gameContext);
@@ -410,6 +412,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
     //bgmの設定
     gameContext.audio.LoadSound("GameBgm", "Resources/Audio/Bgm/GameBgm.wav");
+    gameContext.audio.LoadSound("SkillBgm", "Resources/Audio/Bgm/クロスロード.wav");
     gameContext.audio.LoadSound("GetOrb", "Resources/Audio/Se/se_hirameki02.wav");
     gameContext.audio.LoadSound("Jump", "Resources/Audio/Se/se_bound1.wav");
     gameContext.audio.LoadSound("Stop", "Resources/Audio/Se/電子ルーレットの出目が点滅.wav");

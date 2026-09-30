@@ -17,12 +17,17 @@ void ClearScene::Update(Imase::ISceneController<SceneId>& sceneController, GameC
 	//キーボードの取得
 	auto kb = Keyboard::Get().GetState();
 
+    // 経過時間を取得する
+    float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
+
 
 	if (gameContext.keyboardTracker.pressed.Space)
 	{
         gameContext.audio.Stop(m_bgmHandle);
         sceneController.RequestSwitch(SceneId::TitleScene);
 	}
+
+    m_titleBack.Update(elapsedTime, sceneController);
 
 }
 
@@ -37,6 +42,9 @@ void ClearScene::Render(GameContext& gameContext)
     m_spriteBatch->Draw(m_texture.Get(), {0, 0}, nullptr, m_color, 0.0f, g_XMZero, {1, 1});
 
     m_spriteBatch->End();
+
+    m_titleBack.Render();
+
 }
 
 // シーン切り替え時に呼び出される関数
@@ -64,4 +72,8 @@ void ClearScene::OnEnter(GameContext& gameContext)
     m_bgmHandle = gameContext.audio.Play("ClearBgm", desc);
     //音の大きさを変える
     gameContext.audio.SetVolume(m_bgmHandle, 0.65f);
+
+
+    // バックボタンの設定
+    m_titleBack.Initialize(gameContext, {1100, 625}, L"Resources/Textures/TrancTitleButton.png");
 }

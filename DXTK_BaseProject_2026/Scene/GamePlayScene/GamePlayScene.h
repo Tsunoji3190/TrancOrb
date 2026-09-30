@@ -144,6 +144,7 @@ private:
 
 	//BGM
 	SuzukiLib::Audio::AudioHandle m_bgmHandle;
+	SuzukiLib::Audio::AudioHandle m_SkillbgmHandle;
 
 	//スキルツリー
     std::unique_ptr<Itsuki::SkillTree> m_skilltree;

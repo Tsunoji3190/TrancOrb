@@ -116,9 +116,6 @@ namespace Itsuki
                 }
             }
 
-            //現在のオーブの数を書く
-
-
 
         }
 
@@ -141,11 +138,11 @@ namespace Itsuki
             //
             m_node[1]->SetNode(
                 gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{65, 65}},
-                [this] { AddOrbCost(1); }, 10, L"Resources/Textures/Star.png", VALUE_TEXT);
+                [this] { AddOrbCost(1); }, 5, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             m_node[2]->SetNode(
                 gameContext, m_node[1], {m_node[1]->GetPosition() + SimpleMath::Vector2{65, 65}},
-                [this] { AddOrbCost(1); }, 20, L"Resources/Textures/Star.png", VALUE_TEXT);
+                [this] { AddOrbCost(1); }, 15, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             m_node[3]->SetNode(
                 gameContext, m_node[2], {m_node[2]->GetPosition() + SimpleMath::Vector2{65, 65}},
@@ -154,39 +151,39 @@ namespace Itsuki
             //
             m_node[4]->SetNode(
                 gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, 65}},
-                [this] { Speed(0.25); }, 5, L"Resources/Textures/Star.png", SPEED_TEXT);
+                [this] { Speed(0.5); }, 5, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             m_node[5]->SetNode(
                 gameContext, m_node[4], {m_node[4]->GetPosition() + SimpleMath::Vector2{-65, 65}},
-                [this] { Speed(0.25); }, 10, L"Resources/Textures/Star.png", SPEED_TEXT);
+                [this] { Speed(0.5); }, 10, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             m_node[6]->SetNode(
                 gameContext, m_node[5], {m_node[5]->GetPosition() + SimpleMath::Vector2{-65, 65}},
                 [this] { Speed(0.5); }, 15, L"Resources/Textures/Star.png", SPEED_TEXT);
 
-            //
+            //オーブ発生のインターバル
             m_node[7]->SetNode(
                 gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{65, -65}},
-                [this] { IntervalDecrease(0.5); }, 10, L"Resources/Textures/Star.png", INTERVAL_TEXT);
+                [this] { IntervalDecrease(1.5); }, 5, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             m_node[8]->SetNode(
                 gameContext, m_node[7], {m_node[7]->GetPosition() + SimpleMath::Vector2{65, -65}},
-                [this] { IntervalDecrease(1); }, 50, L"Resources/Textures/Star.png", INTERVAL_TEXT);
+                [this] { IntervalDecrease(1.5); }, 30, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             m_node[9]->SetNode(
                 gameContext, m_node[8], {m_node[8]->GetPosition() + SimpleMath::Vector2{65, -65}},
-                [this] { IntervalDecrease(1.5); }, 100, L"Resources/Textures/Star.png", INTERVAL_TEXT);
+                [this] { IntervalDecrease(1); }, 100, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             //
             m_node[10]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, -65}}, [this] { Time(5); },
-                50, L"Resources/Textures/Star.png", TIMER_TEXT);
+                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, -65}}, [this] { Time(10); },
+                5, L"Resources/Textures/Star.png", TIMER_TEXT);
             m_node[11]->SetNode(
                 gameContext, m_node[10], {m_node[10]->GetPosition() + SimpleMath::Vector2{-65, -65}},
-                [this] { Time(5); }, 300, L"Resources/Textures/Star.png", TIMER_TEXT);
+                [this] { Time(5); }, 100, L"Resources/Textures/Star.png", TIMER_TEXT);
             m_node[12]->SetNode(
                 gameContext, m_node[11], {m_node[11]->GetPosition() + SimpleMath::Vector2{-65, -65}},
-                [this] { Time(15); }, 1500, L"Resources/Textures/Star.png", TIMER_TEXT);
+                [this] { Time(15); }, 200, L"Resources/Textures/Star.png", TIMER_TEXT);
 
 
             //運
@@ -198,7 +195,7 @@ namespace Itsuki
                 auto cosy = (90 * std::sinf(rad));
 
                 m_node[13 + i]->SetNode(
-                    gameContext, m_node[0], {200 + sinx, 500 + cosy}, [this] { Luck(10); }, 150,
+                    gameContext, m_node[0], {200 + sinx, 500 + cosy}, [this] { Luck(10); }, 100,
                     L"Resources/Textures/Star.png", LUCK_TEXT);
             
 
@@ -209,10 +206,22 @@ namespace Itsuki
                 gameContext, m_node[0], {width / 2, 90}, [this] { IsClear(); }, 500,
                 L"Resources/Textures/ClearStar.png", CLEAR_TEXT);
 
-            //
-            m_node[21]->SetNode(
-                gameContext, m_node[0], {width / 2, 90}, [this] { IsClear(); }, 500,
-                L"Resources/Textures/ClearStar.png", CLEAR_TEXT);
+            //最初のオーブの数
+            m_node[22]->SetNode(
+                gameContext, m_node[0], {1000, 90}, [this] { AddFirstOrb(3); }, 30, L"Resources/Textures/Star.png",
+                ADD_TEXT);
+
+            m_node[23]->SetNode(
+                gameContext, m_node[22], {m_node[22]->GetPosition() + SimpleMath::Vector2{0, 65}},
+                [this] { AddFirstOrb(3); }, 60, L"Resources/Textures/Star.png", ADD_TEXT);
+            m_node[24]->SetNode(
+                gameContext, m_node[23], {m_node[23]->GetPosition() + SimpleMath::Vector2{0, 65}},
+                [this] { AddFirstOrb(3); }, 100, L"Resources/Textures/Star.png", ADD_TEXT);
+            m_node[25]->SetNode(
+                gameContext, m_node[24], {m_node[24]->GetPosition() + SimpleMath::Vector2{0, 65}},
+                [this] { AddFirstOrb(5); },
+                300, L"Resources/Textures/Star.png",
+                ADD_TEXT);
 
 
 
@@ -258,6 +267,12 @@ namespace Itsuki
             {
                 ref_orbManager.AddOrb();
             }
+        }
+
+        //最初に出てくるオーブの追加
+        void AddFirstOrb(int num)
+        {
+            ref_orbManager.AddFirst(num);
         }
 
         //オーブの価値増加
@@ -340,7 +355,7 @@ namespace Itsuki
     private:
 
         //ノードの数
-        static constexpr int NODE_COUNT = 23;
+        static constexpr int NODE_COUNT = 26;
 
         //スキルツリーを動かす速さ
         static constexpr float NODE_MOVE_SPEED = 4;
@@ -352,8 +367,8 @@ namespace Itsuki
         static constexpr float CLICK_DRAG_THRESHOLD = 5.0f; 
 
         //テキスト群
-        std::wstring ADD_TEXT = L"オーブを増やすものが追加されます";
-        std::wstring TIMER_TEXT = L"オーブを収集できる時間が増えます。";
+        std::wstring ADD_TEXT = L"最初のオーブの数が増えます";
+        std::wstring TIMER_TEXT = L"オーブを収集できる時間が増えます";
         std::wstring VALUE_TEXT = L"オーブの価値が増えます";
         std::wstring MAGNET_TEXT = L"オーブを取得できる範囲が増えます";
         std::wstring INTERVAL_TEXT = L"オーブが出てくる間隔が減ります";

@@ -11,7 +11,7 @@
 
 namespace Itsuki
 {
-    class BackButton
+    class TitleBackButton
     {
     public:
 
@@ -21,7 +21,7 @@ namespace Itsuki
             m_imageButton.Initialize(gameContext, position, buttonimage, IMAGE_MAGNI, IMAGE_MAGNI);
         }
 
-        void Update(float elapsedtime, Player* player,OrbManager* orbmanager)
+        void Update(float elapsedtime,Imase::ISceneController<SceneId>& sceneController)
         {
 
             auto mouse = Mouse::Get().GetState();
@@ -37,17 +37,7 @@ namespace Itsuki
 
             if (m_imageButton.IsPushed(mouse))
             {
-                //リセットしていく
-                player->SetPosition({0, 0.5, 3.0});
-                player->SetVelocityY(0);
-
-                player->ResetAngle();
-                player->SetTimer();
-                player->SetMouseModeRelative();
-
-                orbmanager->ResetOrb();
-                orbmanager->AddOrb();
-
+                sceneController.RequestSwitch(SceneId::TitleScene);
             }
         }
 
@@ -61,7 +51,7 @@ namespace Itsuki
         
     private:
         // 画像の大きさの倍率
-        static constexpr float IMAGE_MAGNI = 0.8;
+        static constexpr float IMAGE_MAGNI = 1.5;
 
     private:    
 

@@ -12,7 +12,7 @@
 #include "GameContext.h"
 #include "../SceneId.h"
 #include <memory>
-
+#include"TitleBackButton.h"
 class ClearScene : public Imase::SceneBase<SceneId, GameContext>
 {
 public:
@@ -35,5 +35,8 @@ private:
 
 	// BGM
     SuzukiLib::Audio::AudioHandle m_bgmHandle;
+
+	//ƒ{ƒ^ƒ“
+    Itsuki::TitleBackButton m_titleBack;
 };
 

@@ -40,7 +40,7 @@ void Player::Initialze()
     m_luck = 0;
 
     //持っているオーブの設定
-    m_haveOrb = 100000;
+    m_haveOrb = 0;
 
     //クリア判定の初期化
     m_isCleared = false;
