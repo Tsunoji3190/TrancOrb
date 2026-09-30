@@ -17,13 +17,10 @@ void ClearScene::Update(Imase::ISceneController<SceneId>& sceneController, GameC
 	//キーボードの取得
 	auto kb = Keyboard::Get().GetState();
 
-	Imase::DebugRenderer& debugRenderer = gameContext.debugRenderer;
-
-	debugRenderer.DrawText({540, 300.0f}, L"Game Clear!!!");
-	debugRenderer.DrawText({540, 350.0f}, L"Please Push to Space");
 
 	if (gameContext.keyboardTracker.pressed.Space)
 	{
+        gameContext.audio.Stop(m_bgmHandle);
         sceneController.RequestSwitch(SceneId::TitleScene);
 	}
 
@@ -33,10 +30,38 @@ void ClearScene::Update(Imase::ISceneController<SceneId>& sceneController, GameC
 void ClearScene::Render(GameContext& gameContext)
 {
 	gameContext;
+
+    m_spriteBatch->Begin();
+
+    // クリア画像の描画
+    m_spriteBatch->Draw(m_texture.Get(), {0, 0}, nullptr, m_color, 0.0f, g_XMZero, {1, 1});
+
+    m_spriteBatch->End();
 }
 
 // シーン切り替え時に呼び出される関数
 void ClearScene::OnEnter(GameContext& gameContext)
 {
-	gameContext;
+    // DirectX3Dのデバイスを取得する
+    auto device = gameContext.deviceResources.GetD3DDevice();
+
+    // DirectX3Dのデバイスコンテキストを取得する
+    auto context = gameContext.deviceResources.GetD3DDeviceContext();
+
+    m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
+
+    //画像の設定
+    DirectX::CreateWICTextureFromFile(device, L"Resources/Textures/TRANC CLEAR.png", nullptr, m_texture.ReleaseAndGetAddressOf());
+
+    // bgmの設定
+    gameContext.audio.LoadSound("ClearBgm", "Resources/Audio/Bgm/A_Sanctuary_of_Healing.wav");
+
+    SuzukiLib::Audio::AudioPlayDesc desc;
+    desc.channel = SuzukiLib::Audio::AudioChannel::Bgm;
+    desc.loop = true;
+
+    //Bgmの情報を入れる
+    m_bgmHandle = gameContext.audio.Play("ClearBgm", desc);
+    //音の大きさを変える
+    gameContext.audio.SetVolume(m_bgmHandle, 0.65f);
 }

@@ -125,7 +125,7 @@ private:
     //オーブの価値
     static constexpr int FIRST_ORBVALUE = 1;
 
-    //インターバル(1=1フレーム)
+    //インターバル
     static constexpr float FIRST_INTERVAL = 5;
 
 private:

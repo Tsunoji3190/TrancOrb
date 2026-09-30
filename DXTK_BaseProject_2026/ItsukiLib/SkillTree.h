@@ -95,6 +95,17 @@ namespace Itsuki
             // 1x1の白色テクスチャをRECTのサイズに拡大して描画
             m_spriteBatch->Draw(m_whiteTexture.Get(), rect, color * 0.8);
 
+
+            // テキストの設定
+            std::wstring orb =
+                L"現在持っているオーブ: " + std::to_wstring(static_cast<int>(ref_player.GetHaveOrb())) + L"個";
+
+            //プレイヤーの持っているオーブを出す  
+            m_spriteFont->DrawString(m_spriteBatch.get(), orb.c_str(), DirectX::SimpleMath::Vector2{20.0f, 675.0f},
+                                     DirectX::Colors::White, 0.0, {0, 0}, {1.2, 1.2});
+
+
+
             m_spriteBatch->End();
 
             for (size_t i = 0; i < NODE_COUNT; i++)
@@ -143,15 +154,15 @@ namespace Itsuki
             //
             m_node[4]->SetNode(
                 gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, 65}},
-                [this] { Speed(0.25); }, 10, L"Resources/Textures/Star.png", SPEED_TEXT);
+                [this] { Speed(0.25); }, 5, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             m_node[5]->SetNode(
                 gameContext, m_node[4], {m_node[4]->GetPosition() + SimpleMath::Vector2{-65, 65}},
-                [this] { Speed(0.25); }, 15, L"Resources/Textures/Star.png", SPEED_TEXT);
+                [this] { Speed(0.25); }, 10, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             m_node[6]->SetNode(
                 gameContext, m_node[5], {m_node[5]->GetPosition() + SimpleMath::Vector2{-65, 65}},
-                [this] { Speed(0.5); }, 20, L"Resources/Textures/Star.png", SPEED_TEXT);
+                [this] { Speed(0.5); }, 15, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             //
             m_node[7]->SetNode(
@@ -160,11 +171,11 @@ namespace Itsuki
 
             m_node[8]->SetNode(
                 gameContext, m_node[7], {m_node[7]->GetPosition() + SimpleMath::Vector2{65, -65}},
-                [this] { IntervalDecrease(0.5); }, 50, L"Resources/Textures/Star.png", INTERVAL_TEXT);
+                [this] { IntervalDecrease(1); }, 50, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             m_node[9]->SetNode(
                 gameContext, m_node[8], {m_node[8]->GetPosition() + SimpleMath::Vector2{65, -65}},
-                [this] { IntervalDecrease(0.5); }, 100, L"Resources/Textures/Star.png", INTERVAL_TEXT);
+                [this] { IntervalDecrease(1.5); }, 100, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             //
             m_node[10]->SetNode(
@@ -177,9 +188,6 @@ namespace Itsuki
                 gameContext, m_node[11], {m_node[11]->GetPosition() + SimpleMath::Vector2{-65, -65}},
                 [this] { Time(15); }, 1500, L"Resources/Textures/Star.png", TIMER_TEXT);
 
-            //
-            m_node[13]->SetNode(
-                gameContext, m_node[0], {50, 50}, [this] { GetSkill(0); }, 100, L"Resources/Textures/Star.png");
 
             //運
             for (int i = 0; i < 8; i++)
@@ -189,12 +197,22 @@ namespace Itsuki
                 auto sinx = (90 * std::cosf(rad));
                 auto cosy = (90 * std::sinf(rad));
 
-                m_node[14 + i]->SetNode(
+                m_node[13 + i]->SetNode(
                     gameContext, m_node[0], {200 + sinx, 500 + cosy}, [this] { Luck(10); }, 150,
                     L"Resources/Textures/Star.png", LUCK_TEXT);
             
 
             }
+
+            //クリア
+            m_node[21]->SetNode(
+                gameContext, m_node[0], {width / 2, 90}, [this] { IsClear(); }, 500,
+                L"Resources/Textures/ClearStar.png", CLEAR_TEXT);
+
+            //
+            m_node[21]->SetNode(
+                gameContext, m_node[0], {width / 2, 90}, [this] { IsClear(); }, 500,
+                L"Resources/Textures/ClearStar.png", CLEAR_TEXT);
 
 
 
@@ -206,6 +224,8 @@ namespace Itsuki
             // 文字の背景の初期化
             CreateWhiteTexture(device);
 
+            // テキストの初期化
+            m_spriteFont = std::make_unique<DirectX::SpriteFont>(device, L"Resources/Font/Meiryo.spritefont");
 
         }
 
@@ -247,12 +267,6 @@ namespace Itsuki
             ref_orbManager.SetOrbValue(num);
         }
 
-        //オーブを取得できる範囲増加
-        void Magnet(float num)
-        {
-
-        }
-
         //いいことが起きる確率を増加させる
         void Luck(float num)
         {
@@ -284,6 +298,11 @@ namespace Itsuki
 
             ref_orbManager.Remomveinterval(time);
 
+        }
+
+        void IsClear()
+        {
+            ref_player.SetIsCleared(true);
         }
 
         //マウスを掴んだ際の反応
@@ -321,10 +340,10 @@ namespace Itsuki
     private:
 
         //ノードの数
-        static constexpr int NODE_COUNT = 22;
+        static constexpr int NODE_COUNT = 23;
 
         //スキルツリーを動かす速さ
-        static constexpr float NODE_MOVE_SPEED = 6;
+        static constexpr float NODE_MOVE_SPEED = 4;
 
         //スキルツリーの最大可動範囲
         static constexpr int MAX_SKILLTREE_MOVE = 100;
@@ -340,11 +359,15 @@ namespace Itsuki
         std::wstring INTERVAL_TEXT = L"オーブが出てくる間隔が減ります";
         std::wstring SPEED_TEXT = L"あなたの足が速くなります";
         std::wstring LUCK_TEXT = L"オーブを手に入れた際、そのオーブの価値が倍になる確率が増えます";
+        std::wstring CLEAR_TEXT = L"ロケットを買うことが出来、クリアすることが出来ます！";
 
     private:
 
         //
         std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+
+        // スプライトフォント
+        std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 
 
         //スキルノードを数分入れる

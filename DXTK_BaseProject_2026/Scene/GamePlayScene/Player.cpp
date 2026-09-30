@@ -39,6 +39,12 @@ void Player::Initialze()
     m_maxTime = FIRST_TIMER;
     m_luck = 0;
 
+    //持っているオーブの設定
+    m_haveOrb = 100000;
+
+    //クリア判定の初期化
+    m_isCleared = false;
+
     //位置の設定
     SetPosition(m_collider->GetParam().pos);
 }

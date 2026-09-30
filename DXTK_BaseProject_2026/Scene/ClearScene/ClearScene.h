@@ -11,6 +11,7 @@
 #include "ImaseLib/SceneManager.h"
 #include "GameContext.h"
 #include "../SceneId.h"
+#include <memory>
 
 class ClearScene : public Imase::SceneBase<SceneId, GameContext>
 {
@@ -27,5 +28,12 @@ public:
 
 private:
 
+	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+
+    DirectX::SimpleMath::Color m_color = Colors::White;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
+
+	// BGM
+    SuzukiLib::Audio::AudioHandle m_bgmHandle;
 };
 

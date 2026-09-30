@@ -51,6 +51,9 @@ namespace Itsuki
             {
                 if (player.GetHaveOrb() >= GetSteak())
                 {
+                    //Steak分持ってるオーブを減らす
+                    player.RemoveOrbCount(m_steak);
+
                     gameContext.audio.PlayOneShot(
                         "Buy" ,SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
                     GetSkillUp();
@@ -97,7 +100,7 @@ namespace Itsuki
             m_steak = steak;
 
                 // テキストの設定
-            std::wstring alltext = text + L" コスト:" + std::to_wstring(m_steak);
+            std::wstring alltext = text + L"\nコスト : " + std::to_wstring(m_steak);
 
 
             m_text = alltext;

@@ -59,6 +59,9 @@ private:
     std::unique_ptr<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>> m_CprimitiveBatch;
     std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 
+	// スプライトフォント
+    std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
+
 
 	// ベーシックエフェクトへのポインタ
     std::unique_ptr<DirectX::BasicEffect> m_basicEffect;
@@ -150,5 +153,8 @@ private:
 
 	// 背景
     std::unique_ptr<Effect3D::BackGround> m_background;
+
+	//ウィンドウサイズ
+    RECT m_windowSize;
 
 };

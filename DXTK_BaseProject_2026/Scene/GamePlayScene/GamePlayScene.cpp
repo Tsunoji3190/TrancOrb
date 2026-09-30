@@ -46,6 +46,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //タイマーがゼロになったら
     if (m_player->GetTimer() <= 0)
     {
+        //マウスの表示
         m_player->SetMouseModeAbsolute();
         m_skilltree->Update(elapsedTime,gameContext);
         m_backButton.Update(elapsedTime, m_player.get(), m_orbManager.get());
@@ -73,6 +74,16 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //もしクリア状態なら
     if (m_player->GetIsCleared())
     {
+        //ロケットとの当たり判定を取りあたったらクリアシーンへ
+        if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *m_rocket->GetCollider()))
+        {
+            // マウスの表示
+            m_player->SetMouseModeAbsolute();
+            gameContext.audio.Stop(m_bgmHandle);
+            sceneController.RequestSwitch(SceneId::ClearScene);
+        }
+
+
         return;
     }
 
@@ -128,14 +139,6 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //時間を減らす
     m_player->RemoveTimer(elapsedTime);
 
-    //テキストの設定
-    std::wstring text = L"Time: " + std::to_wstring(m_player->GetTimer());
-    std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_player->GetHaveOrb());
-
-    //テキストの描画
-    debugRenderer.DrawText({500.0f, 0.0f}, text);
-    debugRenderer.DrawText({.0f, 100.0f}, OrbCounttext);
-    //debugRenderer.DrawText({0.0f, 0.0f}, L"GamePlayScene");
 
 }
 
@@ -179,7 +182,7 @@ void GamePlayScene::Render(GameContext& gameContext)
 
     m_skyModelSun->Draw(context, gameContext.commonStates, SkyWorld, m_view, m_projection);
 
-    m_rocket->Render();
+    //m_renderer->Render(context, m_view, m_projection, *m_rocket->GetCollider());
 
     //ステージの線形描画
     for (int i = 0; i < m_stageManager->GetNumStages(); i++)
@@ -197,6 +200,10 @@ void GamePlayScene::Render(GameContext& gameContext)
     // クリアしたなら
     if (m_player->GetIsCleared())
     {
+        //ロケットの描画
+        m_rocket->Render();
+
+        return;
     }
 
 
@@ -216,6 +223,32 @@ void GamePlayScene::Render(GameContext& gameContext)
         Orb* pOrb = m_orbManager->GetOrb(i);
         pOrb->Render(context, m_view, m_projection, eye, target);
     }
+
+        // テキストの設定
+    std::wstring text = L"Time: " + std::to_wstring(static_cast<int>(m_player->GetTimer()));
+    std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_player->GetHaveOrb());
+
+    // 文字列の大きさを取得
+    DirectX::SimpleMath::Vector2 size = m_spriteFont->MeasureString(text.c_str());
+
+    // 横幅
+    int width = m_windowSize.right - m_windowSize.left;
+
+    // 縦幅
+    int height = m_windowSize.bottom - m_windowSize.top; 
+
+    m_spriteBatch->Begin();
+
+    // テキストの描画
+    m_spriteFont->DrawString(m_spriteBatch.get(), text.c_str(), DirectX::SimpleMath::Vector2{width / 2 - size.x, 0},
+                             DirectX::Colors::MidnightBlue, 0.0, {0, 0}, {1.0, 1.0});
+
+    m_spriteFont->DrawString(m_spriteBatch.get(), OrbCounttext.c_str(), DirectX::SimpleMath::Vector2{.0f, 100.0f},
+                             DirectX::Colors::MidnightBlue, 0.0, {0, 0}, {1.0, 1.0});
+    // debugRenderer.DrawText({0.0f, 0.0f}, L"GamePlayScene");
+
+    m_spriteBatch->End();
+
 
 }
 
@@ -239,6 +272,10 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_primitiveBatch = std::make_unique<DirectX::PrimitiveBatch<DirectX::VertexPositionColorTexture>>(context);
     m_CprimitiveBatch = std::make_unique<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>(context);
     m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
+
+    // テキストの初期化
+    m_spriteFont = std::make_unique<DirectX::SpriteFont>(device, L"Resources/Font/Meiryo.spritefont");
+
 
     // ---テクスチャのロード---//
     DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Resources/Textures/Orb.dds", nullptr,
@@ -285,16 +322,16 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     Itsuki::CollisionParams floar4 = {{.0f, -11.0f, .0f}, {-10.0f, -.1f, -10.0f}, {10.0f, .0f, 10.0}, {0}};
 
     //壁
-    Itsuki::CollisionParams wall1 = {{-4.0f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 7.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall2 = {{4.0f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 7.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.0f}, {-10.0f, -11.0f, -.1f}, {10.0f, 7.0f, .0f}, {0}};
-    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.0f}, {-10.0f, -11.0f, .0f}, {10.0f, 7.0f, .1f}, {0}};
+    Itsuki::CollisionParams wall1 = {{-4.0f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 6.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall2 = {{4.0f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 6.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.0f}, {-10.0f, -11.0f, -.1f}, {10.0f, 6.0f, .0f}, {0}};
+    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.0f}, {-10.0f, -11.0f, .0f}, {10.0f, 6.0f, .1f}, {0}};
 
     ///プレイヤー
     Itsuki::CollisionParams player = {{0.0f, 0.5f, 3.0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
 
     //ロケット
-    Itsuki::CollisionParams rocket = {{0.0f, .75f, 0.0f}, {-0.5, -1.5, -0.5}, {0.5, 1.5, 0.5}, {0.5}};
+    Itsuki::CollisionParams rocket = {{0.0f, .75f, 0.0f}, {-0.25, -.5, -0.25}, {0.25, .5, 0.25}, {0.5}};
 
     // ーーーーーーーーーーーーーーーーーーーーーーオブジェクトの当たり判定設定ーーーーーーーーーーーーーーーーーーーーーーーーーー
 
@@ -352,6 +389,8 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_rocket = std::make_unique<Rocket>(gameContext, m_view, m_projection, m_RocketModel.get(),
                                         colF.MakeCollider(Itsuki::SHAPE::BOX, rocket));
 
+    auto& dr = gameContext.deviceResources;
+    m_windowSize = dr.GetOutputSize();
 
     // マウスの状態を変える
     m_player->SetMouseModeRelative();
