@@ -15,6 +15,7 @@
 #include "ImaseLib/DebugCamera.h"
 
 #include "Player.h"
+#include "Rocket.h"
 #include "ItsukiLib/ColliderRenderer.h"
 #include"ItsukiLib/CollisionChecker.h"
 #include"ItsukiLib/ColliderFactory.h"
@@ -117,9 +118,11 @@ private:
 	// ターゲットの位置
     DirectX::SimpleMath::Vector3 m_targetPosition = { 0.0f, 0.0f, -2.0f };
 
-	//プレイヤーの作成
+	//プレイヤー
 	std::unique_ptr<Player> m_player;
 
+	//ロケット
+    std::unique_ptr<Rocket> m_rocket;
 
 	//ステージを格納
     std::unique_ptr<StageManager> m_stageManager;

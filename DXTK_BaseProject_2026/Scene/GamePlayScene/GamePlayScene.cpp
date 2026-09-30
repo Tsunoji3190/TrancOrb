@@ -164,7 +164,6 @@ void GamePlayScene::Render(GameContext& gameContext)
 	//m_player->Render(context, m_view, m_projection, eye, target);
 
     SimpleMath::Matrix SkyWorld = SimpleMath::Matrix::CreateScale(15);
-    SimpleMath::Matrix RocketWorld = SimpleMath::Matrix::CreateTranslation({0,3,0});
 
 
     //制限時間が0になったら
@@ -180,6 +179,7 @@ void GamePlayScene::Render(GameContext& gameContext)
 
     m_skyModelSun->Draw(context, gameContext.commonStates, SkyWorld, m_view, m_projection);
 
+    m_rocket->Render();
 
     //ステージの線形描画
     for (int i = 0; i < m_stageManager->GetNumStages(); i++)
@@ -197,7 +197,6 @@ void GamePlayScene::Render(GameContext& gameContext)
     // クリアしたなら
     if (m_player->GetIsCleared())
     {
-        m_RocketModel->Draw(context, gameContext.commonStates, RocketWorld, m_view, m_projection);
     }
 
 
@@ -293,6 +292,10 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
     ///プレイヤー
     Itsuki::CollisionParams player = {{0.0f, 0.5f, 3.0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
+
+    //ロケット
+    Itsuki::CollisionParams rocket = {{0.0f, .75f, 0.0f}, {-0.5, -1.5, -0.5}, {0.5, 1.5, 0.5}, {0.5}};
+
     // ーーーーーーーーーーーーーーーーーーーーーーオブジェクトの当たり判定設定ーーーーーーーーーーーーーーーーーーーーーーーーーー
 
     // 当たり判定工場の作成
@@ -300,11 +303,11 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
 	// モデルの読み込み
     m_model = Model::CreateFromCMO(device, L"Resources/Models/Dammy.cmo", fx);
+    m_RocketModel = Model::CreateFromCMO(device, L"Resources/Models/Space_Rocket.cmo", fx);
 
 
     //空のモデルの読み込み
     m_skyModelSun = Model::CreateFromCMO(device, L"Resources/Models/Skydome.cmo", fx);
-    m_RocketModel = Model::CreateFromCMO(device, L"Resources/Models/Space_Rocket.cmo", fx);
 
 
 
@@ -344,6 +347,11 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_player = std::make_unique<Player>(gameContext, m_view, m_projection, m_model.get(),
                                         colF.MakeCollider(Itsuki::SHAPE::SPHERE, player));
     m_player->Initialze();
+
+    //Rocketの作成
+    m_rocket = std::make_unique<Rocket>(gameContext, m_view, m_projection, m_RocketModel.get(),
+                                        colF.MakeCollider(Itsuki::SHAPE::BOX, rocket));
+
 
     // マウスの状態を変える
     m_player->SetMouseModeRelative();

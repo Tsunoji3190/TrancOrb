@@ -223,6 +223,7 @@
     <ClInclude Include="Scene\GamePlayScene\GamePlayScene.h" />
     <ClInclude Include="ItsukiLib\Obj.h" />
     <ClInclude Include="Scene\GamePlayScene\Orb.h" />
+    <ClInclude Include="Scene\GamePlayScene\Rocket.h" />
     <ClInclude Include="Scene\GamePlayScene\Status.h" />
     <ClInclude Include="Scene\SceneId.h" />
     <ClInclude Include="Scene\TitleScene\TitleScene.h" />
