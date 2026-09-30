@@ -45,7 +45,9 @@ private:
 	    // ステートの取得
     Mouse::ButtonStateTracker m_state;
 
+	// BGM
+    SuzukiLib::Audio::AudioHandle m_bgmHandle;
 
-    int m_isMenu;
+
 };
 

@@ -346,7 +346,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_orbManager = std::make_unique<OrbManager>(&gameContext, m_primitiveBatch.get(), m_orbTexture.Get());
 
     //bgmの設定
-    gameContext.audio.LoadSound("Bgm", "Resources/Audio/Bgm/GameBgm.wav");
+    gameContext.audio.LoadSound("Bgm2", "Resources/Audio/Bgm/GameBgm.wav");
     gameContext.audio.LoadSound("GetOrb", "Resources/Audio/Se/se_hirameki02.wav");
     gameContext.audio.LoadSound("Jump", "Resources/Audio/Se/se_bound1.wav");
     gameContext.audio.LoadSound("Stop", "Resources/Audio/Se/電子ルーレットの出目が点滅.wav");
@@ -359,10 +359,10 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     SuzukiLib::Audio::AudioPlayDesc desc;
     desc.channel = SuzukiLib::Audio::AudioChannel::Bgm;
     desc.loop = true;
-    m_bgmHandle = gameContext.audio.Play("Bgm", desc);
+    m_bgmHandle = gameContext.audio.Play("Bgm2", desc);
     gameContext.audio.SetVolume(m_bgmHandle, 0.8f);
 
-    //スキルツリーの生成
+    //スキルツリーの生成m_bgmHandle
     m_skilltree = std::make_unique<Itsuki::SkillTree>(*m_player, *m_orbManager);
 
     //スキルツリーの設定

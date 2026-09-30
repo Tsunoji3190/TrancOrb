@@ -19,17 +19,15 @@ void TitleScene::Update(Imase::ISceneController<SceneId>& sceneController, GameC
 
     float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
 
-    if (m_isMenu)
-    {
-        m_title->Update(elapsedTime);
-        m_menu->Update();
-    }
+    m_title->Update(elapsedTime);
+    m_menu->Update();
 
     m_state.Update(mouse);
     //STARTの状態で押されたら
     if (m_state.leftButton == Mouse::ButtonStateTracker::RELEASED &&
         m_menu->GetMenuState() == Effect3D::Menu::STATE::START)
     {
+        gameContext.audio.Stop(m_bgmHandle);
         sceneController.RequestSwitch(SceneId::GamePlayScene);
     }
 
@@ -48,14 +46,9 @@ void TitleScene::Render(GameContext& gameContext)
 {
     m_background->Render();
 
-    // メニュー表示時の描画
-    if (m_isMenu)
-    {
+    m_menu->Render();
 
-        m_menu->Render();
-
-        m_title->Render();
-    }
+    m_title->Render();
 }
 
 // シーン切り替え時に呼び出される関数
@@ -77,12 +70,21 @@ void TitleScene::OnEnter(GameContext& gameContext)
     D3D11_VIEWPORT windowInfo = deviceres.GetScreenViewport();
     m_menu->Initialize(&deviceres, (int)windowInfo.Width, (int)windowInfo.Height);
 
-    // メニュー状態にする
-    m_isMenu = 1;
 
     // タイトルの初期化処理
     m_title->Initialize(&deviceres, (int)windowInfo.Width, (int)windowInfo.Height);
 
     // 背景の初期化処理
     m_background->Initialize(&deviceres, (int)windowInfo.Width, (int)windowInfo.Height);
+
+    // bgmの設定
+    gameContext.audio.LoadSound("TitleBgm", "Resources/Audio/Bgm/忍び寄る邂逅.wav");
+
+    SuzukiLib::Audio::AudioPlayDesc desc;
+    desc.channel = SuzukiLib::Audio::AudioChannel::Bgm;
+    desc.loop = true;
+    m_bgmHandle = gameContext.audio.Play("TitleBgm", desc);
+    gameContext.audio.SetVolume(m_bgmHandle, 0.65f);
+
+
 }

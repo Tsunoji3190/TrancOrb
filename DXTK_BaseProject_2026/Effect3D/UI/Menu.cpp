@@ -41,12 +41,12 @@ void Effect3D::Menu::Initialize(DX::DeviceResources* pDR,int width,int height)
 
     //  メニュー１画像を読み込む
     Add(L"Resources/Textures/TrancPorinStart.png"
-        , DirectX::SimpleMath::Vector2(m_windowWidth/2, 420)
+        , DirectX::SimpleMath::Vector2(m_windowWidth/2, 440)
         , DirectX::SimpleMath::Vector2(0.8f,0.8f)
         , Effect3D::ANCHOR::MIDDLE_CENTER);
     //  メニュー2の画像を読み込む
     Add(L"Resources/Textures/TrancPorinExit.png"
-        , DirectX::SimpleMath::Vector2(m_windowWidth / 2, 620)
+        , DirectX::SimpleMath::Vector2(m_windowWidth / 2, 600)
         , DirectX::SimpleMath::Vector2(0.8f, 0.8f)
         , Effect3D::ANCHOR::MIDDLE_CENTER);
 
