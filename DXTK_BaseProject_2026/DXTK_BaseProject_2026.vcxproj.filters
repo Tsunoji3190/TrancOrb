@@ -135,6 +135,9 @@
     <Image Include="directx.ico">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Resources\Models\Albedo__Roket__1.dds">
+      <Filter>Assets</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest">
@@ -146,6 +149,7 @@
     <None Include="Shaders\Gauge.hlsli" />
     <None Include="Shaders\Particle.hlsli" />
     <None Include="Shaders\UI.hlsli" />
+    <None Include="Resources\Models\Space_Rocket.cmo" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Audio\Se\Accept.wav">

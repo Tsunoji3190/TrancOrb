@@ -19,6 +19,7 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_jump(0)
     , m_time(0)
     , m_maxTime(0)
+    , m_isCleared{false}
 {
     //当たり判定を設定する
     SetCollider(std::move(collider));

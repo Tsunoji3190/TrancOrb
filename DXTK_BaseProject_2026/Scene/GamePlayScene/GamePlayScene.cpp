@@ -58,21 +58,28 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //プレイヤーの更新
     m_player->Update(elapsedTime);
 
+    // ステージとの当たり判定
+    for (int i = 0; i < m_stageManager->GetNumStages(); i++)
+    {
+        Stage* Stage = m_stageManager->GetStage(i);
+        // もしプレイヤーとステージがぶつかったら
+        if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *Stage->GetCollider()))
+        {
+            // 押し出し判定を行う
+            ResolveCollision(m_player->GetCollider(), Stage->GetCollider());
+        }
+    }
+
+    //もしクリア状態なら
+    if (m_player->GetIsCleared())
+    {
+        return;
+    }
+
+
     //オーブマネージャーの更新
     m_orbManager->Update(elapsedTime);
 
-    //ステージとの当たり判定
-    for (int i=0;i<m_stageManager->GetNumStages();i++)
-    {
-        Stage* Stage = m_stageManager->GetStage(i);
-        //もしプレイヤーとステージがぶつかったら
-        if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *Stage->GetCollider()))
-        {
-            //押し出し判定を行う
-            ResolveCollision(m_player->GetCollider(), Stage->GetCollider());
-        }
-
-    }
     //オーブとの当たり判定
     for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
     {
@@ -157,6 +164,7 @@ void GamePlayScene::Render(GameContext& gameContext)
 	//m_player->Render(context, m_view, m_projection, eye, target);
 
     SimpleMath::Matrix SkyWorld = SimpleMath::Matrix::CreateScale(15);
+    SimpleMath::Matrix RocketWorld = SimpleMath::Matrix::CreateTranslation({0,3,0});
 
 
     //制限時間が0になったら
@@ -185,6 +193,14 @@ void GamePlayScene::Render(GameContext& gameContext)
         Stage* pStage = m_stageManager->GetStage(i);
         pStage->Render(context, m_view, m_projection, eye, target);
     }
+
+    // クリアしたなら
+    if (m_player->GetIsCleared())
+    {
+        m_RocketModel->Draw(context, gameContext.commonStates, RocketWorld, m_view, m_projection);
+    }
+
+
 
     ////当たり判定描画
     //for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
@@ -288,7 +304,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
     //空のモデルの読み込み
     m_skyModelSun = Model::CreateFromCMO(device, L"Resources/Models/Skydome.cmo", fx);
-    m_skyModelMoon = Model::CreateFromCMO(device, L"Resources/Models/SkydomeMoon.cmo", fx);
+    m_RocketModel = Model::CreateFromCMO(device, L"Resources/Models/Space_Rocket.cmo", fx);
 
 
 
@@ -307,7 +323,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
         }
     }
 
-        for (auto& mesh : m_skyModelMoon->meshes)
+        for (auto& mesh : m_RocketModel->meshes)
     {
         for (auto& parts : mesh->meshParts)
         {
@@ -346,7 +362,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_orbManager = std::make_unique<OrbManager>(&gameContext, m_primitiveBatch.get(), m_orbTexture.Get());
 
     //bgmの設定
-    gameContext.audio.LoadSound("Bgm2", "Resources/Audio/Bgm/GameBgm.wav");
+    gameContext.audio.LoadSound("GameBgm", "Resources/Audio/Bgm/GameBgm.wav");
     gameContext.audio.LoadSound("GetOrb", "Resources/Audio/Se/se_hirameki02.wav");
     gameContext.audio.LoadSound("Jump", "Resources/Audio/Se/se_bound1.wav");
     gameContext.audio.LoadSound("Stop", "Resources/Audio/Se/電子ルーレットの出目が点滅.wav");
@@ -359,7 +375,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     SuzukiLib::Audio::AudioPlayDesc desc;
     desc.channel = SuzukiLib::Audio::AudioChannel::Bgm;
     desc.loop = true;
-    m_bgmHandle = gameContext.audio.Play("Bgm2", desc);
+    m_bgmHandle = gameContext.audio.Play("GameBgm", desc);
     gameContext.audio.SetVolume(m_bgmHandle, 0.8f);
 
     //スキルツリーの生成m_bgmHandle

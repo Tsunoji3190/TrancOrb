@@ -10,8 +10,7 @@ enum struct SkillID
 {
     Dash = 0, // 走れるように
     Vacuum,   // 存在するオーブをすべて吸い込む
-    FirstGet,  // たまに価値が２倍になる
-
+    fever,  
 };
 
 class Player :public Obj
@@ -170,6 +169,18 @@ public:
 
     }
 
+    //クリアかどうか返す関数
+    bool GetIsCleared()
+    {
+        return m_isCleared;
+    }
+
+    //クリアの判定を設定する関数
+    void SetIsCleared(bool clear)
+    {
+        m_isCleared = clear;
+    }
+
 private:
 
     //X軸回転の最大までむける角度
@@ -185,7 +196,7 @@ private:
     static constexpr float JUMP_SPEED = 4.0f;
 
     //最初の時間
-    static constexpr float FIRST_TIMER = 1;
+    static constexpr float FIRST_TIMER = 10;
 
 
 
@@ -242,6 +253,10 @@ private:
 
     //運
     int m_luck;
+
+    //クリアしたか
+    bool m_isCleared;
+
 
     // 解放済みスキル一覧
     std::unordered_set<SkillID> m_unlockedSkills; 

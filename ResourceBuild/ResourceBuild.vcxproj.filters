@@ -34,6 +34,7 @@
       <Filter>Models</Filter>
     </MeshContentTask>
     <MeshContentTask Include="Models\SkydomeMoon.obj" />
+    <MeshContentTask Include="Models\Space_Rocket.obj" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Models\朝の空通常.png">
@@ -42,8 +43,12 @@
     <Image Include="Models\夜の空.png">
       <Filter>リソース ファイル</Filter>
     </Image>
+    <Image Include="Models\Albedo_Roket_1.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\SkydomeMoon.mtl" />
+    <None Include="Models\Space_Rocket.mtl" />
   </ItemGroup>
 </Project>

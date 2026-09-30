@@ -282,12 +282,14 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="directx.ico" />
+    <Image Include="Resources\Models\Albedo__Roket__1.dds" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\Models\Space_Rocket.cmo" />
     <None Include="Shaders\Gauge.hlsli" />
     <None Include="Shaders\Particle.hlsli" />
     <None Include="Shaders\UI.hlsli" />

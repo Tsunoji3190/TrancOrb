@@ -87,7 +87,7 @@ private:
 
 	//空のモデル
 	std::unique_ptr<DirectX::Model> m_skyModelSun;
-	std::unique_ptr<DirectX::Model> m_skyModelMoon;
+	std::unique_ptr<DirectX::Model> m_RocketModel;
 
 
 	// 一人称カメラ

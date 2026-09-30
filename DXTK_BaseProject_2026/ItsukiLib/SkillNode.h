@@ -51,7 +51,8 @@ namespace Itsuki
             {
                 if (player.GetHaveOrb() >= GetSteak())
                 {
-                    gameContext.audio.PlayOneShot("Buy");
+                    gameContext.audio.PlayOneShot(
+                        "Buy" ,SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
                     GetSkillUp();
                     SetIsGet(true);
                     m_imageButton.SetColor(Colors::White);
