@@ -10,7 +10,7 @@ enum struct SkillID
 {
     Dash = 0, // 走れるように
     Vacuum,   // 存在するオーブをすべて吸い込む
-    fever,  
+    fever,    //  
 };
 
 class Player :public Obj
@@ -150,6 +150,29 @@ public:
         m_luck += luck;
     }
 
+    //スキルの追加
+    void GetSkill(SkillID skill)
+    {
+        m_unlockedSkills.insert(skill);
+    }
+
+    //フィーバーかどうか設定する関数
+    void SetFever(bool fever)
+    {
+        m_isfevered = fever;
+    }
+
+    //フィーバー状態か返す関数
+    bool GetFever()
+    {
+        return m_isfevered;
+    }
+
+    void SetFeverInterval(float interval)
+    {
+        m_feverInterval=interval;
+    }
+
 public:
 
     void SetMouseModeRelative()
@@ -198,7 +221,11 @@ private:
     //最初の時間
     static constexpr float FIRST_TIMER = 10;
 
+    //フィーバータイムの持続時間
+    static constexpr float MAX_FEVER_TIME = 5;
 
+    //最初のフィーバータイムのインターバル
+    static constexpr float FIRST_FEVER_INTERVAL = 60;
 
 private:
 
@@ -257,6 +284,20 @@ private:
     //クリアしたか
     bool m_isCleared;
 
+    //フィーバー状態か
+    bool m_isfevered;
+
+    //フィーバー出来る時間
+    float m_fevertime;
+
+    //フィーバータイムのインターバル
+    float m_feverInterval;
+
+    //フィーバータイムの最大インターバル
+    float m_maxFeverInterval;
+
+    //フィーバータイム経過時間
+    float m_feverelapsed;
 
     // 解放済みスキル一覧
     std::unordered_set<SkillID> m_unlockedSkills; 

@@ -85,20 +85,20 @@ private:
 
 	//当った際に当る前の状態に戻す関数（現在は球と立方体の形のみに適応）
     void ResolveCollision(Itsuki::Collider* col1, Itsuki::Collider* col2);
+	
+	// カメラのY軸に対する回転角度（タイトル用）
+    float m_titleAngleRad = 0.0f;
 
 	// モデルハンドル
     std::unique_ptr<DirectX::Model> m_model;
 
-	//空のモデル
-	std::unique_ptr<DirectX::Model> m_skyModelSun;
-	std::unique_ptr<DirectX::Model> m_RocketModel;
+    // 空のモデル
+    std::unique_ptr<DirectX::Model> m_skyModelSun;
+    std::unique_ptr<DirectX::Model> m_RocketModel;
 
-
-	// 一人称カメラ
+    // 一人称カメラ
     void GamePlayCamera(float elapsedTime); 
-	
-	// カメラのY軸に対する回転角度（タイトル用）
-    float m_titleAngleRad = 0.0f;
+
 
 	// タイトル用カメラの回転角度（１秒間あたりの回転角度）
     static constexpr float TITLE_CAMERA_MOVE_ANGLE_DEG = 10.0f;

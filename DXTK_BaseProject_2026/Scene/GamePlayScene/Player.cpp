@@ -20,6 +20,10 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_time(0)
     , m_maxTime(0)
     , m_isCleared{false}
+    , m_feverelapsed{0}
+    , m_isfevered{false}
+    , m_fevertime{0},
+      m_feverInterval{0}
 {
     //当たり判定を設定する
     SetCollider(std::move(collider));
@@ -38,6 +42,13 @@ void Player::Initialze()
     m_time = FIRST_TIMER;
     m_maxTime = FIRST_TIMER;
     m_luck = 0;
+
+    //フィーバー関連の初期化
+    m_maxFeverInterval = FIRST_FEVER_INTERVAL;
+    m_feverInterval = m_maxFeverInterval;
+    m_feverelapsed = 0;
+    m_fevertime = MAX_FEVER_TIME;
+    m_isfevered = false;
 
     //持っているオーブの設定
     m_haveOrb = 0;
@@ -82,7 +93,6 @@ void Player::Update(float elapsedTime)
 
     //移動する方向の初期化
     m_direction = SimpleMath::Vector3::Zero;
-
 
     //対応したキーごとに移動する方向を変える
     if (kb.W)
@@ -143,6 +153,40 @@ void Player::Update(float elapsedTime)
 
     // 当たり判定も移動させる
     m_collider->SetPosition(m_position);
+
+
+    //もしフィーバースキルがアンロックされていて、Intervalが終わっていてEキーが押されたら
+    if (m_unlockedSkills.contains(SkillID::fever) && m_feverInterval<0 && kb.E)
+    {
+        //フィーバー状態にする
+        SetFever(true);
+
+        //インターバルを戻しておく
+        m_feverInterval = m_maxFeverInterval;
+    }
+
+    //フィーバー状態だったら
+    if (GetFever())
+    {
+        //フィーバー時間を経過させる
+        m_feverelapsed += elapsedTime;
+        
+        //制限時間に達したら
+        if (m_feverelapsed > m_fevertime)
+        {
+            //フィーバータイムを終了する
+            SetFever(false);
+
+            //リセットしておく
+            m_feverelapsed = 0;
+        }
+    }
+    else    //ちがかったら
+    {
+        //インターバルを減らす
+        m_feverInterval -= elapsedTime;
+    }
+
 }
 
 void Player::Render()

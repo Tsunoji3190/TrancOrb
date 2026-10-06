@@ -1,0 +1,119 @@
+{
+  "skills": [
+    {
+      "id": "start",
+      "parent": null,
+      "cost": 1,
+      "x": 640,
+      "y": 360,
+      "effect": "AddTime",
+      "amount": 5,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+
+    {
+      "id": "speed_1",
+      "parent": "start",
+      "cost": 3,
+      "x": 575,
+      "y": 425,
+      "effect": "AddSpeed",
+      "amount": 0.5,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+    {
+      "id": "speed_2",
+      "parent": "speed_1",
+      "cost": 9,
+      "x": 510,
+      "y": 490,
+      "effect": "AddSpeed",
+      "amount": 0.5,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+    {
+      "id": "speed_3",
+      "parent": "speed_2",
+      "cost": 30,
+      "x": 445,
+      "y": 555,
+      "effect": "AddSpeed",
+      "amount": 0.5,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+    //
+    {
+      "id": "value_1",
+      "parent": "start",
+      "cost": 3,
+      "x": 705,
+      "y": 425,
+      "effect": "AddOrbCost",
+      "amount": 1,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+    {
+      "id": "value_2",
+      "parent": "value_1",
+      "cost": 20,
+      "x": 770,
+      "y": 490,
+      "effect": "AddOrbCost",
+      "amount": 1,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+    {
+      "id": "value_3",
+      "parent": "value_2",
+      "cost": 60,
+      "x": 835,
+      "y": 555,
+      "effect": "AddOrbCost",
+      "amount": 1,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+    //
+    {
+      "id": "time_1",
+      "parent": "start",
+      "cost": 3,
+      "x": 575,
+      "y": 295,
+      "effect": "AddTime",
+      "amount": 10,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+    {
+      "id": "time_2",
+      "parent": "time_1",
+      "cost": 100,
+      "x": 510,
+      "y": 230,
+      "effect": "AddTime",
+      "amount": 10,
+      "Resource": "Resources/Textures/Star.png"
+
+    },
+    {
+      "id": "time_3",
+      "parent": "time_2",
+      "cost": 200,
+      "x": 445,
+      "y": 165,
+      "effect": "AddTime",
+      "amount": 10,
+      "Resource": "Resources/Textures/Star.png"
+
+    }
+
+
+  ]
+}

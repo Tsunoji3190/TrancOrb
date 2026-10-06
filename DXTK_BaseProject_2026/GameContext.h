@@ -36,6 +36,7 @@ struct GameContext
 	// デバッグ用の描画セット
 	Imase::DebugRenderer& debugRenderer;
 
+	//
 	SuzukiLib::Audio::AudioSystem& audio;
 };
 

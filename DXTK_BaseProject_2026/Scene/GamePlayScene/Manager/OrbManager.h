@@ -14,8 +14,9 @@ public:
         , m_pPrimitiveBatch{pPrimitiveBatch}
         , m_pTexture{pTexture}
         , m_pOrbs{}
-        , m_orbValues{FIRST_ORBVALUE}
-        , m_orbInterval{FIRST_INTERVAL}
+        , m_orbValues{0}
+        , m_orbInterval{0}
+        , m_saveOrbInterval{0}
         , m_count{0}
         , m_startingOrbCount{0}
     { 
@@ -28,6 +29,13 @@ public:
     };
 
     ~OrbManager() = default;
+
+    void Initialize()
+    {
+        m_orbValues = FIRST_ORBVALUE;
+        m_orbInterval = FIRST_INTERVAL;
+        m_saveOrbInterval = FIRST_INTERVAL;
+    }
 
     void Update(float elapsedtime)
     {
@@ -121,8 +129,24 @@ public:
     void Remomveinterval(float num)
     {
         m_orbInterval -= num;
+        m_saveOrbInterval = m_orbInterval;
     }
 
+    //元のインターバルに戻す
+    void ReturnInterval()
+    {
+        m_orbInterval = m_saveOrbInterval;
+    }
+
+    //Intervalを設定する
+    void SetInterval(float num)
+    {
+        m_orbInterval = num;
+    }
+
+
+
+    //最初に出てくるオーブを設定する
     void AddFirst(int num)
     {
         m_startingOrbCount += num;
@@ -161,6 +185,9 @@ private:
 
     //オーブのインターバル
     float m_orbInterval;
+
+    //オーブの保持インターバル
+    float m_saveOrbInterval;
 
     //時間をカウントする
     float m_count;

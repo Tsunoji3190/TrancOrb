@@ -82,6 +82,7 @@
     <ClInclude Include="Scene\GamePlayScene\BackButton.h" />
     <ClInclude Include="Scene\GamePlayScene\Rocket.h" />
     <ClInclude Include="Scene\ClearScene\TitleBackButton.h" />
+    <ClInclude Include="nlohmann\json.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -152,6 +153,7 @@
     <None Include="Shaders\Particle.hlsli" />
     <None Include="Shaders\UI.hlsli" />
     <None Include="Resources\Models\Space_Rocket.cmo" />
+    <None Include="Resources\json\SkillNode.json" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Resources\Audio\Se\Accept.wav">

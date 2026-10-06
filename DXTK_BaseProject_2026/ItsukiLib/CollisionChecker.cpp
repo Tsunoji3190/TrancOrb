@@ -40,7 +40,12 @@ bool CollisionChecker::CheckCollision(const Collider& collider1, const Collider&
 
         case Itsuki::SHAPE::NONE:
 
-        
+            return false;
+            break;
+
+        default:
+
+            assert("no kind!");
             return false;
     }
     

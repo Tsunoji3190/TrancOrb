@@ -211,6 +211,7 @@
     <ClInclude Include="ItsukiLib\SkillTree.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
+    <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
     <ClInclude Include="Scene\ClearScene\TitleBackButton.h" />
     <ClInclude Include="Scene\GamePlayScene\BackButton.h" />
@@ -291,6 +292,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\json\SkillNode.json" />
     <None Include="Resources\Models\Space_Rocket.cmo" />
     <None Include="Shaders\Gauge.hlsli" />
     <None Include="Shaders\Particle.hlsli" />

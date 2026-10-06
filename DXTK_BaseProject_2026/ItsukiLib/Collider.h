@@ -55,7 +55,7 @@ namespace Itsuki
         }
 
         // 当たり判定の形を返す
-        int GetShape() const
+        SHAPE GetShape() const
         {
             return m_KindShape;
         }
@@ -71,7 +71,7 @@ namespace Itsuki
         DirectX::SimpleMath::Vector3 m_position;
 
         // 当たり判定の種類（最初はなにも入れない）
-        int m_KindShape = NONE;
+        SHAPE m_KindShape = NONE;
 
         //パラメータ
         Itsuki::CollisionParams m_param;

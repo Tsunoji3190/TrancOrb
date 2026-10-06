@@ -94,7 +94,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     m_orbManager->Update(elapsedTime);
 
     //オーブとの当たり判定
-    for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
+    for (int i = m_orbManager->GetNumOrbs() - 1; i >= 0; i--)
     {
 
         Orb* pOrb = m_orbManager->GetOrb(i);
@@ -138,9 +138,20 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
         }
     }
 
+    //フィーバータイムに突入したら
+    if (m_player->GetFever())
+    {
+        //オーブのカウントをめちゃ減らす
+        m_orbManager->SetInterval(0.5);
+    }
+    else    //違うなら
+    {
+        //戻す
+        m_orbManager->ReturnInterval();
+    }
+
     //時間を減らす
     m_player->RemoveTimer(elapsedTime);
-
 
 }
 
@@ -207,8 +218,6 @@ void GamePlayScene::Render(GameContext& gameContext)
 
         return;
     }
-
-
 
     ////当たり判定描画
     //for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
@@ -409,6 +418,8 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall4));
 
     m_orbManager = std::make_unique<OrbManager>(&gameContext, m_primitiveBatch.get(), m_orbTexture.Get());
+    m_orbManager->Initialize();
+
 
     //bgmの設定
     gameContext.audio.LoadSound("GameBgm", "Resources/Audio/Bgm/GameBgm.wav");
