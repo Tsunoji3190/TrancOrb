@@ -2,6 +2,8 @@
 #include "SkillNode.h"
 #include"../Scene/GamePlayScene/Player.h"
 #include"../Scene/GamePlayScene/Manager/OrbManager.h"
+#include "GameTimer.h"
+
 #include <nlohmann/json.hpp>
 #include <cmath>
 
@@ -15,8 +17,8 @@ namespace Itsuki
     {
     public:
 
-        SkillTree(Player& player, OrbManager& manager) 
-            : ref_player{player}, ref_orbManager{manager}, m_mouse{}
+        SkillTree(Player& player, OrbManager& manager,GameTimer& timer) 
+            : ref_player{player}, ref_orbManager{manager}, ref_gameTimer{timer},m_mouse{}
         {
         }
 
@@ -24,7 +26,6 @@ namespace Itsuki
         void Update(float elapsedtime,GameContext& gameContext)
         {
 
-                        
             MouseDragging();
 
             //押せるかどうかの距離の判断
@@ -305,7 +306,7 @@ namespace Itsuki
         void Time(float num)
         {
             //現在の制限時間に追加する
-            ref_player.AddMaxTimer(num);
+            ref_gameTimer.AddMaxTimer(num);
         }
 
         //スキルを追加
@@ -406,6 +407,9 @@ namespace Itsuki
 
         //オーブマネージャー
         OrbManager& ref_orbManager;
+
+        //ゲームタイマー
+        GameTimer& ref_gameTimer;
 
         //スキルツリーの位置
         DirectX::SimpleMath::Vector2 m_pos;

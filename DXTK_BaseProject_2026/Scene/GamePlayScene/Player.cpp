@@ -17,8 +17,6 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_haveOrb{0}
     , m_speed(0)
     , m_jump(0)
-    , m_time(0)
-    , m_maxTime(0)
     , m_isCleared{false}
     , m_feverelapsed{0}
     , m_isfevered{false}
@@ -39,8 +37,6 @@ void Player::Initialze()
 {
     m_speed = MOVE_SPEED;
     m_jump = JUMP_SPEED;
-    m_time = FIRST_TIMER;
-    m_maxTime = FIRST_TIMER;
     m_luck = 0;
 
     //フィーバー関連の初期化

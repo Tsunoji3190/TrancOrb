@@ -207,6 +207,7 @@
     <ClInclude Include="ItsukiLib\ColliderFactory.h" />
     <ClInclude Include="ItsukiLib\ColliderRenderer.h" />
     <ClInclude Include="ItsukiLib\CollisionChecker.h" />
+    <ClInclude Include="ItsukiLib\GameTimer.h" />
     <ClInclude Include="ItsukiLib\SkillNode.h" />
     <ClInclude Include="ItsukiLib\SkillTree.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />

@@ -118,32 +118,11 @@ public:
         m_haveOrb -= num;
     }
 
-    void SetTimer()
-    {
-        m_time = m_maxTime;
-    }
-
-    float GetTimer()
-    {
-        return m_time;
-    }
-
-    void RemoveTimer(float time)
-    {
-        m_time -= time;
-    }
-
-    void AddMaxTimer(float time)
-    {
-        m_maxTime += time;
-    }
-
     // 運を取得する
     int GetLuck()
     {
         return m_luck;
     }
-
 
     void AddLuck(int luck)
     {
@@ -218,9 +197,6 @@ private:
     //ジャンプの加速度
     static constexpr float JUMP_SPEED = 4.0f;
 
-    //最初の時間
-    static constexpr float FIRST_TIMER = 10;
-
     //フィーバータイムの持続時間
     static constexpr float MAX_FEVER_TIME = 5;
 
@@ -271,12 +247,6 @@ private:
 
     //ジャンプ力の高さ
     float m_jump;
-
-    //動ける時間の長さ
-    float m_time;
-
-    //動ける最大時間
-    float m_maxTime;
 
     //運
     int m_luck;

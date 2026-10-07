@@ -24,6 +24,7 @@
 #include"Manager/OrbManager.h"
 #include"../../ItsukiLib/SkillTree.h"
 #include"BackButton.h"
+#include"../../ItsukiLib/GameTimer.h"
 
 #include"ItsukiLib/Camera/NormalCamera.h"
 
@@ -61,7 +62,6 @@ private:
 
 	// スプライトフォント
     std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
-
 
 	// ベーシックエフェクトへのポインタ
     std::unique_ptr<DirectX::BasicEffect> m_basicEffect;
@@ -157,5 +157,8 @@ private:
 
 	//ウィンドウサイズ
     RECT m_windowSize;
+
+	//ゲームタイマー
+    std::unique_ptr<Itsuki::GameTimer> m_timer;
 
 };

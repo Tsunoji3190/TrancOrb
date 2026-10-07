@@ -83,6 +83,7 @@
     <ClInclude Include="Scene\GamePlayScene\Rocket.h" />
     <ClInclude Include="Scene\ClearScene\TitleBackButton.h" />
     <ClInclude Include="nlohmann\json.hpp" />
+    <ClInclude Include="ItsukiLib\GameTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

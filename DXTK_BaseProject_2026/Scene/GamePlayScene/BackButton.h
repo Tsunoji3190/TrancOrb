@@ -8,6 +8,8 @@
 #include <WICTextureLoader.h>
 
 #include"../../ItsukiLib/Button.h"
+#include "../../ItsukiLib/GameTimer.h"
+
 
 namespace Itsuki
 {
@@ -21,7 +23,7 @@ namespace Itsuki
             m_imageButton.Initialize(gameContext, position, buttonimage, IMAGE_MAGNI, IMAGE_MAGNI);
         }
 
-        void Update(float elapsedtime, Player* player, OrbManager* orbmanager)
+        void Update(float elapsedtime, Player* player, OrbManager* orbmanager,GameTimer* timer)
         {
 
             auto mouse = Mouse::Get().GetState();
@@ -42,7 +44,7 @@ namespace Itsuki
                 player->SetVelocityY(0);
 
                 player->ResetAngle();
-                player->SetTimer();
+                timer->ResetTimer();
                 player->SetMouseModeRelative();
 
                 orbmanager->ResetOrb();

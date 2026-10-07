@@ -44,14 +44,14 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     //}
 
     //タイマーがゼロになったら
-    if (m_player->GetTimer() <= 0)
+    if (m_timer->GetTimer() <= 0)
     {
 
 
         //マウスの表示
         m_player->SetMouseModeAbsolute();
         m_skilltree->Update(elapsedTime,gameContext);
-        m_backButton.Update(elapsedTime, m_player.get(), m_orbManager.get());
+        m_backButton.Update(elapsedTime, m_player.get(), m_orbManager.get(),m_timer.get());
         return;
     }
 
@@ -151,7 +151,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     }
 
     //時間を減らす
-    m_player->RemoveTimer(elapsedTime);
+    m_timer->RemoveTimer(elapsedTime);
 
 }
 
@@ -183,7 +183,7 @@ void GamePlayScene::Render(GameContext& gameContext)
 
 
     //制限時間が0になったら
-    if (m_player->GetTimer() <= 0)
+    if (m_timer->GetTimer() <= 0)
     {
 
         m_background->Render();
@@ -236,7 +236,7 @@ void GamePlayScene::Render(GameContext& gameContext)
     }
 
         // テキストの設定
-    std::wstring text = L"Time: " + std::to_wstring(static_cast<int>(m_player->GetTimer()));
+    std::wstring text = L"Time: " + std::to_wstring(static_cast<int>(m_timer->GetTimer()));
     std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_player->GetHaveOrb());
 
     // 文字列の大きさを取得
@@ -417,8 +417,13 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall3));
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall4));
 
+    //オーブマネージャーの設定
     m_orbManager = std::make_unique<OrbManager>(&gameContext, m_primitiveBatch.get(), m_orbTexture.Get());
     m_orbManager->Initialize();
+
+    // タイマーの設定
+    m_timer = std::make_unique<Itsuki::GameTimer>();
+    m_timer->Initialize();
 
 
     //bgmの設定
@@ -430,9 +435,6 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     gameContext.audio.LoadSound("Buy", "Resources/Audio/Se/5ac8850c.wav");
 
 
-
-
-
     SuzukiLib::Audio::AudioPlayDesc desc;
     desc.channel = SuzukiLib::Audio::AudioChannel::Bgm;
     desc.loop = true;
@@ -440,7 +442,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     gameContext.audio.SetVolume(m_bgmHandle, 0.8f);
 
     //スキルツリーの生成m_bgmHandle
-    m_skilltree = std::make_unique<Itsuki::SkillTree>(*m_player, *m_orbManager);
+    m_skilltree = std::make_unique<Itsuki::SkillTree>(*m_player, *m_orbManager, *m_timer);
 
     //スキルツリーの設定
     m_skilltree->SetTrees(gameContext);
