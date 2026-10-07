@@ -64,7 +64,6 @@
     <ClInclude Include="SuzukiLib\Audio\Internal\DirectXTKAudioDevice.h" />
     <ClInclude Include="SuzukiLib\Audio\Internal\DirectXTKAudioPlayer.h" />
     <ClInclude Include="SuzukiLib\Audio\Internal\DirectXTKAudioResourceManager.h" />
-    <ClInclude Include="Scene\GamePlayScene\Status.h" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
     <ClInclude Include="ItsukiLib\ColliderFactory.h" />
     <ClInclude Include="ItsukiLib\SkillNode.h" />
@@ -120,7 +119,6 @@
     <ClCompile Include="SuzukiLib\Audio\Internal\DirectXTKAudioDevice.cpp" />
     <ClCompile Include="SuzukiLib\Audio\Internal\DirectXTKAudioPlayer.cpp" />
     <ClCompile Include="SuzukiLib\Audio\Internal\DirectXTKAudioResourceManager.cpp" />
-    <ClCompile Include="Scene\GamePlayScene\Status.cpp" />
     <ClCompile Include="Scene\ClearScene\ClearScene.cpp" />
     <ClCompile Include="Effect3D\ParticleManager\ParticleManager.cpp" />
     <ClCompile Include="Effect3D\ParticleManager\ParticlePosition.cpp" />

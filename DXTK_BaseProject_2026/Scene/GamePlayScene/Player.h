@@ -13,8 +13,26 @@ enum struct SkillID
     fever,    //  
 };
 
+
 class Player :public Obj
 {
+private:
+
+    struct Status
+    {
+        // 移動の速さ
+        float speed;
+
+        // ジャンプ力の高さ
+        float jump;
+
+        // 運
+        int luck;
+
+        // 持っているオーブの数
+        int haveOrb;
+
+    };
 
 public:
 
@@ -80,53 +98,10 @@ public:
 
     //-----------------------強化に使う部分-----------------------//
 
-    void AddSpeed(float speed)
+    //ステータスを取得する関数
+    Status& GetStatus()
     {
-        m_speed += speed;
-    }
-
-    float GetSpeed()
-    {
-        return m_speed;
-    }
-
-    void SetJump(float jump)
-    {
-        m_jump += jump;
-    }
-
-    float GetJump()
-    {
-        return m_jump;
-    }
-
-    //持っているオーブを追加する
-    void AddOrbCount(int num)
-    {
-        m_haveOrb += num;
-    }
-
-    //どれだけ持っているかを返す
-    int GetHaveOrb()
-    {
-        return m_haveOrb;
-    }
-
-    //持っているオーブを減らす
-    void RemoveOrbCount(int num)
-    {
-        m_haveOrb -= num;
-    }
-
-    // 運を取得する
-    int GetLuck()
-    {
-        return m_luck;
-    }
-
-    void AddLuck(int luck)
-    {
-        m_luck += luck;
+        return m_status;
     }
 
     //スキルの追加
@@ -149,7 +124,7 @@ public:
 
     void SetFeverInterval(float interval)
     {
-        m_feverInterval=interval;
+        m_feverInterval = interval;
     }
 
 public:
@@ -205,7 +180,6 @@ private:
 
 private:
 
-
     // ゲームコンテキスト
     const GameContext& m_gameContext;
     
@@ -236,20 +210,12 @@ private:
     // 設置しているかどうか判定
     bool m_isGround;
 
-    //持っているオーブの数
-    int m_haveOrb;
 
     //----------変化するパラメータ----------//
 private:
 
-    //移動の速さ
-    float m_speed;
-
-    //ジャンプ力の高さ
-    float m_jump;
-
-    //運
-    int m_luck;
+    //ステータス
+    Status m_status;
 
     //クリアしたか
     bool m_isCleared;

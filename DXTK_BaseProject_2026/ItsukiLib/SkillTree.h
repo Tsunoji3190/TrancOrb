@@ -15,6 +15,7 @@ namespace Itsuki
 
 	class SkillTree
     {
+
     public:
 
         SkillTree(Player& player, OrbManager& manager,GameTimer& timer) 
@@ -103,7 +104,7 @@ namespace Itsuki
 
             // テキストの設定
             std::wstring orb =
-                L"現在持っているオーブ: " + std::to_wstring(static_cast<int>(ref_player.GetHaveOrb())) + L"個";
+                L"現在持っているオーブ: " + std::to_wstring(static_cast<int>(ref_player.GetStatus().haveOrb)) + L"個";
 
             //プレイヤーの持っているオーブを出す  
             m_spriteFont->DrawString(m_spriteBatch.get(), orb.c_str(), DirectX::SimpleMath::Vector2{20.0f, 675.0f},
@@ -200,7 +201,7 @@ namespace Itsuki
                 auto cosy = (90 * std::sinf(rad));
 
                 m_node[13 + i]->SetNode(
-                    gameContext, m_node[0], {200 + sinx, 500 + cosy}, [this] { Luck(10); }, 80,
+                    gameContext, m_node[0], {200 + sinx, 500 + cosy}, [this] { Luck(10); }, 20,
                     L"Resources/Textures/Star.png", LUCK_TEXT);
             
 
@@ -293,13 +294,13 @@ namespace Itsuki
         //いいことが起きる確率を増加させる
         void Luck(float num)
         {
-            ref_player.AddLuck(num);
+            ref_player.GetStatus().luck += num;
         }
 
         //脚の速さ増加
         void Speed(float num)
         {
-            ref_player.AddSpeed(num);
+            ref_player.GetStatus().speed += num;
         }
 
         //時間の延長

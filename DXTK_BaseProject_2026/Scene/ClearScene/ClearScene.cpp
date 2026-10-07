@@ -17,17 +17,21 @@ void ClearScene::Update(Imase::ISceneController<SceneId>& sceneController, GameC
 	//キーボードの取得
 	auto kb = Keyboard::Get().GetState();
 
+    auto mouse = Mouse::Get().GetState();
+
     // 経過時間を取得する
     float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
 
 
-	if (gameContext.keyboardTracker.pressed.Space)
-	{
+    m_titleBack.Update(elapsedTime, sceneController);
+
+    auto button = m_titleBack.GetImageButton();
+
+    if (button->IsPushed(mouse))
+    {
         gameContext.audio.Stop(m_bgmHandle);
         sceneController.RequestSwitch(SceneId::TitleScene);
-	}
-
-    m_titleBack.Update(elapsedTime, sceneController);
+    }
 
 }
 

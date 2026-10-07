@@ -6,8 +6,7 @@
 #include <Windows.h>
 #include <GameContext.h>
 #include <WICTextureLoader.h>
-
-#include"../../ItsukiLib/Button.h"
+#include <ItsukiLib/Button.h>
 
 namespace Itsuki
 {
@@ -18,7 +17,8 @@ namespace Itsuki
     void Initialize(GameContext& gameContext, DirectX::SimpleMath::Vector2 position,
                         std::wstring buttonimage = L"Resources/Textures/テスト六角型.png")
         {
-            m_imageButton.Initialize(gameContext, position, buttonimage, IMAGE_MAGNI, IMAGE_MAGNI);
+        m_imageButton = std::make_unique<Itsuki::ImageButton>();
+            m_imageButton->Initialize(gameContext, position, buttonimage, IMAGE_MAGNI, IMAGE_MAGNI);
         }
 
         void Update(float elapsedtime,Imase::ISceneController<SceneId>& sceneController)
@@ -26,29 +26,29 @@ namespace Itsuki
 
             auto mouse = Mouse::Get().GetState();
             
-            if (m_imageButton.IsCursored(mouse))
+            if (m_imageButton->IsCursored(mouse))
             {
-                m_imageButton.SetColor(Colors::White);
+                m_imageButton->SetColor(Colors::White);
             }
             else
             {
-                m_imageButton.SetColor(Colors::Gray);
+                m_imageButton->SetColor(Colors::Gray);
             }
 
-            if (m_imageButton.IsPushed(mouse))
-            {
-                sceneController.RequestSwitch(SceneId::TitleScene);
-            }
         }
 
         void Render()
         {
-            m_imageButton.SpriteBegin();
-            m_imageButton.Render();
-            m_imageButton.SpriteEnd();
+            m_imageButton->SpriteBegin();
+            m_imageButton->Render();
+            m_imageButton->SpriteEnd();
         }
 
-        
+        Itsuki::ImageButton* GetImageButton()
+        {
+            return m_imageButton.get();
+        }
+
     private:
         // 画像の大きさの倍率
         static constexpr float IMAGE_MAGNI = 1.5;
@@ -77,7 +77,7 @@ namespace Itsuki
         DirectX::SimpleMath::Vector2 m_position;
 
         //ボタン
-        Itsuki::ImageButton m_imageButton;
+        std::unique_ptr<Itsuki::ImageButton> m_imageButton;
     };
 
 }

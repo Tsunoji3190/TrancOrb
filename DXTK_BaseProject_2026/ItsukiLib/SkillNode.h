@@ -49,10 +49,10 @@ namespace Itsuki
 
             if (m_imageButton.IsPushed(mouse, {pos.x, -pos.y}) && canClick)
             {
-                if (player.GetHaveOrb() >= GetSteak())
+                if (player.GetStatus().haveOrb >= GetSteak())
                 {
                     //Steak分持ってるオーブを減らす
-                    player.RemoveOrbCount(m_steak);
+                    player.GetStatus().haveOrb -= m_steak;
 
                     gameContext.audio.PlayOneShot(
                         "Buy" ,SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});

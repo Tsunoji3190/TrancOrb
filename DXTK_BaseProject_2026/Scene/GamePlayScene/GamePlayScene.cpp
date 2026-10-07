@@ -111,14 +111,14 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
             int random_value = dist(gen);
 
             //もし運が上回ったら
-            if (m_player->GetLuck() >= random_value)
+            if (m_player->GetStatus().luck >= random_value)
             {
                 // ピッチを高くした音を鳴らす
                 gameContext.audio.PlayOneShot(
                     "GetOrb", SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3, 0.5});
 
                 // 持ってるオーブの数の2倍を追加
-                m_player->AddOrbCount(m_orbManager->GetOrbValue() * 2);
+                m_player->GetStatus().haveOrb += m_orbManager->GetOrbValue() * 2;
 
             }
             //ダメだったら
@@ -129,7 +129,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
                                               SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
 
                 // そのままオーブを追加
-                m_player->AddOrbCount(m_orbManager->GetOrbValue());
+                m_player->GetStatus().haveOrb += m_orbManager->GetOrbValue();
 
             }
 
@@ -237,7 +237,7 @@ void GamePlayScene::Render(GameContext& gameContext)
 
         // テキストの設定
     std::wstring text = L"Time: " + std::to_wstring(static_cast<int>(m_timer->GetTimer()));
-    std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_player->GetHaveOrb());
+    std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_player->GetStatus().haveOrb);
 
     // 文字列の大きさを取得
     DirectX::SimpleMath::Vector2 size = m_spriteFont->MeasureString(text.c_str());
@@ -424,7 +424,6 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     // タイマーの設定
     m_timer = std::make_unique<Itsuki::GameTimer>();
     m_timer->Initialize();
-
 
     //bgmの設定
     gameContext.audio.LoadSound("GameBgm", "Resources/Audio/Bgm/GameBgm.wav");

@@ -14,9 +14,6 @@ Player::Player(const GameContext& gameContext, const DirectX::SimpleMath::Matrix
     , m_velocity(.0f,.0f,.0f)
     , m_facingAngleRad(.0f, .0f, .0f)
     , m_isGround{true}
-    , m_haveOrb{0}
-    , m_speed(0)
-    , m_jump(0)
     , m_isCleared{false}
     , m_feverelapsed{0}
     , m_isfevered{false}
@@ -35,9 +32,11 @@ Player::~Player()
 
 void Player::Initialze()
 {
-    m_speed = MOVE_SPEED;
-    m_jump = JUMP_SPEED;
-    m_luck = 0;
+
+    m_status.speed = MOVE_SPEED;
+    m_status.jump = JUMP_SPEED;
+    m_status.luck = 0;
+    m_status.haveOrb = 0;
 
     //フィーバー関連の初期化
     m_maxFeverInterval = FIRST_FEVER_INTERVAL;
@@ -46,14 +45,13 @@ void Player::Initialze()
     m_fevertime = MAX_FEVER_TIME;
     m_isfevered = false;
 
-    //持っているオーブの設定
-    m_haveOrb = 0;
 
     //クリア判定の初期化
     m_isCleared = false;
 
     //位置の設定
     SetPosition(m_collider->GetParam().pos);
+
 }
 
 void Player::Update(float elapsedTime)
@@ -107,8 +105,8 @@ void Player::Update(float elapsedTime)
         m_direction.Normalize();
         SimpleMath::Vector3 worldDir = SimpleMath::Vector3::Transform(m_direction, rotY);
 
-        m_velocity.x = worldDir.x * m_speed;
-        m_velocity.z = worldDir.z * m_speed;
+        m_velocity.x = worldDir.x * GetStatus().speed;
+        m_velocity.z = worldDir.z * GetStatus().speed;
     }
     else
     {
@@ -120,7 +118,7 @@ void Player::Update(float elapsedTime)
     if (m_gameContext.keyboardTracker.pressed.Space && m_isGround)
     {
         m_gameContext.audio.PlayOneShot("Jump");
-        m_velocity.y = m_jump;
+        m_velocity.y = GetStatus().jump;
         m_isGround = false;
 
     }
