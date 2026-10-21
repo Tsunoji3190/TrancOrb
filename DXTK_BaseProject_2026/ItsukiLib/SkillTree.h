@@ -7,11 +7,25 @@
 #include <nlohmann/json.hpp>
 #include <cmath>
 
-using json = nlohmann::json;
 
 namespace Itsuki
 {
 	using namespace Itsuki;
+
+    enum class SkillType
+    {
+        Time,
+        Speed,
+        AddOrb,
+        OrbValue,
+        Interval,
+        Luck,
+        FirstOrb,
+        Skill,
+        Clear
+    };
+
+
 
 	class SkillTree
     {
@@ -34,7 +48,7 @@ namespace Itsuki
 
             for (int i = 0; i < NODE_COUNT; i++)
             {
-                if (IsCanGet(m_node[i]))
+                if (IsCanGet(m_node[i].get()))
                 {
                     m_node[i]->Update(elapsedtime, gameContext,ref_player,m_pos,canClick);
 
@@ -82,7 +96,7 @@ namespace Itsuki
         {
             for (int i = 0; i < NODE_COUNT; i++)
             {
-                if (IsCanGet(m_node[i]))
+                if (IsCanGet(m_node[i].get()))
                 {
                     m_node[i]->Render(m_pos);
                 }
@@ -116,7 +130,7 @@ namespace Itsuki
 
             for (size_t i = 0; i < NODE_COUNT; i++)
             {
-                if (IsCanGet(m_node[i]))
+                if (IsCanGet(m_node[i].get()))
                 {
                     m_node[i]->TextRender(m_pos);
                 }
@@ -133,63 +147,64 @@ namespace Itsuki
             
               for (auto& node : m_node)
             {
-                node = new SkillNode();
+                  node = std::make_unique<SkillNode>();
             }
 
             // ノードを作っていく
             m_node[0]->SetNode(
-                gameContext, nullptr, {width / 2, height / 2}, [this] { Time(5); }, 1, L"Resources/Textures/Star.png",
-                TIMER_TEXT);
+                gameContext, nullptr, {width / 2, height / 2}, [this] { ApplySkill(SkillType::Time, 5); }, 1,
+                L"Resources/Textures/Star.png", TIMER_TEXT);
 
             //
             m_node[1]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{65, 65}},
-                [this] { AddOrbCost(1); }, 3, L"Resources/Textures/Star.png", VALUE_TEXT);
+                gameContext, m_node[0].get(), {m_node[0]->GetPosition() + SimpleMath::Vector2{65, 65}},
+                [this] { ApplySkill(SkillType::AddOrb,1); }, 3, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             m_node[2]->SetNode(
-                gameContext, m_node[1], {m_node[1]->GetPosition() + SimpleMath::Vector2{65, 65}},
-                [this] { AddOrbCost(1); }, 20, L"Resources/Textures/Star.png", VALUE_TEXT);
+                gameContext, m_node[1].get(), {m_node[1]->GetPosition() + SimpleMath::Vector2{65, 65}},
+                [this] { ApplySkill(SkillType::AddOrb, 1); }, 20, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             m_node[3]->SetNode(
-                gameContext, m_node[2], {m_node[2]->GetPosition() + SimpleMath::Vector2{65, 65}},
-                [this] { AddOrbCost(1); }, 50, L"Resources/Textures/Star.png", VALUE_TEXT);
+                gameContext, m_node[2].get(), {m_node[2]->GetPosition() + SimpleMath::Vector2{65, 65}},
+                [this] { ApplySkill(SkillType::AddOrb, 1); }, 50, L"Resources/Textures/Star.png", VALUE_TEXT);
 
             //
             m_node[4]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, 65}},
-                [this] { Speed(0.5); }, 3, L"Resources/Textures/Star.png", SPEED_TEXT);
+                gameContext, m_node[0].get(), {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, 65}},
+                [this] { ApplySkill(SkillType::Speed,0.5); }, 3, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             m_node[5]->SetNode(
-                gameContext, m_node[4], {m_node[4]->GetPosition() + SimpleMath::Vector2{-65, 65}},
-                [this] { Speed(0.5); }, 6, L"Resources/Textures/Star.png", SPEED_TEXT);
+                gameContext, m_node[4].get(), {m_node[4]->GetPosition() + SimpleMath::Vector2{-65, 65}},
+                [this] { ApplySkill(SkillType::Speed, 0.5); }, 6, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             m_node[6]->SetNode(
-                gameContext, m_node[5], {m_node[5]->GetPosition() + SimpleMath::Vector2{-65, 65}},
-                [this] { Speed(0.5); }, 9, L"Resources/Textures/Star.png", SPEED_TEXT);
+                gameContext, m_node[5].get(), {m_node[5]->GetPosition() + SimpleMath::Vector2{-65, 65}},
+                [this] { ApplySkill(SkillType::Speed, 0.5); }, 9, L"Resources/Textures/Star.png", SPEED_TEXT);
 
             //オーブ発生のインターバル
             m_node[7]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{65, -65}},
-                [this] { IntervalDecrease(1.5); }, 3, L"Resources/Textures/Star.png", INTERVAL_TEXT);
+                gameContext, m_node[0].get(), {m_node[0]->GetPosition() + SimpleMath::Vector2{65, -65}},
+                [this] { ApplySkill(SkillType::Interval, 0.5); }, 3, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             m_node[8]->SetNode(
-                gameContext, m_node[7], {m_node[7]->GetPosition() + SimpleMath::Vector2{65, -65}},
-                [this] { IntervalDecrease(1.5); }, 20, L"Resources/Textures/Star.png", INTERVAL_TEXT);
+                gameContext, m_node[7].get(), {m_node[7]->GetPosition() + SimpleMath::Vector2{65, -65}},
+                [this] { ApplySkill(SkillType::Interval, 1.25); }, 20, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             m_node[9]->SetNode(
-                gameContext, m_node[8], {m_node[8]->GetPosition() + SimpleMath::Vector2{65, -65}},
-                [this] { IntervalDecrease(1.5); }, 100, L"Resources/Textures/Star.png", INTERVAL_TEXT);
+                gameContext, m_node[8].get(), {m_node[8]->GetPosition() + SimpleMath::Vector2{65, -65}},
+                [this] { ApplySkill(SkillType::Interval, 1.75); }, 100, L"Resources/Textures/Star.png", INTERVAL_TEXT);
 
             //
             m_node[10]->SetNode(
-                gameContext, m_node[0], {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, -65}}, [this] { Time(10); },
+                gameContext, m_node[0].get(), {m_node[0]->GetPosition() + SimpleMath::Vector2{-65, -65}},
+                [this] { ApplySkill(SkillType::Time, 5); },
                 3, L"Resources/Textures/Star.png", TIMER_TEXT);
             m_node[11]->SetNode(
-                gameContext, m_node[10], {m_node[10]->GetPosition() + SimpleMath::Vector2{-65, -65}},
-                [this] { Time(5); }, 100, L"Resources/Textures/Star.png", TIMER_TEXT);
+                gameContext, m_node[10].get(), {m_node[10]->GetPosition() + SimpleMath::Vector2{-65, -65}},
+                [this] { ApplySkill(SkillType::Time, 5); }, 100, L"Resources/Textures/Star.png", TIMER_TEXT);
             m_node[12]->SetNode(
-                gameContext, m_node[11], {m_node[11]->GetPosition() + SimpleMath::Vector2{-65, -65}},
-                [this] { Time(15); }, 200, L"Resources/Textures/Star.png", TIMER_TEXT);
+                gameContext, m_node[11].get(), {m_node[11]->GetPosition() + SimpleMath::Vector2{-65, -65}},
+                [this] { ApplySkill(SkillType::Time, 10); }, 200, L"Resources/Textures/Star.png", TIMER_TEXT);
 
 
             //運
@@ -201,36 +216,37 @@ namespace Itsuki
                 auto cosy = (90 * std::sinf(rad));
 
                 m_node[13 + i]->SetNode(
-                    gameContext, m_node[0], {200 + sinx, 500 + cosy}, [this] { Luck(10); }, 20,
-                    L"Resources/Textures/Star.png", LUCK_TEXT);
+                    gameContext, m_node[0].get(), {200 + sinx, 500 + cosy}, [this] { ApplySkill(SkillType::Luck, 10); },
+                    20, L"Resources/Textures/Star.png", LUCK_TEXT);
             
 
             }
 
             //クリア
             m_node[21]->SetNode(
-                gameContext, m_node[0], {width / 2, 90}, [this] { IsClear(); }, 1000,
+                gameContext, m_node[0].get(), {width / 2, 90}, [this] { ApplySkill(SkillType::Clear); }, 1000,
                 L"Resources/Textures/ClearStar.png", CLEAR_TEXT);
 
             //最初のオーブの数
             m_node[22]->SetNode(
-                gameContext, m_node[0], {1000, 90}, [this] { AddFirstOrb(3); }, 20, L"Resources/Textures/Star.png",
+                gameContext, m_node[0].get(), {1000, 90}, [this] { ApplySkill(SkillType::FirstOrb,3); }, 20, L"Resources/Textures/Star.png",
                 ADD_TEXT);
             m_node[23]->SetNode(
-                gameContext, m_node[22], {m_node[22]->GetPosition() + SimpleMath::Vector2{0, 65}},
-                [this] { AddFirstOrb(3); }, 60, L"Resources/Textures/Star.png", ADD_TEXT);
+                gameContext, m_node[22].get(), {m_node[22]->GetPosition() + SimpleMath::Vector2{0, 65}},
+                [this] { ApplySkill(SkillType::FirstOrb, 3); }, 60, L"Resources/Textures/Star.png", ADD_TEXT);
             m_node[24]->SetNode(
-                gameContext, m_node[23], {m_node[23]->GetPosition() + SimpleMath::Vector2{0, 65}},
-                [this] { AddFirstOrb(3); }, 100, L"Resources/Textures/Star.png", ADD_TEXT);
+                gameContext, m_node[23].get(), {m_node[23]->GetPosition() + SimpleMath::Vector2{0, 65}},
+                [this] { ApplySkill(SkillType::FirstOrb, 3); }, 100, L"Resources/Textures/Star.png", ADD_TEXT);
             m_node[25]->SetNode(
-                gameContext, m_node[24], {m_node[24]->GetPosition() + SimpleMath::Vector2{0, 65}},
-                [this] { AddFirstOrb(5); },
+                gameContext, m_node[24].get(), {m_node[24]->GetPosition() + SimpleMath::Vector2{0, 65}},
+                [this] { ApplySkill(SkillType::FirstOrb, 5); },
                 300, L"Resources/Textures/Star.png",
                 ADD_TEXT);
 
             m_node[26]->SetNode(
-                gameContext, m_node[0], SimpleMath::Vector2{100, 65},
-                [this] { GetSkill(SkillID::fever); }, 200, L"Resources/Textures/Star.png", FEVER_TEXT);
+                gameContext, m_node[0].get(), SimpleMath::Vector2{100, 65},
+                [this] { ApplySkill(SkillType::Skill, (int)SkillID::fever); }, 200, L"Resources/Textures/Star.png",
+                FEVER_TEXT);
 
 
 
@@ -268,65 +284,56 @@ namespace Itsuki
             return false;
         }
 
-        //オーブの数の追加
-        void AddOrb(int num)
+      
+        //スキルの追加
+        void ApplySkill(Itsuki::SkillType type,float num = 0)
         {
-            //num分だけオーブを追加する
-            for (size_t i = 0; i < num; i++)
+            switch (type)
             {
-                ref_orbManager.AddOrb();
+                case SkillType::Time:
+                    // 現在の制限時間に追加する
+                    ref_gameTimer.AddMaxTimer(num);
+                    break;
+
+                case SkillType::Speed:
+                    //プレイヤーの速度を上げる
+                    ref_player.GetStatus().speed += num;
+                    break;
+
+                case SkillType::AddOrb:
+                    //オーブの数を追加する
+                    ref_orbManager.AddOrb();
+                    break;
+
+                case SkillType::OrbValue:
+                    //オーブの価値を上げる
+                    ref_orbManager.SetOrbValue(num);
+                    break;
+
+                case SkillType::Interval:
+                    //オーブが出る間隔を減少させる
+                    ref_orbManager.Remomveinterval(num);
+                    break;
+
+                case SkillType::Luck:
+                    ref_player.GetStatus().luck += num;
+                    break;
+
+                case SkillType::FirstOrb:
+                    //最初に出てくるオーブの追加
+                    ref_orbManager.AddFirst(num);
+
+                case SkillType::Skill:
+                    //クリアする
+                    ref_player.GetSkill((SkillID)num);
+                    break;
+
+                case SkillType::Clear:
+                    //クリアする
+                    ref_player.GetIsCleared();
+                    break;
+
             }
-        }
-
-        //最初に出てくるオーブの追加
-        void AddFirstOrb(int num)
-        {
-            ref_orbManager.AddFirst(num);
-        }
-
-        //オーブの価値増加
-        void AddOrbCost(int num)
-        {
-
-            ref_orbManager.SetOrbValue(num);
-        }
-
-        //いいことが起きる確率を増加させる
-        void Luck(float num)
-        {
-            ref_player.GetStatus().luck += num;
-        }
-
-        //脚の速さ増加
-        void Speed(float num)
-        {
-            ref_player.GetStatus().speed += num;
-        }
-
-        //時間の延長
-        void Time(float num)
-        {
-            //現在の制限時間に追加する
-            ref_gameTimer.AddMaxTimer(num);
-        }
-
-        //スキルを追加
-        void GetSkill(SkillID num)
-        {
-            ref_player.GetSkill(num);
-        }
-
-        //オーブのインターバル減少
-        void IntervalDecrease(float time)
-        {
-
-            ref_orbManager.Remomveinterval(time);
-
-        }
-
-        void IsClear()
-        {
-            ref_player.SetIsCleared(true);
         }
 
         //マウスを掴んだ際の反応
@@ -399,9 +406,8 @@ namespace Itsuki
         // スプライトフォント
         std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 
-
         //スキルノードを数分入れる
-        SkillNode* m_node[NODE_COUNT];
+        std::vector<std::unique_ptr<SkillNode>> m_node;
 
         //プレイヤー
         Player& ref_player;
@@ -447,7 +453,36 @@ namespace Itsuki
         DirectX::SimpleMath::Vector2 m_lastMousePos{};
         float m_dragDistance = 0.0f; 
 
-        json m_json;
     };
 
+}
+
+//スキルノードのデータ駆動設計
+namespace Itsuki
+{
+    struct SkillNodeData
+    {
+
+        int id;
+
+        int parentId;
+
+        //位置
+        DirectX::SimpleMath::Vector2 position;
+
+        //スキルの種類
+        SkillType type;
+
+        //スキルの効果をどれだけ適応するか
+        float value;
+
+        //開放にどれほどのオーブが必要か
+        int cost;
+
+        //テクスチャ
+        std::wstring texturePath;
+
+        //説明文
+        std::wstring description;
+    };
 }

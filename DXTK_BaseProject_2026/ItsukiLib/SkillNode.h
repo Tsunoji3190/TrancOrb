@@ -14,8 +14,7 @@ namespace Itsuki
     {
     public:
         SkillNode() 
-        : m_matrix{},
-        m_parentNode{nullptr},
+        :m_parentNode{nullptr},
         m_skillUp{},
         m_steak{0},
         m_isGet{false}
@@ -163,8 +162,6 @@ namespace Itsuki
 
     private:
 
-        //カメラ移動のマトリクス
-        DirectX::SimpleMath::Matrix m_matrix;
 
         //
         std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
@@ -174,10 +171,13 @@ namespace Itsuki
 
         // 親のノード
         SkillNode* m_parentNode;
+
         // 関数
         std::function<void()> m_skillUp;
+
         // 必要なオーブ数
         int m_steak;
+
         // 取得したか
         bool m_isGet = false;
 

@@ -26,7 +26,6 @@ Orb::Orb(GameContext* pGameContext, DirectX::PrimitiveBatch<DirectX::VertexPosit
     DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColorTexture>(device, m_basicEffect.get(),
                                                                               m_inputLayout.ReleaseAndGetAddressOf()));
 
-
     SetRandom();
 }
 

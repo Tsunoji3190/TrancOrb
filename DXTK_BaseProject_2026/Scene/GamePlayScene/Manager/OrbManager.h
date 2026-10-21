@@ -35,6 +35,10 @@ public:
         m_orbValues = FIRST_ORBVALUE;
         m_orbInterval = FIRST_INTERVAL;
         m_saveOrbInterval = FIRST_INTERVAL;
+        m_startingOrbCount = 0;
+        m_count = 0;
+
+
     }
 
     void Update(float elapsedtime)

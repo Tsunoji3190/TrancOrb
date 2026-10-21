@@ -202,6 +202,7 @@
     <ClInclude Include="ItsukiLib\BoxCollider.h" />
     <ClInclude Include="ItsukiLib\Button.h" />
     <ClInclude Include="ItsukiLib\Camera\CameraBase.h" />
+    <ClInclude Include="ItsukiLib\Camera\MovieCamera.h" />
     <ClInclude Include="ItsukiLib\Camera\NormalCamera.h" />
     <ClInclude Include="ItsukiLib\Collider.h" />
     <ClInclude Include="ItsukiLib\ColliderFactory.h" />
@@ -210,8 +211,9 @@
     <ClInclude Include="ItsukiLib\GameTimer.h" />
     <ClInclude Include="ItsukiLib\SkillNode.h" />
     <ClInclude Include="ItsukiLib\SkillTree.h" />
-    <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
+    <ClInclude Include="ItsukiLib\SkillTreeDefinition.h" />
+    <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
     <ClInclude Include="Scene\ClearScene\TitleBackButton.h" />
@@ -255,6 +257,7 @@
     <ClCompile Include="ImaseLib\DebugRenderer.cpp" />
     <ClCompile Include="ImaseLib\GridFloor.cpp" />
     <ClCompile Include="ItsukiLib\BoxCollider.cpp" />
+    <ClCompile Include="ItsukiLib\Camera\MovieCamera.cpp" />
     <ClCompile Include="ItsukiLib\Camera\NormalCamera.cpp" />
     <ClCompile Include="ItsukiLib\ColliderRenderer.cpp" />
     <ClCompile Include="ItsukiLib\CollisionChecker.cpp" />
