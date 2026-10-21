@@ -71,7 +71,7 @@ namespace Itsuki
 
     private:
         // 最初の時間
-        static constexpr float FIRST_TIMER = 10;
+        static constexpr float FIRST_TIMER = 1;
 
     private:
         // 経過時間

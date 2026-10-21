@@ -212,7 +212,6 @@
     <ClInclude Include="ItsukiLib\SkillNode.h" />
     <ClInclude Include="ItsukiLib\SkillTree.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
-    <ClInclude Include="ItsukiLib\SkillTreeDefinition.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />

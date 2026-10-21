@@ -1,4 +1,10 @@
-﻿#pragma once
+﻿///////////////////////////////
+//
+// スキルツリーに使われる押すことで各々の効果を発揮するクラス
+// 2026/10/21更新 宮本樹
+///////////////////////////////
+
+#pragma once
 #include <functional>
 #include <string>
 #include <memory>
@@ -10,13 +16,27 @@
 
 namespace Itsuki
 {
+
+        enum class SkillEffect
+    {
+        Time,
+        Speed,
+        OrbValue,
+        Interval,
+        Luck,
+        FirstOrb,
+        Skill,
+        Clear
+    };
+
     class SkillNode
     {
     public:
         SkillNode() 
-        :m_parentNode{nullptr},
-        m_skillUp{},
-        m_steak{0},
+        :m_parent{nullptr},
+        m_effect{}, 
+        m_value{},
+        m_cost{0},
         m_isGet{false}
         {
         }
@@ -26,40 +46,49 @@ namespace Itsuki
         }
 
         // 更新関数
-        void Update(float elapsedtime, GameContext& gameContext, Player& player, DirectX::SimpleMath::Vector2 pos,
-                    bool canClick)
+        bool Update(GameContext& gameContext, Player& player, const DirectX::SimpleMath::Vector2& pos, bool canClick)
         {
+            //取得済みなら何もしない
+            if (IsGet())
+                return false;
 
             auto mouse = Mouse::Get().GetState();
 
             auto kb = Keyboard::Get().GetState();
 
-            if (GetIsGet())
-                return;
-
+            //カーソルが触れたら
             if (m_imageButton.IsCursored(mouse, {pos.x, -pos.y}))
             {
+                //色を明るくする
                 m_imageButton.SetColor(Colors::White);
             }
             else
             {
+                //触れてないなら色を暗くする
                 m_imageButton.SetColor(Colors::Gray);
             }
 
-            if (m_imageButton.IsPushed(mouse, {pos.x, -pos.y}) && canClick)
-            {
-                if (player.GetStatus().haveOrb >= GetSteak())
-                {
-                    //Steak分持ってるオーブを減らす
-                    player.GetStatus().haveOrb -= m_steak;
+            //
+            if (!m_imageButton.IsPushed(mouse, {pos.x, -pos.y}) || !canClick)
+                return false;
 
-                    gameContext.audio.PlayOneShot(
-                        "Buy" ,SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
-                    GetSkillUp();
-                    SetIsGet(true);
-                    m_imageButton.SetColor(Colors::White);
-                }
+
+            // オーブが足りているのなら
+            if (player.GetStatus().haveOrb >= GetSteak())
+            {
+                // Steak分持ってるオーブを減らす
+                player.GetStatus().haveOrb -= m_cost;
+
+                gameContext.audio.PlayOneShot("Buy",        
+                    SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
+
+                m_isGet = true;
+                m_imageButton.SetColor(Colors::White);
+
+                return true;
             }
+
+            return false;
         }
 
         void Render(DirectX::SimpleMath::Vector2 pos)
@@ -90,21 +119,17 @@ namespace Itsuki
 
         }
 
-        void SetNode(GameContext& gameContext, SkillNode* parent, DirectX::SimpleMath::Vector2 position,
-                     std::function<void()> skillup, int steak = 10,
-                     std::wstring skillimage = L"Resources/Textures/テスト六角型.png", std::wstring text = L"データ無し")
+        void SetNode(GameContext& gameContext, const SkillNode* parent, const DirectX::SimpleMath::Vector2& position,
+                     SkillEffect effect, float value, int cost, const std::wstring& image, const std::wstring& text)
         {
-            m_parentNode = parent;
-            m_skillUp = skillup;
-            m_steak = steak;
+            //初期化設定
+            m_parent = parent;
+            m_effect = effect;
+            m_value = value;
+            m_cost = cost;
+            m_text = text + L"\nコスト : " + std::to_wstring(m_cost);
 
-                // テキストの設定
-            std::wstring alltext = text + L"\nコスト : " + std::to_wstring(m_steak);
-
-
-            m_text = alltext;
-
-            m_imageButton.Initialize(gameContext, position, skillimage, IMAGE_MAGNI, BUTTON_MAGNI);
+            m_imageButton.Initialize(gameContext, position, image, IMAGE_MAGNI, BUTTON_MAGNI);
 
             auto device = gameContext.deviceResources.GetD3DDevice();
             auto context = gameContext.deviceResources.GetD3DDeviceContext();
@@ -112,40 +137,50 @@ namespace Itsuki
             m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(context);
             // テキストの初期化
             m_spriteFont = std::make_unique<DirectX::SpriteFont>(device, L"Resources/Font/Meiryo.spritefont");
-
         }
 
-        // 取得済みかどうか設定する
-        void SetIsGet(bool isget)
+        // カーソルが乗っているか(説明文の表示用)
+        bool IsCursored(const DirectX::SimpleMath::Vector2& pos)
         {
-            m_isGet = isget;
+            auto mouse = DirectX::Mouse::Get().GetState();
+            return m_imageButton.IsCursored(mouse, {pos.x, -pos.y});
         }
 
-        // 親のノードを返す
-        SkillNode* GetPrevNode()
+        // 取得できるか
+        bool IsUnlockable() const
         {
-            return m_parentNode;
+            //親がいないか、親が入手されていたらtrue
+            return m_parent == nullptr || m_parent->IsGet();
         }
 
-        // 実行する関数を返す
-        void GetSkillUp()
+        //スキルの種類を返す関数
+        SkillEffect GetEffect()
         {
-            if (m_skillUp)
-            {
-                m_skillUp();
-            }
+            return m_effect;
+        }
+
+        //どれだけの効果か返す
+        float GetValue()
+        {
+            return m_value;
         }
 
         // 必要なオーブ数を返す
         int GetSteak()
         {
-            return m_steak;
+            return m_cost;
         }
 
         // 取得済みか返す
-        bool GetIsGet()
+        const bool IsGet() const
         {
             return m_isGet;
+        }
+
+        //説明文の取得
+        const std::wstring& GetText() const
+        {
+            return m_text;
         }
 
         // 位置の取得
@@ -170,13 +205,14 @@ namespace Itsuki
         std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 
         // 親のノード
-        SkillNode* m_parentNode;
+        const SkillNode* m_parent;
 
-        // 関数
-        std::function<void()> m_skillUp;
+        // 効果と効果量
+        SkillEffect m_effect;
+        float m_value = 0.0f;
 
         // 必要なオーブ数
-        int m_steak;
+        int m_cost;
 
         // 取得したか
         bool m_isGet = false;

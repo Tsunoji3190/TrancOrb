@@ -36,7 +36,7 @@ void Player::Initialze()
     m_status.speed = MOVE_SPEED;
     m_status.jump = JUMP_SPEED;
     m_status.luck = 0;
-    m_status.haveOrb = 0;
+    m_status.haveOrb = 10000;
 
     //フィーバー関連の初期化
     m_maxFeverInterval = FIRST_FEVER_INTERVAL;
