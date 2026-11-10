@@ -51,6 +51,194 @@ bool CollisionChecker::CheckCollision(const Collider& collider1, const Collider&
     
 }
 
+bool CollisionChecker::CheckRayCollision(const Ray& ray, const Collider& collider, float& distance) const
+{
+    distance = 0.0f;
+    auto direction = ray.direction;
+
+    if (direction.LengthSquared() <= 0.000001f)
+        return false;
+
+    direction.Normalize();
+
+    if (collider.GetShape() == SHAPE::SPHERE)
+    {
+        const auto* sphere = dynamic_cast<const SphereCollider*>(&collider);
+
+        if (!sphere)
+            return false;
+
+        const auto toCenter = sphere->GetPosition() - ray.origin;
+        const float projected = toCenter.Dot(direction);
+        const float discriminant =
+            projected * projected - (toCenter.LengthSquared() - sphere->GetRadius() * sphere->GetRadius());
+
+        if (discriminant < 0.0f)
+            return false;
+
+        const float nearDistance = projected - std::sqrt(discriminant);
+
+        const float farDistance = projected + std::sqrt(discriminant);
+
+        distance = nearDistance >= 0.0f ? nearDistance : farDistance;
+
+        return distance >= 0.0f;
+    }
+
+    if (collider.GetShape() == SHAPE::BOX)
+    {
+        const auto* box = dynamic_cast<const BoxCollider*>(&collider);
+
+        if (!box)
+            return false;
+
+        float nearDistance = 0.0f;
+        float farDistance = (std::numeric_limits<float>::max)();
+        const auto min = box->GetMin();
+        const auto max = box->GetMax();
+        const auto component = [](const SimpleMath::Vector3& value, int axis)
+        {
+            switch (axis)
+            {
+                case 0:
+                    return value.x;
+                case 1:
+                    return value.y;
+                default:
+                    return value.z;
+            }
+        };
+        for (int axis = 0; axis < 3; ++axis)
+        {
+            const float origin = component(ray.origin, axis);
+            const float dir = component(direction, axis);
+            const float minimum = component(min, axis);
+            const float maximum = component(max, axis);
+            if (std::abs(dir) <= 0.000001f)
+            {
+                if (origin < minimum || origin > maximum)
+                    return false;
+                continue;
+            }
+            float a = (minimum - origin) / dir;
+            float b = (maximum - origin) / dir;
+            if (a > b)
+                std::swap(a, b);
+            nearDistance = (std::max)(nearDistance, a);
+            farDistance = (std::min)(farDistance, b);
+            if (nearDistance > farDistance)
+                return false;
+        }
+        distance = nearDistance;
+        return farDistance >= 0.0f;
+    }
+    return false;
+}
+
+
+bool Itsuki::CollisionChecker::GetSeparation(const Collider& obj, const Collider& stage,
+                                             DirectX::SimpleMath::Vector3& separation) const
+{
+    separation = SimpleMath::Vector3::Zero;
+
+    // ステージがボックスコライダーじゃないのなら判定しない
+    const auto* stageBox = dynamic_cast<const BoxCollider*>(&stage);
+    if (!stageBox)
+        return false;
+
+    // ステージの大きさの取得
+    const SimpleMath::Vector3 stageMin = stageBox->GetMin();
+    const SimpleMath::Vector3 stageMax = stageBox->GetMax();
+
+    // 球コライダー用の処理
+    if (const auto* sphere = dynamic_cast<const SphereCollider*>(&obj))
+    {
+        // 位置の取得
+        const SimpleMath::Vector3 center = sphere->GetPosition();
+
+        // 球からもっとも近い座標を作成する
+        SimpleMath::Vector3 closest;
+        closest.x = std::clamp(center.x, stageMin.x, stageMax.x);
+        closest.y = std::clamp(center.y, stageMin.y, stageMax.y);
+        closest.z = std::clamp(center.z, stageMin.z, stageMax.z);
+
+        // 球から近い点のベクトル
+        const SimpleMath::Vector3 diff = center - closest;
+
+        // ベクトルの二乗を取る（平方根を取るより早い）
+        const float distanceSq = diff.LengthSquared();
+
+        // 半径を取得
+        const float radius = sphere->GetRadius();
+
+        // ベクトルが半径より大きい（地形にめり込んでいない）なら
+        if (distanceSq > radius * radius)
+            return false;
+
+        // 球の中心が箱の外側にある場合
+        if (distanceSq > 0.000001f)
+        {
+            // 平方根をとる（やむなし）
+            const float distance = std::sqrt(distanceSq);
+
+            // 押し戻し量の計算
+            separation = diff / distance * (radius - distance);
+
+            // 押し戻しを伝える
+            return true;
+        }
+
+        // 球の中心が AABB の内部にある場合（dist = 0）
+        if (distanceSq == 0.0f)
+        {
+            // とりあえず 上方向に押し出す（簡易処理）
+            separation = SimpleMath::Vector3(0, 1, 0);
+        }
+
+        return true;
+    }
+
+    // ボックスコライダー用の処理
+    if (const auto* objBox = dynamic_cast<const BoxCollider*>(&obj))
+    {
+        // オブジェクトの大きさを取得
+        const SimpleMath::Vector3 objMin = objBox->GetMin();
+        const SimpleMath::Vector3 objMax = objBox->GetMax();
+
+        // それぞれの座標の重なりを取得
+        const float overlapX = std::min(objMax.x, stageMax.x) - std::max(objMin.x, stageMin.x);
+        const float overlapY = std::min(objMax.y, stageMax.y) - std::max(objMin.y, stageMin.y);
+        const float overlapZ = std::min(objMax.z, stageMax.z) - std::max(objMin.z, stageMin.z);
+
+        // 3点すべてが重なっていないなら何もしない
+        if (overlapX <= 0.0f || overlapY <= 0.0f || overlapZ <= 0.0f)
+            return false;
+
+        // それぞれの中心を取る
+        const SimpleMath::Vector3 movingCenter = (objMin + objMax) * 0.5f;
+        const SimpleMath::Vector3 stageCenter = (stageMin + stageMax) * 0.5f;
+
+        // 重なりが一番小さい軸に沿って押し出す
+        if (overlapX <= overlapY && overlapX <= overlapZ)
+        {
+            separation.x = movingCenter.x < stageCenter.x ? -overlapX : overlapX;
+        }
+        else if (overlapY <= overlapZ)
+        {
+            separation.y = movingCenter.y < stageCenter.y ? -overlapY : overlapY;
+        }
+        else
+        {
+            separation.z = movingCenter.z < stageCenter.z ? -overlapZ : overlapZ;
+        }
+
+        return true;
+    }
+
+    // 何らかの形で抜けたらfalseを返す
+    return false;
+}
+
 bool CollisionChecker::SphireCheck(const Collider& collider1, const Collider& collider2) const
 {
     // Sphere型のColliderを作成
