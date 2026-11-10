@@ -26,7 +26,8 @@ namespace Itsuki
         Luck,
         FirstOrb,
         Skill,
-        Clear
+        Clear,
+        Carry
     };
 
     class SkillNode

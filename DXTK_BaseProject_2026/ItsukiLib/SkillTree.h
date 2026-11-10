@@ -92,7 +92,7 @@ namespace Itsuki
         {
             for (size_t i = 0; i < count; i++)
             {
-                // 中心角の大きさ
+                // 中心角の大きさを決める
                 auto rad = DirectX::XMConvertToRadians(360 / count * i);
 
                 // radiusを用意することでノード同士をどの程度離すか決められる
@@ -132,7 +132,7 @@ namespace Itsuki
             d.AddChain("Interval", "First", {65, -65}, SkillEffect::Interval, {{1, 3}, {1, 20}, {1, 100}});
 
             // 制限時間の延長
-            d.AddChain("Time", "First", {-65, -65}, SkillEffect::Interval, {{1, 3}, {1, 50}, {1, 200}});
+            d.AddChain("Time", "First", {-65, -65}, SkillEffect::Time, {{1, 3}, {1, 50}, {1, 200}});
 
             // 運
             std::initializer_list<Step> luck = {
@@ -295,21 +295,29 @@ namespace Itsuki
             //変なものが入っていないようにする
             m_nodes.clear();
 
+            //idでほしいノードを渡せるようにする
             std::unordered_map<std::string, SkillNode*> idToNode;
 
+            //中のデータ分初期化する
             for (const auto& d : def.RefData())
             {
+                //親を引き出す　何もないならnullptrにする
                 const SkillNode* parent = d.parentId.empty() ? nullptr : idToNode.at(d.parentId);
+
                 // 相対指定なら親の位置からのオフセット
                 DirectX::SimpleMath::Vector2 position = d.pos;
                 if (d.relative && parent)
                     position += parent->GetPosition();
 
+                //ノードを作成する
                 auto node = std::make_unique<SkillNode>();
                 node->SetNode(gameContext, parent, position, d.type, d.num, d.cost, d.image,
                               GetEffectText(d.type));
 
+                //ノードを情報をidと共に格納する
                 idToNode[d.id] = node.get();
+
+                //
                 m_nodes.push_back(std::move(node));
             }
 
@@ -363,15 +371,19 @@ namespace Itsuki
                     break;
 
                 case SkillEffect::Skill:
-                    //クリアする
+                    //IDに沿った取得する
                     ref_player.GetSkill((SkillID)num);
                     break;
 
                 case SkillEffect::Clear:
                     //クリアする
-                    ref_player.GetIsCleared();
+                    ref_player.SetIsCleared(true);
                     break;
-
+                    
+                case SkillEffect::Carry:
+                    //より大きなものを掴めるようにする
+                    ref_player.GetStatus().CarryPower += num;
+                    break;
             }
         }
 
@@ -403,6 +415,9 @@ namespace Itsuki
 
                 case SkillEffect::Clear:
                     return L"ロケットを買うことが出来、クリアすることが出来ます！";
+
+                case SkillEffect::Carry:
+                    return L"より大きなものを掴めるようになります";
             }
 
         }

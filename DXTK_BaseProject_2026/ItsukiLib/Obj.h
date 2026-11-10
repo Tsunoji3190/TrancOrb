@@ -6,14 +6,6 @@ class Obj
 {
 public:
 
-    enum Type
-    {
-        NONE=-1,
-        Player,
-        Wall,
-        Orb
-    };
-
     Obj() {};
 
     virtual ~Obj() = default;

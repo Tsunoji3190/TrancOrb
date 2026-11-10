@@ -14,6 +14,12 @@
     <Filter Include="DirectXTK_Utilities">
       <UniqueIdentifier>{b9855007-75dd-44b7-bb00-1e824ff358fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ItsukiLib">
+      <UniqueIdentifier>{dd80a980-80a5-44f0-a251-80b732461b04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ItsukiLib\Camera">
+      <UniqueIdentifier>{6b26d68e-aa52-4075-b46d-335df77004d4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -36,21 +42,14 @@
     <ClInclude Include="ImaseLib\DebugRenderer.h">
       <Filter>ImaseLib</Filter>
     </ClInclude>
-    <ClInclude Include="ItsukiLib\BoxCollider.h" />
-    <ClInclude Include="ItsukiLib\Collider.h" />
-    <ClInclude Include="ItsukiLib\SphereCollider.h" />
     <ClInclude Include="ImaseLib\SceneManager.h" />
     <ClInclude Include="Scene\SceneId.h" />
     <ClInclude Include="Scene\BaseScene\BaseScene.h" />
     <ClInclude Include="Scene\GamePlayScene\GamePlayScene.h" />
     <ClInclude Include="GameContext.h" />
     <ClInclude Include="Scene\GamePlayScene\Player.h" />
-    <ClInclude Include="ItsukiLib\ColliderRenderer.h" />
-    <ClInclude Include="ItsukiLib\CollisionChecker.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
     <ClInclude Include="ItsukiLib\Camera\CameraBase.h" />
-    <ClInclude Include="ItsukiLib\Camera\NormalCamera.h" />
-    <ClInclude Include="ItsukiLib\Obj.h" />
     <ClInclude Include="Scene\GamePlayScene\Orb.h" />
     <ClInclude Include="Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="Scene\GamePlayScene\Manager\StageManager.h" />
@@ -64,10 +63,6 @@
     <ClInclude Include="SuzukiLib\Audio\Internal\DirectXTKAudioPlayer.h" />
     <ClInclude Include="SuzukiLib\Audio\Internal\DirectXTKAudioResourceManager.h" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
-    <ClInclude Include="ItsukiLib\ColliderFactory.h" />
-    <ClInclude Include="ItsukiLib\SkillNode.h" />
-    <ClInclude Include="ItsukiLib\SkillTree.h" />
-    <ClInclude Include="ItsukiLib\Button.h" />
     <ClInclude Include="Effect3D\ParticleManager\ParticleManager.h" />
     <ClInclude Include="Effect3D\ParticleManager\ParticlePosition.h" />
     <ClInclude Include="Effect3D\UI\BackGround.h" />
@@ -79,11 +74,49 @@
     <ClInclude Include="Effect3D\Particle.h" />
     <ClInclude Include="Scene\GamePlayScene\BackButton.h" />
     <ClInclude Include="Scene\GamePlayScene\Rocket.h" />
-    <ClInclude Include="Scene\ClearScene\TitleBackButton.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="ItsukiLib\GameTimer.h" />
-    <ClInclude Include="ItsukiLib\Camera\MovieCamera.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />
+    <ClInclude Include="ItsukiLib\Button.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\BoxCollider.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\Collider.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\ColliderFactory.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\ColliderRenderer.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\CollisionChecker.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\Obj.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\Camera\NormalCamera.h">
+      <Filter>ItsukiLib\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\Camera\MovieCamera.h">
+      <Filter>ItsukiLib\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ClearScene\TitleBackButton.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\SphereCollider.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\SkillTree.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\SkillNode.h">
+      <Filter>ItsukiLib</Filter>
+    </ClInclude>
+    <ClInclude Include="ItsukiLib\ThrowableObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -104,15 +137,10 @@
     <ClCompile Include="ImaseLib\DebugRenderer.cpp">
       <Filter>ImaseLib</Filter>
     </ClCompile>
-    <ClCompile Include="ItsukiLib\BoxCollider.cpp" />
-    <ClCompile Include="ItsukiLib\SphereCollider.cpp" />
     <ClCompile Include="Scene\BaseScene\BaseScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\GamePlayScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Player.cpp" />
-    <ClCompile Include="ItsukiLib\ColliderRenderer.cpp" />
     <ClCompile Include="ItsukiLib\Stage.cpp" />
-    <ClCompile Include="ItsukiLib\CollisionChecker.cpp" />
-    <ClCompile Include="ItsukiLib\Camera\NormalCamera.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Orb.cpp" />
     <ClCompile Include="Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="SuzukiLib\Audio\AudioSystem.cpp" />
@@ -130,7 +158,25 @@
     <ClCompile Include="Effect3D\UI\UserInterface.cpp" />
     <ClCompile Include="Effect3D\BinaryFile.cpp" />
     <ClCompile Include="Effect3D\Particle.cpp" />
-    <ClCompile Include="ItsukiLib\Camera\MovieCamera.cpp" />
+    <ClCompile Include="ItsukiLib\BoxCollider.cpp">
+      <Filter>ItsukiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ItsukiLib\ColliderRenderer.cpp">
+      <Filter>ItsukiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ItsukiLib\CollisionChecker.cpp">
+      <Filter>ItsukiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ItsukiLib\Camera\MovieCamera.cpp">
+      <Filter>ItsukiLib\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ItsukiLib\Camera\NormalCamera.cpp">
+      <Filter>ItsukiLib\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ItsukiLib\SphereCollider.cpp">
+      <Filter>ItsukiLib</Filter>
+    </ClCompile>
+    <ClCompile Include="ItsukiLib\ThrowableObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

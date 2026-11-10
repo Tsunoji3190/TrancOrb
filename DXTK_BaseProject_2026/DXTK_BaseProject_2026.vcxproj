@@ -213,6 +213,7 @@
     <ClInclude Include="ItsukiLib\SkillTree.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
     <ClInclude Include="ItsukiLib\Stage.h" />
+    <ClInclude Include="ItsukiLib\ThrowableObject.h" />
     <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="Scene\ClearScene\ClearScene.h" />
     <ClInclude Include="Scene\ClearScene\TitleBackButton.h" />
@@ -261,6 +262,7 @@
     <ClCompile Include="ItsukiLib\ColliderRenderer.cpp" />
     <ClCompile Include="ItsukiLib\CollisionChecker.cpp" />
     <ClCompile Include="ItsukiLib\Stage.cpp" />
+    <ClCompile Include="ItsukiLib\ThrowableObject.cpp" />
     <ClCompile Include="Scene\ClearScene\ClearScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Player.cpp" />
     <ClCompile Include="ItsukiLib\SphereCollider.cpp" />

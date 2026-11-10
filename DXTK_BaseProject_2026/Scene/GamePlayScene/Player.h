@@ -32,6 +32,9 @@ private:
         // 持っているオーブの数
         int haveOrb;
 
+        //掴む強さ
+        int CarryPower = 1;
+        
     };
 
 public:

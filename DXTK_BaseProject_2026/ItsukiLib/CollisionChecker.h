@@ -3,6 +3,12 @@
 
 namespace Itsuki
 {
+    struct Ray
+    {
+        DirectX::SimpleMath::Vector3 origin;
+        DirectX::SimpleMath::Vector3 direction;
+    };
+
     class CollisionChecker
     {
     public:
