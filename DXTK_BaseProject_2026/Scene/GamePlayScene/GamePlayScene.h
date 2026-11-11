@@ -84,9 +84,9 @@ private:
 	// ウインドウサイズ変更時に呼び出される関数
     void OnWindowSizeChanged(GameContext& gameContext) override;
 
-	//当った際に当る前の状態に戻す関数（現在は球と立方体の形のみに適応）
-    void ResolveCollision(Itsuki::Collider* col1, Itsuki::Collider* col2);
-	
+	//投げれるオブジェクトの取得
+    ThrowableObject* FindThrowObj();
+
 	// カメラのY軸に対する回転角度（タイトル用）
     float m_titleAngleRad = 0.0f;
 
@@ -97,13 +97,17 @@ private:
     std::unique_ptr<DirectX::Model> m_skyModelSun;
     std::unique_ptr<DirectX::Model> m_RocketModel;
 
+    //照準の画像
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_aiming;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_aimingHit;
+
+
     // 一人称カメラ
     void GamePlayCamera(float elapsedTime); 
 
 
 	// タイトル用カメラの回転角度（１秒間あたりの回転角度）
     static constexpr float TITLE_CAMERA_MOVE_ANGLE_DEG = 10.0f;
-
 
 	// ---- オイラー角テスト用 ----- //
     float m_angleRad_X = 0.0f;
@@ -136,7 +140,7 @@ private:
 
     //投げられるオブジェクト
     std::vector<std::unique_ptr<ThrowableObject>> m_throwableObjects;
-    static constexpr float THROWABLE_RAY_DISTANCE = 3.0f;
+    static constexpr float THROWABLE_RAY_DISTANCE = 2.0f;
 
 
 	//当たり判定を描画するもの
@@ -166,5 +170,7 @@ private:
 
 	//ゲームタイマー
     std::unique_ptr<Itsuki::GameTimer> m_timer;
+
+
 
 };

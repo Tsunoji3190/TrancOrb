@@ -152,6 +152,7 @@ namespace Itsuki
         {
             //親がいないか、親が入手されていたらtrue
             return m_parent == nullptr || m_parent->IsGet();
+
         }
 
         //スキルの種類を返す関数

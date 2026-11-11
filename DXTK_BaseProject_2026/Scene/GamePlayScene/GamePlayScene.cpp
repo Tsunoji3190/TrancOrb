@@ -32,6 +32,7 @@ GamePlayScene::GamePlayScene()
 // 更新
 void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, GameContext& gameContext)
 {
+
     Imase::DebugRenderer& debugRenderer = gameContext.debugRenderer;
     // 経過時間を取得する
     float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
@@ -100,44 +101,26 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
         }
     }
 
-    // 目線の向き
-    SimpleMath::Vector3 rayDirection = m_camera.GetRay();
 
-    // 大きさは取らず向きだけにする
-    rayDirection.Normalize();
-
-    // レイの作成
-    const Itsuki::Ray viewRay{m_camera.GetEyePosition(), rayDirection};
-
-    // プレイヤーがマウスをクリックしたら
-    if (m_player->IsMousePressed())
+    // 何も持っていない状態でプレイヤーがマウスをクリックしたら
+    if (m_player->IsMousePressed() && !m_player->GetIsHeld())
     {
-
-        // オブジェクト分確認する
-        for (auto& object : m_throwableObjects)
+        if (auto obj = FindThrowObj())
         {
-            // もしプレイヤーが持てるものでなかったら次へ行く
-            if (object->GetRequiredCarryPower() > m_player->GetCarryPower())
-                continue;
-            float distance = 0.0f;
-
-            // もしも範囲内のRayに当たり、
-            if (object->IsGetRay(viewRay, *m_collisionChecker, distance) && distance <= THROWABLE_RAY_DISTANCE)
-            {
-
-                // 持つ
-                object->PickUp();
-
-                // マイクラのように右下に表示する
-                const SimpleMath::Vector3 up = SimpleMath::Vector3::UnitY;
-                SimpleMath::Vector3 right = rayDirection.Cross(up);
-                right.Normalize();
-                object->SetHeldPosition(m_camera.GetEyePosition() + rayDirection * 1.25f + right * 0.55f - up * 0.42f);
-            }
+            obj->PickUp();
+            m_player->SetIsHeld();
         }
+
     }
-    else
+    // 何か持った状態でプレイヤーがマウスをクリックしたら
+    else if (m_player->IsMousePressed() && m_player->GetIsHeld())
     {
+        // 目線の向き
+        SimpleMath::Vector3 rayDirection = m_camera.GetRay();
+
+        // 大きさは取らず向きだけにする
+        rayDirection.Normalize();
+
         // オブジェクト分確認する
         for (auto& object : m_throwableObjects)
         {
@@ -147,9 +130,14 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
                 const SimpleMath::Vector3 throwPosition = m_camera.GetEyePosition() + rayDirection * 1.25f;
 
                 object->Throw(throwPosition, rayDirection * 8.0f + m_player->GetVelocity());
+                return;
             }
         }
+        
+        m_player->SetIsHeld();
+
     }
+
 
     // もしクリア状態なら
     if (m_player->GetIsCleared())
@@ -286,12 +274,12 @@ void GamePlayScene::Render(GameContext& gameContext)
         return;
     }
 
-    ////当たり判定描画
-    //for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
-    //{
-    //    Orb* pOrb = m_orbManager->GetOrb(i);
-    //    m_renderer->Render(context, m_view, m_projection, *pOrb->GetCollider());
-    //}
+    //当たり判定描画
+    for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
+    {
+        Orb* pOrb = m_orbManager->GetOrb(i);
+        m_renderer->Render(context, m_view, m_projection, *pOrb->GetCollider());
+    }
 
     //目線で手前側のものを前にする
     m_orbManager->Sort(eye);
@@ -303,14 +291,21 @@ void GamePlayScene::Render(GameContext& gameContext)
     }
 
 
+    bool isRay=false;
+    
     SimpleMath::Vector3 cameraForward = target - eye;
     cameraForward.Normalize();
+
+    // レイの作成
+    const Itsuki::Ray viewRay{m_camera.GetEyePosition(), cameraForward};
+
     //投げるオブジェクトの描画
     for (const auto& object : m_throwableObjects)
     {
         object->Render(m_view, m_projection, eye, cameraForward, SimpleMath::Vector3::UnitY);
-    }
 
+        float distance = 0.0f;
+    }
 
         // テキストの設定
     std::wstring text = L"Time: " + std::to_wstring(static_cast<int>(m_timer->GetTimer()));
@@ -326,6 +321,43 @@ void GamePlayScene::Render(GameContext& gameContext)
     int height = m_windowSize.bottom - m_windowSize.top; 
 
     m_spriteBatch->Begin();
+
+    //もし掴めるオブジェクトを見ていたら
+    if (auto obj = FindThrowObj())
+    {
+        
+        // 画像のサイズ取得
+        Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+        m_aimingHit->GetResource(resource.GetAddressOf());
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D;
+        if (!SUCCEEDED(resource.As(&tex2D)))
+            false;
+
+        D3D11_TEXTURE2D_DESC desc = {};
+        tex2D->GetDesc(&desc);
+        auto textureSize = DirectX::SimpleMath::Vector2(desc.Width, desc.Height);
+        XMFLOAT2 origin = {textureSize.x / 2, textureSize.y / 2};
+
+        m_spriteBatch->Draw(m_aimingHit.Get(), XMFLOAT2(width / 2, height / 2), nullptr, Colors::White, 0.0, origin, 0.5f);
+    }
+    else
+    {
+        // 画像のサイズ取得
+        Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+        m_aimingHit->GetResource(resource.GetAddressOf());
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> tex2D;
+        if (!SUCCEEDED(resource.As(&tex2D)))
+            false;
+
+        D3D11_TEXTURE2D_DESC desc = {};
+        tex2D->GetDesc(&desc);
+        auto textureSize = DirectX::SimpleMath::Vector2(desc.Width, desc.Height);
+        XMFLOAT2 origin = {textureSize.x / 2, textureSize.y / 2};
+
+        m_spriteBatch->Draw(m_aiming.Get(), XMFLOAT2(width / 2, height / 2), nullptr, Colors::White, 0.0, origin, 0.5f);
+    }
 
     // テキストの描画
     m_spriteFont->DrawString(m_spriteBatch.get(), text.c_str(), DirectX::SimpleMath::Vector2{width / 2 - size.x, 0},
@@ -368,6 +400,12 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     // ---テクスチャのロード---//
     DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Resources/Textures/Orb.dds", nullptr,
                                                m_orbTexture.ReleaseAndGetAddressOf()));
+
+    //照準
+    DirectX::CreateWICTextureFromFile(device, L"Resources/Textures/Aiming.png", nullptr,
+                                      m_aiming.ReleaseAndGetAddressOf());
+    DirectX::CreateWICTextureFromFile(device, L"Resources/Textures/AimingHit.png", nullptr,
+                                      m_aimingHit.ReleaseAndGetAddressOf());
 
     // ---テクスチャのロード---//
 
@@ -582,6 +620,43 @@ void GamePlayScene::OnWindowSizeChanged(GameContext& gameContext)
     m_projection = CreateProjectionMatrix(gameContext);
 }
 
+//視線に入っている持てるオブジェクトを見つける関数
+ThrowableObject* GamePlayScene::FindThrowObj()
+{
+    // 目線の向き
+    SimpleMath::Vector3 rayDirection = m_camera.GetRay();
+
+    // 大きさは取らず向きだけにする
+    rayDirection.Normalize();
+
+    // レイの作成
+    const Itsuki::Ray viewRay{m_camera.GetEyePosition(), rayDirection};
+
+    // オブジェクト分確認する
+    for (auto& object : m_throwableObjects)
+    {
+        //掴まれているオブジェクトは取らない
+        if (object->IsHeld())
+            continue;
+
+        // もしプレイヤーが持てるものでなかったら次へ行く
+        if (object->GetRequiredCarryPower() > m_player->GetCarryPower())
+            continue;
+        float distance = 0.0f;
+
+        // もしも範囲内のRayに当たり、投げれる距離にいたら
+        if (object->IsGetRay(viewRay, *m_collisionChecker, distance) && distance <= THROWABLE_RAY_DISTANCE)
+        {
+            //そのオブジェクトの情報を返す
+            return object.get();
+        }
+        return nullptr;
+
+    }
+
+    return nullptr;
+}
+
 // ゲームプレイ用カメラ
 void GamePlayScene::GamePlayCamera(float elapsedTime)
 {
@@ -593,7 +668,7 @@ void GamePlayScene::GamePlayCamera(float elapsedTime)
     SimpleMath::Matrix rotX = SimpleMath::Matrix::CreateRotationX(m_player->GetFacingAngleRad().x);
 
 	// カメラの相対位置をプレイヤーの向いている角度で回転させる
-    SimpleMath::Vector3 v = SimpleMath::Vector3::Transform(cameraPosition, rotX*rotY);
+    SimpleMath::Vector3 v = SimpleMath::Vector3::Transform(cameraPosition, rotX * rotY);
 
     //カメラの見る位置を設定
     m_camera.SetCamera(m_player->GetPosition() + v, m_player->GetPosition());

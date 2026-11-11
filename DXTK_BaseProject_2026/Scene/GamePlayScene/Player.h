@@ -159,7 +159,7 @@ public:
     // マウスのクリック判定を返す
     bool IsMousePressed()
     {
-        return m_mouse.leftButton == Mouse::ButtonStateTracker::ButtonState::HELD ? true : false;
+        return m_mouse.leftButton == Mouse::ButtonStateTracker::ButtonState::PRESSED ? true : false;
     }
 
 
@@ -173,6 +173,16 @@ public:
     void SetIsCleared(bool clear)
     {
         m_isCleared = clear;
+    }
+
+    bool GetIsHeld()
+    {
+        return m_isHeld;
+    }
+
+    void SetIsHeld()
+    {
+        m_isHeld = !m_isHeld;
     }
 
 private:
@@ -224,13 +234,14 @@ private:
     // マウス
     DirectX::Mouse::ButtonStateTracker m_mouse;
 
-
     //マウスの変更を遅らせる
     bool m_nextmousedelta = false;
 
     // 設置しているかどうか判定
     bool m_isGround;
 
+    //持っているかどうか判定
+    bool m_isHeld=false;
 
     //----------変化するパラメータ----------//
 private:
