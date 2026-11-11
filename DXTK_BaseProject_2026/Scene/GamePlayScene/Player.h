@@ -72,9 +72,9 @@ public:
     }
 
     //速度を設定する関数
-    void SetVelocityY(float velocity) 
+    void SetVelocity(DirectX::SimpleMath::Vector3 velocity) 
     {
-        m_velocity.y = velocity;
+        m_velocity = velocity;
     }
 
     // 向いている角度を取得する関数
@@ -130,6 +130,13 @@ public:
         m_feverInterval = interval;
     }
 
+    //掴む強さを返す
+    int GetCarryPower() const
+    {
+        return m_status.CarryPower;
+    }
+
+
 public:
 
     void SetMouseModeRelative()
@@ -148,6 +155,13 @@ public:
         Mouse::Get().SetMode(Mouse::MODE_ABSOLUTE);
 
     }
+
+    // マウスのクリック判定を返す
+    bool IsMousePressed()
+    {
+        return m_mouse.leftButton == Mouse::ButtonStateTracker::ButtonState::HELD ? true : false;
+    }
+
 
     //クリアかどうか返す関数
     bool GetIsCleared()
@@ -170,7 +184,7 @@ private:
     static constexpr float ROTATE_SPEED_DEG = 100.0f;
 
     // 移動の速さ（１秒間あたりの移動量）
-    static constexpr float MOVE_SPEED = 1.f;
+    static constexpr float MOVE_SPEED = 1.5f;
     
     //ジャンプの加速度
     static constexpr float JUMP_SPEED = 4.0f;
@@ -206,6 +220,10 @@ private:
 
     // 向きを作成
     SimpleMath::Vector3 m_direction = SimpleMath::Vector3::Zero;
+
+    // マウス
+    DirectX::Mouse::ButtonStateTracker m_mouse;
+
 
     //マウスの変更を遅らせる
     bool m_nextmousedelta = false;

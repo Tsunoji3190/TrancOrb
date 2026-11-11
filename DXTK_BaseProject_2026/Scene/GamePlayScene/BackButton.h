@@ -41,7 +41,7 @@ namespace Itsuki
             {
                 //リセットしていく
                 player->SetPosition({0, 0.5, 3.0});
-                player->SetVelocityY(0);
+                player->SetVelocity(SimpleMath::Vector3::Zero);
 
                 player->ResetAngle();
                 timer->ResetTimer();

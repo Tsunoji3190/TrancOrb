@@ -87,7 +87,6 @@ void Orb::Render(ID3D11DeviceContext* pContext, const DirectX::SimpleMath::Matri
 
 void Orb::SetRandom()
 {
-    //-----------やむを得ず-----------
     // 非決定論的な乱数の種（利用できない環境では固定値になる場合あり）
     std::random_device rd;
 
@@ -96,7 +95,7 @@ void Orb::SetRandom()
 
     // 1〜100の整数を生成する分布
     std::uniform_real_distribution<float> distXZ(-3, 3);
-    std::uniform_real_distribution<float> distY(0.5, 1);
+    std::uniform_real_distribution<float> distY(3, 4);
 
     // 乱数を10個生成
     DirectX::SimpleMath::Vector3 Pos = {distXZ(gen), distY(gen), distXZ(gen)};
@@ -106,5 +105,4 @@ void Orb::SetRandom()
 
     // 当たり判定の位置も設定
     m_collider->SetPosition(Pos);
-    //-----------やむを得ず-----------
 }

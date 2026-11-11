@@ -58,9 +58,13 @@ void Player::Update(float elapsedTime)
 {
 
     auto kb = Keyboard::Get().GetState();
+
     // マウスの取得
     auto state = Mouse::Get().GetState();
     
+    // マウスの更新
+    m_mouse.Update(state);
+
 
     // マウスの相対移動量（Relative モード時）
     float dx = state.x;

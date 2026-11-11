@@ -37,6 +37,12 @@ namespace Itsuki
             return m_view;
         }
 
+        // Rayを取得する関数
+        DirectX::SimpleMath::Vector3 GetRay() const
+        {
+            return m_target - m_eye;
+        }
+
     protected:
 
         // 視点の設定関数

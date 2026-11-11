@@ -32,51 +32,129 @@ GamePlayScene::GamePlayScene()
 // 更新
 void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, GameContext& gameContext)
 {
-	Imase::DebugRenderer& debugRenderer = gameContext.debugRenderer;
-	// 経過時間を取得する
-	float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
+    Imase::DebugRenderer& debugRenderer = gameContext.debugRenderer;
+    // 経過時間を取得する
+    float elapsedTime = static_cast<float>(gameContext.timer.GetElapsedSeconds());
 
-    ////ステータスがクリアを示していたなら
-    //if (m_status->IsClear())
-    //{
-    //    //クリアシーンに切り替える
-    //    sceneController.RequestSwitch(SceneId::ClearScene);
-    //}
-
-    //タイマーがゼロになったら
+    // タイマーがゼロになったら
     if (m_timer->GetTimer() <= 0)
     {
 
-
-        //マウスの表示
+        // マウスの表示
         m_player->SetMouseModeAbsolute();
-        m_skilltree->Update(elapsedTime,gameContext);
-        m_backButton.Update(elapsedTime, m_player.get(), m_orbManager.get(),m_timer.get());
+        m_skilltree->Update(elapsedTime, gameContext);
+        m_backButton.Update(elapsedTime, m_player.get(), m_orbManager.get(), m_timer.get());
         return;
     }
 
-    //カメラの設定
-    GamePlayCamera(elapsedTime);
-
-    //プレイヤーの更新
+    // プレイヤーの更新
     m_player->Update(elapsedTime);
+
+    // オブジェクトの更新
+    for (auto& object : m_throwableObjects)
+    {
+        object->Update(elapsedTime);
+    }
+
+    GamePlayCamera(elapsedTime);
 
     // ステージとの当たり判定
     for (int i = 0; i < m_stageManager->GetNumStages(); i++)
     {
         Stage* Stage = m_stageManager->GetStage(i);
-        // もしプレイヤーとステージがぶつかったら
-        if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *Stage->GetCollider()))
+
+        SimpleMath::Vector3 separation;
+        if (m_collisionChecker->GetSeparation(*m_player->GetCollider(), *Stage->GetCollider(), separation))
         {
-            // 押し出し判定を行う
-            ResolveCollision(m_player->GetCollider(), Stage->GetCollider());
+            const auto correctedPosition = m_player->GetPosition() + separation;
+
+            m_player->SetPosition(correctedPosition);
+            m_player->GetCollider()->SetPosition(correctedPosition);
+
+            // 重力加速でのめり込みが起きないようにする
+            if (separation.y > 0)
+            {
+                m_player->SetIsGround(1);
+
+                m_player->SetVelocity({m_player->GetVelocity().x, 0, m_player->GetVelocity().z});
+            }
+        }
+
+        // 投げれるオブジェクトの更新
+        for (auto& object : m_throwableObjects)
+        {
+
+            if (m_collisionChecker->GetSeparation(*object->GetCollider(), *Stage->GetCollider(), separation))
+            {
+                const auto correctedPosition = object->GetPosition() + separation;
+
+                object->SetPosition(correctedPosition);
+                object->GetCollider()->SetPosition(correctedPosition);
+
+                // 重力加速でのめり込みが起きないようにする
+                if (separation.y > 0)
+                {
+                    object->SetVelocity(SimpleMath::Vector3::Zero);
+                }
+            }
         }
     }
 
-    //もしクリア状態なら
+    // 目線の向き
+    SimpleMath::Vector3 rayDirection = m_camera.GetRay();
+
+    // 大きさは取らず向きだけにする
+    rayDirection.Normalize();
+
+    // レイの作成
+    const Itsuki::Ray viewRay{m_camera.GetEyePosition(), rayDirection};
+
+    // プレイヤーがマウスをクリックしたら
+    if (m_player->IsMousePressed())
+    {
+
+        // オブジェクト分確認する
+        for (auto& object : m_throwableObjects)
+        {
+            // もしプレイヤーが持てるものでなかったら次へ行く
+            if (object->GetRequiredCarryPower() > m_player->GetCarryPower())
+                continue;
+            float distance = 0.0f;
+
+            // もしも範囲内のRayに当たり、
+            if (object->IsGetRay(viewRay, *m_collisionChecker, distance) && distance <= THROWABLE_RAY_DISTANCE)
+            {
+
+                // 持つ
+                object->PickUp();
+
+                // マイクラのように右下に表示する
+                const SimpleMath::Vector3 up = SimpleMath::Vector3::UnitY;
+                SimpleMath::Vector3 right = rayDirection.Cross(up);
+                right.Normalize();
+                object->SetHeldPosition(m_camera.GetEyePosition() + rayDirection * 1.25f + right * 0.55f - up * 0.42f);
+            }
+        }
+    }
+    else
+    {
+        // オブジェクト分確認する
+        for (auto& object : m_throwableObjects)
+        {
+            // もし持っているものだったら
+            if (object->IsHeld())
+            {
+                const SimpleMath::Vector3 throwPosition = m_camera.GetEyePosition() + rayDirection * 1.25f;
+
+                object->Throw(throwPosition, rayDirection * 8.0f + m_player->GetVelocity());
+            }
+        }
+    }
+
+    // もしクリア状態なら
     if (m_player->GetIsCleared())
     {
-        //ロケットとの当たり判定を取りあたったらクリアシーンへ
+        // ロケットとの当たり判定を取りあたったらクリアシーンへ
         if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *m_rocket->GetCollider()))
         {
             // マウスの表示
@@ -85,74 +163,63 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
             sceneController.RequestSwitch(SceneId::ClearScene);
         }
 
-
         return;
     }
 
-
-    //オーブマネージャーの更新
+    // オーブマネージャーの更新
     m_orbManager->Update(elapsedTime);
 
-    //オーブとの当たり判定
+    auto collectOrb = [&](int index)
+    {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> dist(1, 100);
+        if (m_player->GetStatus().luck >= dist(gen))
+        {
+            gameContext.audio.PlayOneShot(
+                "GetOrb", SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3, 0.5});
+            m_player->GetStatus().haveOrb += m_orbManager->GetOrbValue() * 2;
+        }
+        else
+        {
+            gameContext.audio.PlayOneShot("GetOrb",
+                                          SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
+            m_player->GetStatus().haveOrb += m_orbManager->GetOrbValue();
+        }
+        m_orbManager->DeleteOrb(index);
+    };
+
+    // オーブとの当たり判定
     for (int i = m_orbManager->GetNumOrbs() - 1; i >= 0; i--)
     {
 
         Orb* pOrb = m_orbManager->GetOrb(i);
-        // もしプレイヤーとオーブがぶつかったら
-        if (m_collisionChecker->CheckCollision(*m_player->GetCollider(), *pOrb->GetCollider()))
+        bool collected = m_collisionChecker->CheckCollision(*m_player->GetCollider(), *pOrb->GetCollider());
+        for (const auto& object : m_throwableObjects)
         {
-            //ランダム抽選を始める
-            std::random_device rd;
-            std::mt19937 gen(rd());
-
-            std::uniform_int_distribution<int> dist(1, 100);
-
-            // 3. ランダムな値を取得
-            int random_value = dist(gen);
-
-            //もし運が上回ったら
-            if (m_player->GetStatus().luck >= random_value)
-            {
-                // ピッチを高くした音を鳴らす
-                gameContext.audio.PlayOneShot(
-                    "GetOrb", SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3, 0.5});
-
-                // 持ってるオーブの数の2倍を追加
-                m_player->GetStatus().haveOrb += m_orbManager->GetOrbValue() * 2;
-
-            }
-            //ダメだったら
-            else
-            {
-                // 音を鳴らす
-                gameContext.audio.PlayOneShot("GetOrb",
-                                              SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
-
-                // そのままオーブを追加
-                m_player->GetStatus().haveOrb += m_orbManager->GetOrbValue();
-
-            }
-
-            //オーブを削除する
-            m_orbManager->DeleteOrb(i);
+            if (!collected && m_collisionChecker->CheckCollision(*object->GetCollider(), *pOrb->GetCollider()))
+                collected = true;
+        }
+        if (collected)
+        {
+            collectOrb(i);
         }
     }
 
-    //フィーバータイムに突入したら
+    // フィーバータイムに突入したら
     if (m_player->GetFever())
     {
-        //オーブのカウントをめちゃ減らす
+        // オーブのカウントをめちゃ減らす
         m_orbManager->SetInterval(0.5);
     }
-    else    //違うなら
+    else // 違うなら
     {
-        //戻す
+        // 戻す
         m_orbManager->ReturnInterval();
     }
 
-    //時間を減らす
+    // 時間を減らす
     m_timer->RemoveTimer(elapsedTime);
-
 }
 
 
@@ -234,6 +301,16 @@ void GamePlayScene::Render(GameContext& gameContext)
         Orb* pOrb = m_orbManager->GetOrb(i);
         pOrb->Render(context, m_view, m_projection, eye, target);
     }
+
+
+    SimpleMath::Vector3 cameraForward = target - eye;
+    cameraForward.Normalize();
+    //投げるオブジェクトの描画
+    for (const auto& object : m_throwableObjects)
+    {
+        object->Render(m_view, m_projection, eye, cameraForward, SimpleMath::Vector3::UnitY);
+    }
+
 
         // テキストの設定
     std::wstring text = L"Time: " + std::to_wstring(static_cast<int>(m_timer->GetTimer()));
@@ -396,6 +473,23 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
                                         colF.MakeCollider(Itsuki::SHAPE::SPHERE, player));
     m_player->Initialze();
 
+    // 投げれるオブジェクトの作成
+    auto addThrowable = [&](const SimpleMath::Vector3& position, float size, int carryPower)
+    {
+        //大きさの半分を取る
+        const float half = size * 0.5f;
+
+        //立方体を作成する
+        Itsuki::CollisionParams box = {position, {-half, -half, -half}, {half, half, half}, 0.0f};
+        m_throwableObjects.push_back(
+            std::make_unique<ThrowableObject>(context, colF.MakeCollider(Itsuki::SHAPE::BOX, box), size, carryPower));
+    };
+
+    // オブジェクトの追加
+    addThrowable({0.0f, 0.45f, 1.5f}, 0.25f, 1);
+    addThrowable({1.4f, 0.5f, 0.5f}, 0.9f, 2);
+
+
     //Rocketの作成
     m_rocket = std::make_unique<Rocket>(gameContext, m_view, m_projection, m_RocketModel.get(),
                                         colF.MakeCollider(Itsuki::SHAPE::BOX, rocket));
@@ -509,73 +603,5 @@ void GamePlayScene::GamePlayCamera(float elapsedTime)
 
 }
 
-void GamePlayScene::ResolveCollision(Itsuki::Collider* col1, Itsuki::Collider* col2)
-{
-    using namespace DirectX;
-
-    auto sphere = dynamic_cast<Itsuki::SphereCollider*>(col1);
-    auto aabb = dynamic_cast<Itsuki::BoxCollider*>(col2);
-
-    // どちらかがない場合は判定しない
-    if (!aabb || !sphere)
-    {
-        return;
-    }
-
-    //もっとも近い座標の作成
-    SimpleMath::Vector3 closestPoint = {0, 0, 0};
-
-    // それぞれの座標で球に最も近い点を取る
-    closestPoint.x = std::clamp(sphere->GetPosition().x, aabb->GetMin().x, aabb->GetMax().x);
-    closestPoint.y = std::clamp(sphere->GetPosition().y, aabb->GetMin().y, aabb->GetMax().y);
-    closestPoint.z = std::clamp(sphere->GetPosition().z, aabb->GetMin().z, aabb->GetMax().z);
-
-
-    //球の中心点を取る
-    SimpleMath::Vector3 center = sphere->GetPosition();
-
-    //球から近い点のベクトル
-    SimpleMath::Vector3 diff = center - closestPoint;
-
-    // ベクトルの二乗を取る（平方根を取るより早い）
-    float distSq = (closestPoint - sphere->GetPosition()).LengthSquared();
-
-    //半径を取得
-    float r = sphere->GetRadius();
-
-    //平方根をとる（やむなし）
-    float dist = sqrtf(distSq);
-
-    // 球の中心が AABB の内部にある場合（dist = 0）
-    if (dist == 0.0f)
-    {
-        // とりあえず 上方向に押し出す（簡易処理）
-        diff = SimpleMath::Vector3(0, 1, 0);
-        dist = 1.0f;
-    }
-
-    // 押し戻し方向
-    SimpleMath::Vector3 pushDir = diff / dist;
-
-    // 押し戻し量
-    float penetration = r - dist;
-
-    SimpleMath::Vector3 position = center + pushDir * penetration;
-
-    //
-    m_player->SetPosition(center + pushDir * penetration);
-    m_player->GetCollider()->SetPosition(center + pushDir * penetration);        
-
-    // プレイヤーの位置を修正
-    if (pushDir.y >0)
-    {
-        m_player->SetIsGround(1);
-
-        m_player->SetVelocityY(0);
-
-    }
-
-
-}
 
 

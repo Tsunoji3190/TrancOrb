@@ -29,6 +29,7 @@
 #include"ItsukiLib/Camera/NormalCamera.h"
 
 #include "Effect3D/UI/BackGround.h"
+#include <ItsukiLib/ThrowableObject.h>
 
 class GamePlayScene : public Imase::SceneBase<SceneId, GameContext>
 {
@@ -132,6 +133,11 @@ private:
 
 	//オーブを格納
     std::unique_ptr<OrbManager> m_orbManager;
+
+    //投げられるオブジェクト
+    std::vector<std::unique_ptr<ThrowableObject>> m_throwableObjects;
+    static constexpr float THROWABLE_RAY_DISTANCE = 3.0f;
+
 
 	//当たり判定を描画するもの
 	std::unique_ptr<Itsuki::ColliderRenderer> m_renderer;
