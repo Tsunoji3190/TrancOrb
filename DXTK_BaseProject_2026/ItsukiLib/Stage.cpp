@@ -2,7 +2,7 @@
 #include "Stage.h"
 
 Stage::Stage(GameContext* pGameContext, DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* pPrimitiveBatch,
-             std::unique_ptr<Itsuki::Collider> collider)
+             std::unique_ptr<Itsuki::Collider> collider,bool isBroken)
     :m_pPrimitiveBatch{pPrimitiveBatch} ,m_pGameContext{pGameContext}
 {
     //位置と当たり判定の形を設定する
@@ -29,6 +29,8 @@ Stage::Stage(GameContext* pGameContext, DirectX::PrimitiveBatch<DirectX::VertexP
     	// 入力レイアウトの作成
     DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColorTexture>(device, m_basicEffect.get(),
                                                                               m_inputLayout.ReleaseAndGetAddressOf()));
+
+    m_isBroken = isBroken;
 }
 
 Stage::~Stage()

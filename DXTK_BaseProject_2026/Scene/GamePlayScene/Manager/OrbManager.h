@@ -61,7 +61,7 @@ public:
         Itsuki::ColliderFactory& colF = Itsuki::ColliderFactory::GetRefInstance();
 
         /// 球
-        Itsuki::CollisionParams orbCol = {{0.0f, 0.0f, .0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
+        Itsuki::CollisionParams orbCol = {{0.0f, 0.0f, .0f}, {-.2f, -.2f, -.2f}, {0.2f, 0.2f, 0.2f}, {0.4}};
 
 
         std::unique_ptr<Orb> orb = std::make_unique<Orb>(m_pGameContext, m_pPrimitiveBatch, m_pTexture,

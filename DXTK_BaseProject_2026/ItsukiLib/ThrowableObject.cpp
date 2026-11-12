@@ -29,7 +29,7 @@ void ThrowableObject::Update(float elapsedTime)
 
     m_position += m_velocity * elapsedTime;
 
-    //すり抜けで下まで落ちてしまったら
+    //万が一すり抜けで下まで落ちてしまったら
     if (m_position.y < -10.0f)
     {
         //リスポーンさせる

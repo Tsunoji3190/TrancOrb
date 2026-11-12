@@ -60,9 +60,8 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     GamePlayCamera(elapsedTime);
 
     // ステージとの当たり判定
-    for (int i = 0; i < m_stageManager->GetNumStages(); i++)
+    for (auto& Stage:m_stageManager->GetStages())
     {
-        Stage* Stage = m_stageManager->GetStage(i);
 
         SimpleMath::Vector3 separation;
         if (m_collisionChecker->GetSeparation(*m_player->GetCollider(), *Stage->GetCollider(), separation))
@@ -78,15 +77,18 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
                 m_player->SetIsGround(1);
 
                 m_player->SetVelocity({m_player->GetVelocity().x, 0, m_player->GetVelocity().z});
+
             }
         }
 
         // 投げれるオブジェクトの更新
         for (auto& object : m_throwableObjects)
         {
-
+            //壁にぶつかったら
             if (m_collisionChecker->GetSeparation(*object->GetCollider(), *Stage->GetCollider(), separation))
             {
+
+                //
                 const auto correctedPosition = object->GetPosition() + separation;
 
                 object->SetPosition(correctedPosition);
@@ -97,6 +99,8 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
                 {
                     object->SetVelocity(SimpleMath::Vector3::Zero);
                 }
+
+
             }
         }
     }
@@ -130,11 +134,11 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
                 const SimpleMath::Vector3 throwPosition = m_camera.GetEyePosition() + rayDirection * 1.25f;
 
                 object->Throw(throwPosition, rayDirection * 8.0f + m_player->GetVelocity());
+                m_player->SetIsHeld();
                 return;
             }
         }
         
-        m_player->SetIsHeld();
 
     }
 
@@ -156,6 +160,8 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
 
     // オーブマネージャーの更新
     m_orbManager->Update(elapsedTime);
+    
+    //----------------------------//
 
     auto collectOrb = [&](int index)
     {
@@ -193,6 +199,10 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
             collectOrb(i);
         }
     }
+
+    //----------------------------//
+
+
 
     // フィーバータイムに突入したら
     if (m_player->GetFever())
@@ -274,12 +284,12 @@ void GamePlayScene::Render(GameContext& gameContext)
         return;
     }
 
-    //当たり判定描画
-    for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
-    {
-        Orb* pOrb = m_orbManager->GetOrb(i);
-        m_renderer->Render(context, m_view, m_projection, *pOrb->GetCollider());
-    }
+    ////当たり判定描画
+    //for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
+    //{
+    //    Orb* pOrb = m_orbManager->GetOrb(i);
+    //    m_renderer->Render(context, m_view, m_projection, *pOrb->GetCollider());
+    //}
 
     //目線で手前側のものを前にする
     m_orbManager->Sort(eye);
@@ -540,14 +550,14 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
     m_stageManager = std::make_unique<StageManager>(&gameContext, m_CprimitiveBatch.get());
     //ステージの追加
-    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX,floar1));
+    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX,floar1),false);
     //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar2));
     //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar3));
     //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar4));
-    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall1));
-    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall2));
-    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall3));
-    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall4));
+    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall1),true);
+    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall2), true);
+    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall3), true);
+    m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall4), true);
 
     //オーブマネージャーの設定
     m_orbManager = std::make_unique<OrbManager>(&gameContext, m_primitiveBatch.get(), m_orbTexture.Get());

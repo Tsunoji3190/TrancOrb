@@ -20,13 +20,27 @@ public:
 
     void Render();
 
-    void AddStage( std::unique_ptr<Itsuki::Collider> collider)
+    void AddStage( std::unique_ptr<Itsuki::Collider> collider,bool broken)
     {
         
-        std::unique_ptr<Stage> stage = std::make_unique<Stage>(m_pGameContext, m_pPrimitiveBatch, std::move(collider));
+        std::unique_ptr<Stage> stage = std::make_unique<Stage>(m_pGameContext, m_pPrimitiveBatch, std::move(collider),broken);
         
         m_pStages.push_back(std::move(stage));
     }
+
+    //いらないステージを消す関数
+    void RemoveStage(int num)
+    {
+        m_pStages.erase(m_pStages.begin() + num);
+    }
+
+
+    // ステージ群を返す
+    std::vector<std::unique_ptr<Stage>>& GetStages()
+    {
+        return m_pStages;
+    }
+
 
 
     //指定されたステージを返す

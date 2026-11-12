@@ -12,7 +12,7 @@ class Stage:public Obj
 public:
 
 	Stage(GameContext* pGameContext, DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* pPrimitiveBatch,
-          std::unique_ptr<Itsuki::Collider> collider);
+          std::unique_ptr<Itsuki::Collider> collider,bool isBroken);
 
 	~Stage();
 
@@ -21,6 +21,12 @@ public:
 	void Render(ID3D11DeviceContext* pContext, const DirectX::SimpleMath::Matrix& view,
                 const DirectX::SimpleMath::Matrix& proj, const DirectX::SimpleMath::Vector3& eye,
                 const DirectX::SimpleMath::Vector3& target);
+
+    //壊せるかどうか返す関数
+    bool GetIsBroken()
+    {
+        return m_isBroken;
+    }
 
 private:
 
@@ -39,7 +45,10 @@ private:
     // 入力レイアウト
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
-
+    //最小値と最大値
     SimpleMath::Vector3 m_minPos;
     SimpleMath::Vector3 m_maxPos;
+
+    //壊せるか
+    bool m_isBroken;
 };

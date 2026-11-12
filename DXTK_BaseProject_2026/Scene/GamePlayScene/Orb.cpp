@@ -104,5 +104,5 @@ void Orb::SetRandom()
     SetPosition(Pos);
 
     // 当たり判定の位置も設定
-    m_collider->SetPosition(Pos);
+    m_collider->SetPosition({Pos.x,Pos.y+0.5f,Pos.z});
 }
