@@ -53,38 +53,53 @@ bool CollisionChecker::CheckCollision(const Collider& collider1, const Collider&
 
 bool CollisionChecker::CheckRayCollision(const Ray& ray, const Collider& collider, float& distance) const
 {
+    //返す用の値を入れておく
     distance = 0.0f;
+
+    //向き
     auto direction = ray.direction;
 
-    if (direction.LengthSquared() <= 0.000001f)
+    //ほぼゼロだったら何もしない
+    if (direction.LengthSquared() <= FLT_EPSILON)
         return false;
 
+    //向きだけを取得する
     direction.Normalize();
 
+    //球との判定
     if (collider.GetShape() == SHAPE::SPHERE)
     {
+
         const auto* sphere = dynamic_cast<const SphereCollider*>(&collider);
 
-        if (!sphere)
-            return false;
-
+        //視点からの球の中心
         const auto toCenter = sphere->GetPosition() - ray.origin;
+
+        //中心と向いてる方向の内積を取得
         const float projected = toCenter.Dot(direction);
+
+        //球との判定を行う（平方根の計算しないように2乗している）
         const float discriminant =
             projected * projected - (toCenter.LengthSquared() - sphere->GetRadius() * sphere->GetRadius());
 
+        //当ってないなら何もしない
         if (discriminant < 0.0f)
             return false;
 
+        //視線から球の一番近い部分を取る
         const float nearDistance = projected - std::sqrt(discriminant);
 
+        //視線から球の一番遠い部分を取る
         const float farDistance = projected + std::sqrt(discriminant);
 
+        //距離を取っておく（物体にめり込んでいる場合はfarDistanceを返しておく）
         distance = nearDistance >= 0.0f ? nearDistance : farDistance;
 
+        //trueを返す
         return distance >= 0.0f;
     }
 
+    //箱との判定
     if (collider.GetShape() == SHAPE::BOX)
     {
         const auto* box = dynamic_cast<const BoxCollider*>(&collider);
@@ -92,10 +107,14 @@ bool CollisionChecker::CheckRayCollision(const Ray& ray, const Collider& collide
         if (!box)
             return false;
 
+        //もっとも近い位置と遠い位置を作成しておく
         float nearDistance = 0.0f;
-        float farDistance = (std::numeric_limits<float>::max)();
+        float farDistance = FLT_MAX;
+
         const auto min = box->GetMin();
+
         const auto max = box->GetMax();
+
         const auto component = [](const SimpleMath::Vector3& value, int axis)
         {
             switch (axis)
@@ -108,30 +127,50 @@ bool CollisionChecker::CheckRayCollision(const Ray& ray, const Collider& collide
                     return value.z;
             }
         };
+
+        //それぞれの軸で計算
         for (int axis = 0; axis < 3; ++axis)
         {
+            //----------------------それぞれの軸の値の計算----------------------//
             const float origin = component(ray.origin, axis);
+
             const float dir = component(direction, axis);
+
             const float minimum = component(min, axis);
             const float maximum = component(max, axis);
-            if (std::abs(dir) <= 0.000001f)
+            //----------------------それぞれの軸の値の計算----------------------//
+
+            //もしもほぼ０（視点を動かしていない）なら
+            if (std::abs(dir) <= FLT_EPSILON)
             {
+                //箱に引っかかっていないのであればfalseを返す
                 if (origin < minimum || origin > maximum)
                     return false;
                 continue;
             }
+
+            //値の距離を取得
             float a = (minimum - origin) / dir;
             float b = (maximum - origin) / dir;
+
+            //もしも小さい方の計算の値が大きかったら
             if (a > b)
                 std::swap(a, b);
-            nearDistance = (std::max)(nearDistance, a);
-            farDistance = (std::min)(farDistance, b);
+
+
+            nearDistance = std::max(nearDistance, a);
+            farDistance = std::min(farDistance, b);
+
+            //もしも一番小さい値の方が大きいならfalseを返す
             if (nearDistance > farDistance)
                 return false;
         }
+
+        //距離を入れる
         distance = nearDistance;
         return farDistance >= 0.0f;
     }
+
     return false;
 }
 
@@ -176,7 +215,7 @@ bool Itsuki::CollisionChecker::GetSeparation(const Collider& obj, const Collider
             return false;
 
         // 球の中心が箱の外側にある場合
-        if (distanceSq > 0.000001f)
+        if (distanceSq > FLT_EPSILON)
         {
             // 平方根をとる（やむなし）
             const float distance = std::sqrt(distanceSq);
