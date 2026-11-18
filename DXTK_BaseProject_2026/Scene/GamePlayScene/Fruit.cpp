@@ -25,8 +25,7 @@ void Fruit::Update(float elapsedTime)
 
 void Fruit::Render()
 {
-    SimpleMath::Matrix world = SimpleMath::Matrix::CreateTranslation(m_position);
-
+    SimpleMath::Matrix world = SimpleMath::Matrix::CreateScale(0.5) * SimpleMath::Matrix::CreateTranslation(m_position);
     // モデルの描画
     m_pModel->Draw(m_pGameContext->deviceResources.GetD3DDeviceContext(), m_pGameContext->commonStates, world, m_view,
                    m_projection);

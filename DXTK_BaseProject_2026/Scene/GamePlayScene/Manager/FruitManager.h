@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <vector>
 #include <memory>
 #include "../Fruit.h"
@@ -14,7 +14,7 @@ public:
         , m_view{view}
         , m_projection{projection}
         , m_pModel{pModel}
-        , m_pFruits{}
+        , m_pFruitses{}
         , m_fruitValues{0}
         , m_fruitInterval{0}
         , m_saveFruitInterval{0}
@@ -68,23 +68,23 @@ public:
         std::unique_ptr<Fruit> fruit = std::make_unique<Fruit>(m_pGameContext, m_view, m_projection,m_pModel,
                                                          colF.MakeCollider(Itsuki::SHAPE::SPHERE, fruitCol));
         
-        m_pFruits.push_back(std::move(fruit));
+        m_pFruitses.push_back(std::move(fruit));
     }
 
     //指定したフルーツを消す
     void DeleteFruit(int index)
     {
-        if (index < 0 || static_cast<size_t>(index) >= m_pFruits.size())
+        if (index < 0 || static_cast<size_t>(index) >= m_pFruitses.size())
             return;
         
-        m_pFruits.erase(m_pFruits.begin() + index);
+        m_pFruitses.erase(m_pFruitses.begin() + index);
 
     }
 
     //すべてのフルーツを消す
     void ResetFruit()
     {
-        m_pFruits.clear();
+        m_pFruitses.clear();
         m_count = 0;
 
         for (size_t i = 0; i < m_startingFruitCount; i++)
@@ -96,14 +96,22 @@ public:
     //指定されたフルーツを返す
     Fruit* GetFruit(int Index)
     {
-        return m_pFruits[Index].get();
+        return m_pFruitses[Index].get();
     }
 
     //フルーツの数を返す
     int GetNumFruits()
     {
-        return m_pFruits.size();
+        return m_pFruitses.size();
     }
+    
+    //フルーツの箱を返す
+    std::vector<std::unique_ptr<Fruit>>& GetFruitses()
+    {
+        return m_pFruitses;
+    }
+
+
 
     // フルーツの価値を追加する
     void SetFruitValue(int value)
@@ -173,7 +181,7 @@ private:
     DirectX::Model* m_pModel = nullptr;
 
     //フルーツを格納する箱
-    std::vector<std::unique_ptr<Fruit>> m_pFruits;
+    std::vector<std::unique_ptr<Fruit>> m_pFruitses;
 
     //フルーツの基本価格
     int m_fruitValues;

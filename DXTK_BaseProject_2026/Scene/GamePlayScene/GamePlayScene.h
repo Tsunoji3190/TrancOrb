@@ -71,7 +71,6 @@ private:
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
     // シェーダーリソースビュー
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_fruitTexture;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_stageTexture;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timerTexture;
 

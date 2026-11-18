@@ -271,6 +271,12 @@ void GamePlayScene::Render(GameContext& gameContext)
 
     m_skyModelSun->Draw(context, gameContext.commonStates, SkyWorld, m_view, m_projection);
 
+    // フルーツの描画
+    for (auto& Fruit : m_fruitManager->GetFruitses())
+    {
+        Fruit->Render();
+    }
+
     //m_renderer->Render(context, m_view, m_projection, *m_rocket->GetCollider());
 
     //ステージの線形描画
@@ -301,7 +307,6 @@ void GamePlayScene::Render(GameContext& gameContext)
     //    Fruit* pFruit = m_fruitManager->GetFruit(i);
     //    m_renderer->Render(context, m_view, m_projection, *pFruit->GetCollider());
     //}
-
 
 
     bool isRay=false;
@@ -410,10 +415,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_spriteFont = std::make_unique<DirectX::SpriteFont>(device, L"Resources/Font/Meiryo.spritefont");
 
 
-    // ---テクスチャのロード---//
-    DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Resources/Textures/Fruit.dds", nullptr,
-                                               m_fruitTexture.ReleaseAndGetAddressOf()));
-
+    // ---テクスチャのロード--- //
     //照準
     DirectX::CreateWICTextureFromFile(device, L"Resources/Textures/Aiming.png", nullptr,
                                       m_aiming.ReleaseAndGetAddressOf());
@@ -428,7 +430,6 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_basicEffect->SetVertexColorEnabled(true);
     m_basicEffect->SetLightingEnabled(false);
     m_basicEffect->SetTextureEnabled(true);
-    m_basicEffect->SetTexture(m_fruitTexture.Get());
 
     // 入力レイアウトの作成
     DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColorTexture>(device, m_basicEffect.get(),
@@ -515,6 +516,35 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
             }
         }
     }
+
+    for (auto& mesh : m_appleModel->meshes)
+    {
+        for (auto& parts : mesh->meshParts)
+        {
+            auto effect = dynamic_cast<DirectX::BasicEffect*>(parts->effect.get());
+            if (effect)
+            {
+                effect->EnableDefaultLighting();      // ライトを有効に
+                effect->SetDiffuseColor(Colors::Red); // 黒でないか確認のため一時的に赤
+
+                effect->SetEmissiveColor({0.6f, 0.6f, 0.6f});
+
+            }
+        }
+    }
+    //for (auto& mesh : m_appleModel->meshes)
+    //{
+    //    for (auto& parts : mesh->meshParts)
+    //    {
+    //        auto effect = dynamic_cast<DirectX::BasicEffect*>(parts->effect.get());
+    //        if (effect)
+    //        {
+    //            effect->EnableDefaultLighting();      // ライトを有効に
+    //            effect->SetDiffuseColor(Colors::Red); // 黒でないか確認のため一時的に赤
+    //        }
+    //    }
+    //}
+
 
 
 
