@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Models\Albedo_Roket_1.png" />
+    <Image Include="Models\Image_0.png" />
     <Image Include="Models\夜の空.png" />
   </ItemGroup>
   <ItemGroup>

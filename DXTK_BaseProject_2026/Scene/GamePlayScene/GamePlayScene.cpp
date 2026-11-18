@@ -301,12 +301,12 @@ void GamePlayScene::Render(GameContext& gameContext)
         return;
     }
 
-    ////当たり判定描画
-    //for (int i = 0; i < m_fruitManager->GetNumFruits(); i++)
-    //{
-    //    Fruit* pFruit = m_fruitManager->GetFruit(i);
-    //    m_renderer->Render(context, m_view, m_projection, *pFruit->GetCollider());
-    //}
+    //当たり判定描画
+    for (int i = 0; i < m_fruitManager->GetNumFruits(); i++)
+    {
+        Fruit* pFruit = m_fruitManager->GetFruit(i);
+        m_renderer->Render(context, m_view, m_projection, *pFruit->GetCollider());
+    }
 
 
     bool isRay=false;
