@@ -21,19 +21,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Models\Dammy.obj">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Models\floor.obj">
-      <Filter>Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Models\wall.obj">
-      <Filter>Models</Filter>
-    </MeshContentTask>
     <MeshContentTask Include="Models\Skydome.obj">
       <Filter>Models</Filter>
     </MeshContentTask>
-    <MeshContentTask Include="Models\Space_Rocket.obj" />
+    <MeshContentTask Include="Models\apple.obj">
+      <Filter>Models</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Models\Space_Rocket.obj">
+      <Filter>Models</Filter>
+    </MeshContentTask>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Models\夜の空.png">
@@ -44,6 +40,11 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Models\Space_Rocket.mtl" />
+    <None Include="Models\Space_Rocket.mtl">
+      <Filter>Models</Filter>
+    </None>
+    <None Include="Models\apple.mtl">
+      <Filter>Models</Filter>
+    </None>
   </ItemGroup>
 </Project>

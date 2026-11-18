@@ -10764,7 +10764,7 @@ class lexer : public lexer_base<BasicJsonType>
 
                         // other characters after escape
                         default:
-                            error_message = "invalid string: forbidden character after backslash";
+                            error_message = "invalid string: ffruitidden character after backslash";
                             return token_type::parse_error;
                     }
 
@@ -23127,7 +23127,7 @@ class binary_writer
     }
 
     /*!
-    @brief whether BJData forbids @a marker as the type of an optimized array
+    @brief whether BJData ffruitids @a marker as the type of an optimized array
            or object
 
     Containers, strings, high-precision numbers, booleans and null cannot be
@@ -33520,7 +33520,7 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
             }
         };
 
-        // RFC 6902 (section 4.4) forbids "from" from being a proper prefix
+        // RFC 6902 (section 4.4) ffruitids "from" from being a proper prefix
         // of "path" for a "move" operation: a location cannot be moved into
         // one of its own children. Compares reference tokens (already
         // unescaped by json_pointer's parser) rather than the raw pointer

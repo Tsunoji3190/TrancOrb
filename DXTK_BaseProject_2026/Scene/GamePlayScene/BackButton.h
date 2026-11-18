@@ -23,7 +23,7 @@ namespace Itsuki
             m_imageButton.Initialize(gameContext, position, buttonimage, IMAGE_MAGNI, IMAGE_MAGNI);
         }
 
-        void Update(float elapsedtime, Player* player, OrbManager* orbmanager,GameTimer* timer)
+        void Update(float elapsedtime, Player* player, FruitManager* fruitmanager,GameTimer* timer)
         {
 
             auto mouse = Mouse::Get().GetState();
@@ -47,8 +47,8 @@ namespace Itsuki
                 timer->ResetTimer();
                 player->SetMouseModeRelative();
 
-                orbmanager->ResetOrb();
-                orbmanager->AddOrb();
+                fruitmanager->ResetFruit();
+                fruitmanager->AddFruit();
 
             }
         }

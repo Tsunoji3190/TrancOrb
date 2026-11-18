@@ -21,7 +21,7 @@
 #include"ItsukiLib/ColliderFactory.h"
 
 #include"Manager/StageManager.h"
-#include"Manager/OrbManager.h"
+#include"Manager/FruitManager.h"
 #include"../../ItsukiLib/SkillTree.h"
 #include"BackButton.h"
 #include"../../ItsukiLib/GameTimer.h"
@@ -71,7 +71,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11InputLayout> m_inputLayout;
 
     // シェーダーリソースビュー
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_orbTexture;
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_fruitTexture;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_stageTexture;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_timerTexture;
 
@@ -95,7 +95,12 @@ private:
 
     // 空のモデル
     std::unique_ptr<DirectX::Model> m_skyModelSun;
+
+    //
     std::unique_ptr<DirectX::Model> m_RocketModel;
+
+    //
+    std::unique_ptr<DirectX::Model> m_appleModel;
 
     //照準の画像
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_aiming;
@@ -132,11 +137,12 @@ private:
 	//ロケット
     std::unique_ptr<Rocket> m_rocket;
 
+
 	//ステージを格納
     std::unique_ptr<StageManager> m_stageManager;
 
-	//オーブを格納
-    std::unique_ptr<OrbManager> m_orbManager;
+	//フルーツを格納
+    std::unique_ptr<FruitManager> m_fruitManager;
 
     //投げられるオブジェクト
     std::vector<std::unique_ptr<ThrowableObject>> m_throwableObjects;

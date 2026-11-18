@@ -9,7 +9,7 @@
 enum struct SkillID
 {
     Dash = 0, // 走れるように
-    Vacuum,   // 存在するオーブをすべて吸い込む
+    Vacuum,   // 存在するフルーツをすべて吸い込む
     fever,    //  
 };
 
@@ -29,8 +29,8 @@ private:
         // 運
         int luck;
 
-        // 持っているオーブの数
-        int haveOrb;
+        // 持っているフルーツの数
+        int haveFruit;
 
         //掴む強さ
         int CarryPower = 1;

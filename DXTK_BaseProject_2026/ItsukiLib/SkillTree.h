@@ -8,7 +8,7 @@
 #include "SkillNode.h"
 
 #include"../Scene/GamePlayScene/Player.h"
-#include"../Scene/GamePlayScene/Manager/OrbManager.h"
+#include"../Scene/GamePlayScene/Manager/FruitManager.h"
 #include "GameTimer.h"
 #include <cmath>
 
@@ -38,7 +38,7 @@ namespace Itsuki
             // スキルの効果をどれだけ適応するか
             float num;
 
-            // 必要オーブ数
+            // 必要フルーツ数
             int cost = 0;       
 
             // 画像
@@ -123,12 +123,12 @@ namespace Itsuki
             d.AddNode("First", "", center, SkillEffect::Time, 5, 1, STAR_IMAGE, false);
 
             // 価値
-            d.AddChain("Value", "First", {65, 65}, SkillEffect::OrbValue, {{1, 3}, {1, 20}, {1, 50}});
+            d.AddChain("Value", "First", {65, 65}, SkillEffect::FruitValue, {{1, 3}, {1, 20}, {1, 50}});
 
             // プレイヤーの速度
             d.AddChain("Speed", "First", {-65, 65}, SkillEffect::Speed, {{1, 3}, {1, 6}, {1, 9}});
 
-            // オーブのインターバル
+            // フルーツのインターバル
             d.AddChain("Interval", "First", {65, -65}, SkillEffect::Interval, {{1, 3}, {1, 20}, {1, 100}});
 
             // 制限時間の延長
@@ -143,9 +143,9 @@ namespace Itsuki
             // クリア
             d.AddNode("Clear", "", {center.x, 80}, SkillEffect::Clear, 5, 1, CLEAR_IMAGE, false);
 
-            // 最初のオーブの数
-            d.AddNode("FirstOrb", "First", {1000, 90}, SkillEffect::FirstOrb, 3, 20, STAR_IMAGE, false);
-            d.AddChain("ChainFirstOrb", "FirstOrb", {0, 65}, SkillEffect::FirstOrb, {{3, 60}, {3, 100}, {5, 300}});
+            // 最初のフルーツの数
+            d.AddNode("FirstFruit", "First", {1000, 90}, SkillEffect::FirstFruit, 3, 20, STAR_IMAGE, false);
+            d.AddChain("ChainFirstFruit", "FirstFruit", {0, 65}, SkillEffect::FirstFruit, {{3, 60}, {3, 100}, {5, 300}});
 
             return d;
         }
@@ -172,8 +172,8 @@ namespace Itsuki
 
     public:
 
-        SkillTree(Player& player, OrbManager& manager,GameTimer& timer) 
-            : ref_player{player}, ref_orbManager{manager}, ref_gameTimer{timer},m_mouse{}
+        SkillTree(Player& player, FruitManager& manager,GameTimer& timer) 
+            : ref_player{player}, ref_fruitManager{manager}, ref_gameTimer{timer},m_mouse{}
         {
         }
 
@@ -258,11 +258,11 @@ namespace Itsuki
 
 
             // テキストの設定
-            std::wstring orb =
-                L"現在持っているオーブ: " + std::to_wstring(static_cast<int>(ref_player.GetStatus().haveOrb)) + L"個";
+            std::wstring fruit =
+                L"現在持っているフルーツ: " + std::to_wstring(static_cast<int>(ref_player.GetStatus().haveFruit)) + L"個";
 
-            //プレイヤーの持っているオーブを出す  
-            m_spriteFont->DrawString(m_spriteBatch.get(), orb.c_str(), DirectX::SimpleMath::Vector2{20.0f, 675.0f},
+            //プレイヤーの持っているフルーツを出す  
+            m_spriteFont->DrawString(m_spriteBatch.get(), fruit.c_str(), DirectX::SimpleMath::Vector2{20.0f, 675.0f},
                                      DirectX::Colors::White, 0.0, {0, 0}, {1.2, 1.2});
 
 
@@ -351,23 +351,23 @@ namespace Itsuki
                     ref_player.GetStatus().speed += num;
                     break;
 
-                case SkillEffect::OrbValue:
-                    //オーブの価値を上げる
-                    ref_orbManager.SetOrbValue(num);
+                case SkillEffect::FruitValue:
+                    //フルーツの価値を上げる
+                    ref_fruitManager.SetFruitValue(num);
                     break;
 
                 case SkillEffect::Interval:
-                    //オーブが出る間隔を減少させる
-                    ref_orbManager.Remomveinterval(num);
+                    //フルーツが出る間隔を減少させる
+                    ref_fruitManager.Remomveinterval(num);
                     break;
 
                 case SkillEffect::Luck:
                     ref_player.GetStatus().luck += num;
                     break;
 
-                case SkillEffect::FirstOrb:
-                    //最初に出てくるオーブの追加
-                    ref_orbManager.AddFirst(num);
+                case SkillEffect::FirstFruit:
+                    //最初に出てくるフルーツの追加
+                    ref_fruitManager.AddFirst(num);
                     break;
 
                 case SkillEffect::Skill:
@@ -393,25 +393,25 @@ namespace Itsuki
             switch (type)
             {
                 case SkillEffect::Time:
-                    return L"オーブを収集できる時間が増えます";
+                    return L"フルーツを収集できる時間が増えます";
 
                 case SkillEffect::Speed:
                     return L"あなたの足が速くなります";
 
-                case SkillEffect::OrbValue:
-                    return L"オーブの価値が増えます";
+                case SkillEffect::FruitValue:
+                    return L"フルーツの価値が増えます";
 
                 case SkillEffect::Interval:
-                    return L"オーブが出てくる間隔が減ります";
+                    return L"フルーツが出てくる間隔が減ります";
 
                 case SkillEffect::Luck:
-                    return L"オーブを手に入れた際、そのオーブの価値が倍になる確率が増えます";
+                    return L"フルーツを手に入れた際、そのフルーツの価値が倍になる確率が増えます";
 
-                case SkillEffect::FirstOrb:
-                    return L"最初のオーブの数が増えます";
+                case SkillEffect::FirstFruit:
+                    return L"最初のフルーツの数が増えます";
 
                 case SkillEffect::Skill:
-                    return L"Eキーを押すことでオーブの生成時間を大幅に短縮することが出来ます";
+                    return L"Eキーを押すことでフルーツの生成時間を大幅に短縮することが出来ます";
 
                 case SkillEffect::Clear:
                     return L"ロケットを買うことが出来、クリアすることが出来ます！";
@@ -484,8 +484,8 @@ namespace Itsuki
         //プレイヤー
         Player& ref_player;
 
-        //オーブマネージャー
-        OrbManager& ref_orbManager;
+        //フルーツマネージャー
+        FruitManager& ref_fruitManager;
 
         //ゲームタイマー
         GameTimer& ref_gameTimer;

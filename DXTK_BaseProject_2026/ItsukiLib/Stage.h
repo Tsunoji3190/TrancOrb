@@ -23,9 +23,9 @@ public:
                 const DirectX::SimpleMath::Vector3& target);
 
     //壊せるかどうか返す関数
-    bool GetIsBroken()
+    bool IsBroken(int power)
     {
-        return m_isBroken;
+        return power >= 2 && m_isBroken ? true : false;
     }
 
 private:

@@ -5,7 +5,7 @@
         "id": "value_1",
         "parent": "root",
         "offset": [ 65, 65 ],
-        "type": "OrbValue",
+        "type": "FruitValue",
         "value": 1,
         "cost": 3,
         "texture": "value"
@@ -14,7 +14,7 @@
         "id": "value_1",
         "parent": "root",
         "offset": [ 65, 65 ],
-        "type": "OrbValue",
+        "type": "FruitValue",
         "value": 1,
         "cost": 3,
         "texture": "value"

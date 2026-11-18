@@ -21,10 +21,10 @@ namespace Itsuki
     {
         Time,
         Speed,
-        OrbValue,
+        FruitValue,
         Interval,
         Luck,
-        FirstOrb,
+        FirstFruit,
         Skill,
         Clear,
         Carry
@@ -74,11 +74,11 @@ namespace Itsuki
                 return false;
 
 
-            // オーブが足りているのなら
-            if (player.GetStatus().haveOrb >= GetSteak())
+            // フルーツが足りているのなら
+            if (player.GetStatus().haveFruit >= GetSteak())
             {
-                // Steak分持ってるオーブを減らす
-                player.GetStatus().haveOrb -= m_cost;
+                // Steak分持ってるフルーツを減らす
+                player.GetStatus().haveFruit -= m_cost;
 
                 gameContext.audio.PlayOneShot("Buy",        
                     SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
@@ -167,7 +167,7 @@ namespace Itsuki
             return m_value;
         }
 
-        // 必要なオーブ数を返す
+        // 必要なフルーツ数を返す
         int GetSteak()
         {
             return m_cost;
@@ -213,7 +213,7 @@ namespace Itsuki
         SkillEffect m_effect;
         float m_value = 0.0f;
 
-        // 必要なオーブ数
+        // 必要なフルーツ数
         int m_cost;
 
         // 取得したか

@@ -50,10 +50,10 @@
     <ClInclude Include="Scene\GamePlayScene\Player.h" />
     <ClInclude Include="ItsukiLib\ItsukiMath.h" />
     <ClInclude Include="ItsukiLib\Camera\CameraBase.h" />
-    <ClInclude Include="Scene\GamePlayScene\Orb.h" />
+    <ClInclude Include="Scene\GamePlayScene\Fruit.h" />
     <ClInclude Include="Scene\TitleScene\TitleScene.h" />
     <ClInclude Include="Scene\GamePlayScene\Manager\StageManager.h" />
-    <ClInclude Include="Scene\GamePlayScene\Manager\OrbManager.h" />
+    <ClInclude Include="Scene\GamePlayScene\Manager\FruitManager.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioChannel.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioHandle.h" />
     <ClInclude Include="SuzukiLib\Audio\AudioPlayDesc.h" />
@@ -141,7 +141,7 @@
     <ClCompile Include="Scene\GamePlayScene\GamePlayScene.cpp" />
     <ClCompile Include="Scene\GamePlayScene\Player.cpp" />
     <ClCompile Include="ItsukiLib\Stage.cpp" />
-    <ClCompile Include="Scene\GamePlayScene\Orb.cpp" />
+    <ClCompile Include="Scene\GamePlayScene\Fruit.cpp" />
     <ClCompile Include="Scene\TitleScene\TitleScene.cpp" />
     <ClCompile Include="SuzukiLib\Audio\AudioSystem.cpp" />
     <ClCompile Include="SuzukiLib\Audio\Internal\AudioVolumeMixer.cpp" />

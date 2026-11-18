@@ -11,7 +11,7 @@
 #include <ItsukiLib/SphereCollider.h>
 #include <ItsukiLib/Collider.h>
 #include"ItsukiLib/BoxCollider.h"
-#include "Orb.h"
+#include "Fruit.h"
 #include <ItsukiLib/ColliderFactory.h>
 #include <random>
 
@@ -44,7 +44,7 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
         // マウスの表示
         m_player->SetMouseModeAbsolute();
         m_skilltree->Update(elapsedTime, gameContext);
-        m_backButton.Update(elapsedTime, m_player.get(), m_orbManager.get(), m_timer.get());
+        m_backButton.Update(elapsedTime, m_player.get(), m_fruitManager.get(), m_timer.get());
         return;
     }
 
@@ -59,10 +59,10 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
 
     GamePlayCamera(elapsedTime);
 
+    int i = 0;
     // ステージとの当たり判定
     for (auto& Stage:m_stageManager->GetStages())
     {
-
         SimpleMath::Vector3 separation;
         if (m_collisionChecker->GetSeparation(*m_player->GetCollider(), *Stage->GetCollider(), separation))
         {
@@ -74,11 +74,12 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
             // 重力加速でのめり込みが起きないようにする
             if (separation.y > 0)
             {
-                m_player->SetIsGround(1);
+                m_player->SetIsGround(true);
 
                 m_player->SetVelocity({m_player->GetVelocity().x, 0, m_player->GetVelocity().z});
 
             }
+
         }
 
         // 投げれるオブジェクトの更新
@@ -87,6 +88,12 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
             //壁にぶつかったら
             if (m_collisionChecker->GetSeparation(*object->GetCollider(), *Stage->GetCollider(), separation))
             {
+                //もし壁を壊せるほど強い力を持っていたら
+                if (Stage->IsBroken(object->GetRequiredCarryPower()))
+                {
+                    m_stageManager->RemoveStage(i);
+                    return;
+                }
 
                 //
                 const auto correctedPosition = object->GetPosition() + separation;
@@ -102,7 +109,11 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
 
 
             }
+
         }
+
+        i++;
+
     }
 
 
@@ -158,12 +169,12 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
         return;
     }
 
-    // オーブマネージャーの更新
-    m_orbManager->Update(elapsedTime);
+    // フルーツマネージャーの更新
+    m_fruitManager->Update(elapsedTime);
     
     //----------------------------//
 
-    auto collectOrb = [&](int index)
+    auto collectFruit = [&](int index)
     {
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -171,32 +182,32 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
         if (m_player->GetStatus().luck >= dist(gen))
         {
             gameContext.audio.PlayOneShot(
-                "GetOrb", SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3, 0.5});
-            m_player->GetStatus().haveOrb += m_orbManager->GetOrbValue() * 2;
+                "GetFruit", SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3, 0.5});
+            m_player->GetStatus().haveFruit += m_fruitManager->GetFruitValue() * 2;
         }
         else
         {
-            gameContext.audio.PlayOneShot("GetOrb",
+            gameContext.audio.PlayOneShot("GetFruit",
                                           SuzukiLib::Audio::AudioPlayDesc{SuzukiLib::Audio::AudioChannel::Se, 0.3});
-            m_player->GetStatus().haveOrb += m_orbManager->GetOrbValue();
+            m_player->GetStatus().haveFruit += m_fruitManager->GetFruitValue();
         }
-        m_orbManager->DeleteOrb(index);
+        m_fruitManager->DeleteFruit(index);
     };
 
-    // オーブとの当たり判定
-    for (int i = m_orbManager->GetNumOrbs() - 1; i >= 0; i--)
+    // フルーツとの当たり判定
+    for (int i = m_fruitManager->GetNumFruits() - 1; i >= 0; i--)
     {
 
-        Orb* pOrb = m_orbManager->GetOrb(i);
-        bool collected = m_collisionChecker->CheckCollision(*m_player->GetCollider(), *pOrb->GetCollider());
+        Fruit* pFruit = m_fruitManager->GetFruit(i);
+        bool collected = m_collisionChecker->CheckCollision(*m_player->GetCollider(), *pFruit->GetCollider());
         for (const auto& object : m_throwableObjects)
         {
-            if (!collected && m_collisionChecker->CheckCollision(*object->GetCollider(), *pOrb->GetCollider()))
+            if (!collected && m_collisionChecker->CheckCollision(*object->GetCollider(), *pFruit->GetCollider()))
                 collected = true;
         }
         if (collected)
         {
-            collectOrb(i);
+            collectFruit(i);
         }
     }
 
@@ -207,13 +218,13 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
     // フィーバータイムに突入したら
     if (m_player->GetFever())
     {
-        // オーブのカウントをめちゃ減らす
-        m_orbManager->SetInterval(0.5);
+        // フルーツのカウントをめちゃ減らす
+        m_fruitManager->SetInterval(0.5);
     }
     else // 違うなら
     {
         // 戻す
-        m_orbManager->ReturnInterval();
+        m_fruitManager->ReturnInterval();
     }
 
     // 時間を減らす
@@ -285,20 +296,12 @@ void GamePlayScene::Render(GameContext& gameContext)
     }
 
     ////当たり判定描画
-    //for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
+    //for (int i = 0; i < m_fruitManager->GetNumFruits(); i++)
     //{
-    //    Orb* pOrb = m_orbManager->GetOrb(i);
-    //    m_renderer->Render(context, m_view, m_projection, *pOrb->GetCollider());
+    //    Fruit* pFruit = m_fruitManager->GetFruit(i);
+    //    m_renderer->Render(context, m_view, m_projection, *pFruit->GetCollider());
     //}
 
-    //目線で手前側のものを前にする
-    m_orbManager->Sort(eye);
-
-    for (int i = 0; i < m_orbManager->GetNumOrbs(); i++)
-    {
-        Orb* pOrb = m_orbManager->GetOrb(i);
-        pOrb->Render(context, m_view, m_projection, eye, target);
-    }
 
 
     bool isRay=false;
@@ -319,7 +322,7 @@ void GamePlayScene::Render(GameContext& gameContext)
 
         // テキストの設定
     std::wstring text = L"Time: " + std::to_wstring(static_cast<int>(m_timer->GetTimer()));
-    std::wstring OrbCounttext = L"Orb: " + std::to_wstring(m_player->GetStatus().haveOrb);
+    std::wstring FruitCounttext = L"Fruit: " + std::to_wstring(m_player->GetStatus().haveFruit);
 
     // 文字列の大きさを取得
     DirectX::SimpleMath::Vector2 size = m_spriteFont->MeasureString(text.c_str());
@@ -373,7 +376,7 @@ void GamePlayScene::Render(GameContext& gameContext)
     m_spriteFont->DrawString(m_spriteBatch.get(), text.c_str(), DirectX::SimpleMath::Vector2{width / 2 - size.x, 0},
                              DirectX::Colors::MidnightBlue, 0.0, {0, 0}, {1.0, 1.0});
 
-    m_spriteFont->DrawString(m_spriteBatch.get(), OrbCounttext.c_str(), DirectX::SimpleMath::Vector2{.0f, 100.0f},
+    m_spriteFont->DrawString(m_spriteBatch.get(), FruitCounttext.c_str(), DirectX::SimpleMath::Vector2{.0f, 100.0f},
                              DirectX::Colors::MidnightBlue, 0.0, {0, 0}, {1.0, 1.0});
     // debugRenderer.DrawText({0.0f, 0.0f}, L"GamePlayScene");
 
@@ -408,8 +411,8 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
 
     // ---テクスチャのロード---//
-    DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Resources/Textures/Orb.dds", nullptr,
-                                               m_orbTexture.ReleaseAndGetAddressOf()));
+    DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Resources/Textures/Fruit.dds", nullptr,
+                                               m_fruitTexture.ReleaseAndGetAddressOf()));
 
     //照準
     DirectX::CreateWICTextureFromFile(device, L"Resources/Textures/Aiming.png", nullptr,
@@ -425,7 +428,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_basicEffect->SetVertexColorEnabled(true);
     m_basicEffect->SetLightingEnabled(false);
     m_basicEffect->SetTextureEnabled(true);
-    m_basicEffect->SetTexture(m_orbTexture.Get());
+    m_basicEffect->SetTexture(m_fruitTexture.Get());
 
     // 入力レイアウトの作成
     DX::ThrowIfFailed(CreateInputLayoutFromEffect<VertexPositionColorTexture>(device, m_basicEffect.get(),
@@ -452,16 +455,13 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
     //箱の座標
     //床
-    Itsuki::CollisionParams floar1 = {{.0f, 0.0f, .0f}, {-4.0f, -11.0f, -4.0f}, {4.0f, .0f, 4.0f}, {0}};
-    Itsuki::CollisionParams floar2 = {{8.0f, 0.0f, .0f}, {-1.5f, -11.0f, -1.5f}, {1.5f, .0f, 1.5f}, {0}};
-    Itsuki::CollisionParams floar3 = {{-8.0f, 5.0f, .0f}, {-1.5f, -16.0f, -1.5f}, {1.5f, .0f, 1.5}, {0}};
-    Itsuki::CollisionParams floar4 = {{.0f, -11.0f, .0f}, {-10.0f, -.1f, -10.0f}, {10.0f, .0f, 10.0}, {0}};
+    Itsuki::CollisionParams floar1 = {{.0f, 0.0f, .0f}, {-6.0f, -11.0f, -6.0f}, {6.0f, .0f, 6.0f}, {0}};
 
     //壁
-    Itsuki::CollisionParams wall1 = {{-4.0f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 7.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall2 = {{4.0f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 7.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.0f}, {-10.0f, -11.0f, -.1f}, {10.0f, 7.0f, .0f}, {0}};
-    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.0f}, {-10.0f, -11.0f, .0f}, {10.0f, 7.0f, .1f}, {0}};
+    Itsuki::CollisionParams wall1 = {{-4.2f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 7.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall2 = {{4.2f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 7.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.2f}, {-10.0f, -11.0f, -.1f}, {10.0f, 7.0f, .0f}, {0}};
+    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.2f}, {-10.0f, -11.0f, .0f}, {10.0f, 7.0f, .1f}, {0}};
 
     ///プレイヤー
     Itsuki::CollisionParams player = {{0.0f, 0.5f, 3.0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
@@ -478,6 +478,8 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_model = Model::CreateFromCMO(device, L"Resources/Models/Dammy.cmo", fx);
     m_RocketModel = Model::CreateFromCMO(device, L"Resources/Models/Space_Rocket.cmo", fx);
 
+    //りんごの読み込み
+    m_appleModel = Model::CreateFromCMO(device, L"Resources/Models/apple.cmo", fx);
 
     //空のモデルの読み込み
     m_skyModelSun = Model::CreateFromCMO(device, L"Resources/Models/Skydome.cmo", fx);
@@ -549,19 +551,18 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     m_player->SetMouseModeRelative();
 
     m_stageManager = std::make_unique<StageManager>(&gameContext, m_CprimitiveBatch.get());
+
     //ステージの追加
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX,floar1),false);
-    //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar2));
-    //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar3));
-    //m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, floar4));
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall1),true);
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall2), true);
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall3), true);
     m_stageManager->AddStage(colF.MakeCollider(Itsuki::SHAPE::BOX, wall4), true);
 
-    //オーブマネージャーの設定
-    m_orbManager = std::make_unique<OrbManager>(&gameContext, m_primitiveBatch.get(), m_orbTexture.Get());
-    m_orbManager->Initialize();
+
+    //フルーツマネージャーの設定
+    m_fruitManager = std::make_unique<FruitManager>(&gameContext, m_view, m_projection, m_appleModel.get());
+    m_fruitManager->Initialize();
 
     // タイマーの設定
     m_timer = std::make_unique<Itsuki::GameTimer>();
@@ -570,7 +571,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     //bgmの設定
     gameContext.audio.LoadSound("GameBgm", "Resources/Audio/Bgm/GameBgm.wav");
     gameContext.audio.LoadSound("SkillBgm", "Resources/Audio/Bgm/クロスロード.wav");
-    gameContext.audio.LoadSound("GetOrb", "Resources/Audio/Se/se_hirameki02.wav");
+    gameContext.audio.LoadSound("GetFruit", "Resources/Audio/Se/se_hirameki02.wav");
     gameContext.audio.LoadSound("Jump", "Resources/Audio/Se/se_bound1.wav");
     gameContext.audio.LoadSound("Stop", "Resources/Audio/Se/電子ルーレットの出目が点滅.wav");
     gameContext.audio.LoadSound("Buy", "Resources/Audio/Se/5ac8850c.wav");
@@ -583,7 +584,7 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     gameContext.audio.SetVolume(m_bgmHandle, 0.8f);
 
     //スキルツリーの生成m_bgmHandle
-    m_skilltree = std::make_unique<Itsuki::SkillTree>(*m_player, *m_orbManager, *m_timer);
+    m_skilltree = std::make_unique<Itsuki::SkillTree>(*m_player, *m_fruitManager, *m_timer);
 
     //スキルツリーの設定
     m_skilltree->SetTrees(gameContext);
