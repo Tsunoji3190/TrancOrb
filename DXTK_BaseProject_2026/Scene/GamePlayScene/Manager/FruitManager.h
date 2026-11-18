@@ -65,7 +65,7 @@ public:
         Itsuki::CollisionParams fruitCol = {{0.0f, 0.0f, .0f}, {-.2f, -.2f, -.2f}, {0.2f, 0.2f, 0.2f}, {0.4}};
 
 
-        std::unique_ptr<Fruit> fruit = std::make_unique<Fruit>(m_pGameContext, m_view, m_projection,
+        std::unique_ptr<Fruit> fruit = std::make_unique<Fruit>(m_pGameContext, m_view, m_projection,m_pModel,
                                                          colF.MakeCollider(Itsuki::SHAPE::SPHERE, fruitCol));
         
         m_pFruits.push_back(std::move(fruit));
