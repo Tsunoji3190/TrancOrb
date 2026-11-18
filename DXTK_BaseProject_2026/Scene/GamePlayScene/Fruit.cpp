@@ -21,6 +21,14 @@ Fruit::Fruit(GameContext* pGameContext, const DirectX::SimpleMath::Matrix& view,
 
 void Fruit::Update(float elapsedTime)
 {
+    if (m_isFall)
+        return;
+
+    m_position = m_velocity*elapsedTime;
+
+    m_collider->SetPosition(m_position);
+
+
 }
 
 void Fruit::Render()
@@ -28,7 +36,8 @@ void Fruit::Render()
     using namespace DirectX::SimpleMath;
 
 
-    SimpleMath::Matrix world =SimpleMath::Matrix::CreateScale(0.3) * SimpleMath::Matrix::CreateTranslation(m_position);
+    SimpleMath::Matrix world =
+        SimpleMath::Matrix::CreateScale(SCALE) * SimpleMath::Matrix::CreateTranslation(m_position);
     // モデルの描画
     m_pModel->Draw(m_pGameContext->deviceResources.GetD3DDeviceContext(), m_pGameContext->commonStates, world, m_view,
                    m_projection);
@@ -42,20 +51,25 @@ void Fruit::SetRandom()
     // 乱数生成器に種を設定
     std::mt19937 gen(rd());
 
-    // 1〜100の整数を生成する分布
+    // XYZの座標を生成する
     std::uniform_real_distribution<float> distXZ(-3, 3);
     std::uniform_real_distribution<float> distY(3, 4);
 
-    // 乱数を10個生成
+    // 乱数を生成
     DirectX::SimpleMath::Vector3 Pos = {distXZ(gen), distY(gen), distXZ(gen)};
 
     // ランダムに位置を設定する
     SetPosition(Pos);
 
     // 当たり判定の位置も設定
-    m_collider->SetPosition({Pos.x,Pos.y+0.5f,Pos.z});
+    m_collider->SetPosition({Pos.x,Pos.y,Pos.z});
 }
 
-void Fruit::Fall()
+void Fruit::Fall(float Yvel)
 {
+    m_isFall = true;
+
+    //下に落とすだけでいいのでYを入れる
+    m_velocity.y = Yvel;
+
 }

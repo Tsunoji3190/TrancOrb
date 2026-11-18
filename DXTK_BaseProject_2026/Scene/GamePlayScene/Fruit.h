@@ -16,10 +16,24 @@ public:
 
     void SetRandom();
 
-    //落ちる関数
-    void Fall();
+    //落ちる際に反応する関数
+    void Fall(float Yvel);
+
+    void SetVelocity(SimpleMath::Vector3 vel)
+    {
+        m_velocity = vel;
+    }
 
 private:
+
+    //大きさ
+    static constexpr float SCALE = 0.3f;
+    //加速
+    DirectX::SimpleMath::Vector3 m_velocity = DirectX::SimpleMath::Vector3::Zero;
+
+    //落ちるかどうか
+    bool m_isFall=false;
+
     // ゲームコンテキストへのポインタ
     GameContext* m_pGameContext;
 
