@@ -40,7 +40,7 @@ void Effect3D::Title::Initialize(DX::DeviceResources* pDR, int width, int height
     m_windowHeight = height;
 
     //  タイトル画像を読み込む
-    Add(L"Resources/Textures/TrancFruitTitle.png"
+    Add(L"Resources/Textures/TrancOrbTitle.png"
         , DirectX::SimpleMath::Vector2(m_windowWidth / 2, 150)
         , DirectX::SimpleMath::Vector2(1.2f, 1.2f)
         , Effect3D::ANCHOR::MIDDLE_CENTER);

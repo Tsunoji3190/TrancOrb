@@ -44,7 +44,8 @@ void GamePlayScene::Update(Imase::ISceneController<SceneId>& sceneController, Ga
         // マウスの表示
         m_player->SetMouseModeAbsolute();
         m_skilltree->Update(elapsedTime, gameContext);
-        m_backButton.Update(elapsedTime, m_player.get(), m_fruitManager.get(), m_timer.get());
+        m_backButton.Update(elapsedTime, m_player.get(), m_fruitManager.get() ,m_throwableObjects,
+                            m_timer.get());
         return;
     }
 
@@ -301,12 +302,12 @@ void GamePlayScene::Render(GameContext& gameContext)
         return;
     }
 
-    //当たり判定描画
-    for (int i = 0; i < m_fruitManager->GetNumFruits(); i++)
-    {
-        Fruit* pFruit = m_fruitManager->GetFruit(i);
-        m_renderer->Render(context, m_view, m_projection, *pFruit->GetCollider());
-    }
+    ////当たり判定描画
+    //for (int i = 0; i < m_fruitManager->GetNumFruits(); i++)
+    //{
+    //    Fruit* pFruit = m_fruitManager->GetFruit(i);
+    //    m_renderer->Render(context, m_view, m_projection, *pFruit->GetCollider());
+    //}
 
 
     bool isRay=false;
@@ -456,13 +457,13 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
 
     //箱の座標
     //床
-    Itsuki::CollisionParams floar1 = {{.0f, 0.0f, .0f}, {-6.0f, -11.0f, -6.0f}, {6.0f, .0f, 6.0f}, {0}};
+    Itsuki::CollisionParams floar1 = {{.0f, 0.0f, .0f}, {-5.0f, -11.0f, -5.0f}, {5.0f, .0f, 5.0f}, {0}};
 
     //壁
-    Itsuki::CollisionParams wall1 = {{-4.2f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 7.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall2 = {{4.2f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 7.0f, 10.0f}, {0}};
-    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.2f}, {-10.0f, -11.0f, -.1f}, {10.0f, 7.0f, .0f}, {0}};
-    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.2f}, {-10.0f, -11.0f, .0f}, {10.0f, 7.0f, .1f}, {0}};
+    Itsuki::CollisionParams wall1 = {{-4.2f, 0.0f, .0f}, {-.1f, -11.0f, -10.0f}, {0.0f, 9.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall2 = {{4.2f, 0.0f, .0f}, {.0f, -11.0f, -10.0f}, {0.1f, 9.0f, 10.0f}, {0}};
+    Itsuki::CollisionParams wall3 = {{0.0f, 0.0f, -4.2f}, {-10.0f, -11.0f, -.1f}, {10.0f, 9.0f, .0f}, {0}};
+    Itsuki::CollisionParams wall4 = {{0.0f, 0.0f, 4.2f}, {-10.0f, -11.0f, .0f}, {10.0f, 9.0f, .1f}, {0}};
 
     ///プレイヤー
     Itsuki::CollisionParams player = {{0.0f, 0.5f, 3.0f}, {-.15f, -.15f, -.15f}, {0.15f, 0.15f, 0.15f}, {0.3}};
@@ -566,8 +567,8 @@ void GamePlayScene::OnEnter(GameContext& gameContext)
     };
 
     // オブジェクトの追加
-    addThrowable({0.0f, 0.45f, 1.5f}, 0.2f, 1);
-    addThrowable({1.4f, 0.5f, 0.5f}, 0.9f, 2);
+    addThrowable({0.0f, 0.3f, 1.f}, 0.2f, 1);
+    addThrowable({2.0f, 0.3f, 1.f}, 0.2f, 1);
 
 
     //Rocketの作成

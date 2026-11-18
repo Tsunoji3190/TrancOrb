@@ -9,6 +9,8 @@
 
 #include"../../ItsukiLib/Button.h"
 #include "../../ItsukiLib/GameTimer.h"
+#include <vector>
+#include <ItsukiLib/ThrowableObject.h>
 
 
 namespace Itsuki
@@ -23,7 +25,9 @@ namespace Itsuki
             m_imageButton.Initialize(gameContext, position, buttonimage, IMAGE_MAGNI, IMAGE_MAGNI);
         }
 
-        void Update(float elapsedtime, Player* player, FruitManager* fruitmanager,GameTimer* timer)
+        void Update(float elapsedtime, Player* player, FruitManager* fruitmanager,
+                    std::vector<std::unique_ptr<ThrowableObject>>& throwobj,
+                    GameTimer* timer)
         {
 
             auto mouse = Mouse::Get().GetState();
@@ -50,6 +54,10 @@ namespace Itsuki
                 fruitmanager->ResetFruit();
                 fruitmanager->AddFruit();
 
+                for (auto& obj : throwobj)
+                {
+                    obj->Reset();
+                }
             }
         }
 

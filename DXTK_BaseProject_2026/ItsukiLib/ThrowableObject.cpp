@@ -17,6 +17,8 @@ ThrowableObject::ThrowableObject(ID3D11DeviceContext* context, std::unique_ptr<I
     // 位置の設定
     SetPosition(m_collider->GetParam().pos);
 
+    m_firstPos = m_collider->GetParam().pos;
+
     m_primitive = GeometricPrimitive::CreateCube(context);
 }
 
@@ -33,7 +35,7 @@ void ThrowableObject::Update(float elapsedTime)
     if (m_position.y < -10.0f)
     {
         //リスポーンさせる
-        m_position = {0.0, 0.0, 0.0};
+        m_position = m_firstPos;
         m_velocity = {0.0, 0.0, 0.0};
     }
     //位置の設定

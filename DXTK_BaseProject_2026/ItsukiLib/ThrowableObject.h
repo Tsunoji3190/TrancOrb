@@ -66,6 +66,13 @@ public:
         m_velocity = velocity;
     }
 
+    void Reset()
+    {
+        m_isHeld = false;
+        m_velocity = DirectX::SimpleMath::Vector3::Zero;
+        m_position = m_firstPos;
+    }
+
 private:
 
 
@@ -79,4 +86,6 @@ private:
 
     bool m_isHeld = false;
 
+    //最初の位置
+    DirectX::SimpleMath::Vector3 m_firstPos;
 };
