@@ -175,7 +175,7 @@ public:
         m_isCleared = clear;
     }
 
-    bool GetIsHeld()
+    bool& GetIsHeld()
     {
         return m_isHeld;
     }
