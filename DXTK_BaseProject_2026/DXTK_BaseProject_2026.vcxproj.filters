@@ -117,6 +117,7 @@
       <Filter>ItsukiLib</Filter>
     </ClInclude>
     <ClInclude Include="ItsukiLib\ThrowableObject.h" />
+    <ClInclude Include="ItsukiLib\Fade.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />

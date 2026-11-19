@@ -53,7 +53,7 @@ void ThrowableObject::Render(const Matrix& view, const Matrix& projection, const
         position = eye + forward * 1.25f + right * 0.55f - up * 0.42f;
     }
     const Matrix world = Matrix::CreateScale(m_size) * Matrix::CreateTranslation(position);
-    m_primitive->Draw(world, view, projection, m_isHeld ? Colors::White : Colors::SandyBrown);
+    m_primitive->Draw(world, view, projection, m_isHeld ? Colors::White : Colors::SkyBlue);
 }
 
 bool ThrowableObject::IsGetRay(const Itsuki::Ray& ray, const Itsuki::CollisionChecker& checker, float& distance) const

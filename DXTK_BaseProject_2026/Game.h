@@ -90,7 +90,6 @@ private:
     // ゲームコンテキスト
     std::optional<GameContext> m_gameContext;
 
-
     // シーンマネージャー
     Imase::SceneManager<SceneId, GameContext> m_sceneManager;
 

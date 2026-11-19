@@ -358,7 +358,8 @@ void GamePlayScene::Render(GameContext& gameContext)
         auto textureSize = DirectX::SimpleMath::Vector2(desc.Width, desc.Height);
         XMFLOAT2 origin = {textureSize.x / 2, textureSize.y / 2};
 
-        m_spriteBatch->Draw(m_aimingHit.Get(), XMFLOAT2(width / 2, height / 2), nullptr, Colors::White, 0.0, origin, 0.5f);
+        m_spriteBatch->Draw(m_aimingHit.Get(), XMFLOAT2(width / 2, height / 2), nullptr, Colors::Orange, 0.0, origin,
+                            0.5f);
     }
     else
     {
@@ -375,7 +376,8 @@ void GamePlayScene::Render(GameContext& gameContext)
         auto textureSize = DirectX::SimpleMath::Vector2(desc.Width, desc.Height);
         XMFLOAT2 origin = {textureSize.x / 2, textureSize.y / 2};
 
-        m_spriteBatch->Draw(m_aiming.Get(), XMFLOAT2(width / 2, height / 2), nullptr, Colors::White, 0.0, origin, 0.5f);
+        m_spriteBatch->Draw(m_aiming.Get(), XMFLOAT2(width / 2, height / 2), nullptr, Colors::Orange, 0.0, origin,
+                            0.5f);
     }
 
     // テキストの描画
@@ -692,7 +694,6 @@ ThrowableObject* GamePlayScene::FindThrowObj()
             //そのオブジェクトの情報を返す
             return object.get();
         }
-        return nullptr;
 
     }
 
