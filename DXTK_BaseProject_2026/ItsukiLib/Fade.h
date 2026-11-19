@@ -1,4 +1,5 @@
 #pragma once
+#include "pch.h"
 
 namespace Itsuki
 {
@@ -67,10 +68,14 @@ namespace Itsuki
 
     private:
 
+        //
+        std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_texture;
+        RECT m_rect{};
 
+        DirectX::SimpleMath::Color m_color = Colors::Black;
         //現在の状態を占めす
         State m_state;
-
         //間隔を示す
         float m_duration;
     };
